@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Login</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            <a class="navbar-brand" href="index.html">Campus Event Board</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="index.html">Home</a></li>
+                <li><a href="#">Page 1</a></li>
+                <li><a href="#">Page 2</a></li>
+                <li><a href="#">Page 3</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/login"><span class="glyphicon glyphicon-user"></span> Log in</a></li>
+            </ul>
+        </div>
+    </nav>
+    <h1 style="text-align: center;">Login</h1>
+
+    <div style=" font-size:20px; width: 100%; padding-left:500px;"><br>
+        <form action="/account/login" method="get">
+            
+            <label for="email">Email: </label><br>
+            <input type="email" name="email" placeholder="Enter email" size="25" style="line-height: 2em; font-size: 18px;"><br><br>
+
+            <label for="password">Password:</label><br>
+            <input type="password" name="password" placeholder="Enter password" size="25" style="line-height: 2em; font-size: 18px;"><br><br>
+
+            <button type="submit" style="font-size: 20px;">Log In</button><br><br>
+
+        </form>
+        <span>No account yet? </span><a href="/register">Register Now!</a>
+
+    </div>
+    
+
+    
+</body>
+
+</html>
