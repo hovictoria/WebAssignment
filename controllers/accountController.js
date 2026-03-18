@@ -17,20 +17,23 @@ exports.handleLogin = async (req, res) => {
     if (errors.length === 0) {
         const isLoggedIn = await Account.authenticateUser(email, password);
         if (!isLoggedIn) {
-            errors.push("Invalid username or password. <br> Try <a href='/register'>registering</a> first.");
+            errors.push("Invalid username or password.");
+        }
+        else{
+            res.redirect('/index.html');
         }
     }
-    res.render("login", { userName, errors });
+    res.render("login", { email, errors });
 };
 
 exports.showRegister = (req, res) => {
-    res.render("register", { userName: undefined, fullName: undefined, showForm: true, errors: [] })
+    res.render("register", { email: undefined, errors: [] })
 };
 
 exports.handleRegister = async (req, res) => {
     let email = (req.body.email ?? "").trim();
     let password = req.body.password;
-    let password2 = req.body.password2;
+    let confirmpassword = req.body.confirmpassword;
     let errors = [];
     if (!email) {
         errors.push("Email is required");
@@ -38,7 +41,7 @@ exports.handleRegister = async (req, res) => {
     if (!password) {
         errors.push("Password is required");
     }
-    if (password !== password2) {
+    if (password !== confirmpassword) {
         errors.push("Passwords don't match");
     }
     if (errors.length === 0) {
@@ -47,6 +50,9 @@ exports.handleRegister = async (req, res) => {
         } catch (err) {
             errors.push(err.message);
         }
+    }
+    if(errors.length === 0){
+        res.redirect('/index.html');
     }
     res.render("register", { email, errors });
 };

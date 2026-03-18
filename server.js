@@ -27,12 +27,7 @@ server.set("view engine", "ejs");
 // (3)
 // Handles GET request: Redirect the GET request to a static file.
 server.get('/', (req, res) => {
-    res.redirect('/home.html')
-})
-
-// First Route: demonstrates how we can create different routes
-server.get('/about', (req, res) => {
-    res.send("First Route: Hey .... this is an awesome bubble tea")
+    res.redirect('/index.html');
 })
 
 // (4)

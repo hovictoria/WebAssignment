@@ -18,22 +18,21 @@ async function writeUsers(users) {
     );
 }
 
-async function registerUser(userName, fullName, password) {
+async function registerUser(email, password) {
     const users = await readUsers();
-    if (users[userName]) {
-        throw new Error("Username already exists");
+    if (users[email]) {
+        throw new Error("Email already exists");
     }
-    users[userName] = {
-        fullName,
-        password
+    users[email] = {
+        password,role: "student",bookmarks:[]
     };
     await writeUsers(users);
 }
 
-async function authenticateUser(userName, password) {
+async function authenticateUser(email, password) {
     const users = await readUsers();
 
-    const user = users[userName];
+    const user = users[email];
 
     if (!user) return false;
 
