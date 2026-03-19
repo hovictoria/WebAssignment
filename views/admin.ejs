@@ -1,0 +1,55 @@
+<%- include("common/header") %>
+  <div class="container mt-5">
+    <h2>Accounts (<%= data.length %>)</h2>
+    <table class="table" id="contact-list">
+      <tr>
+        <th>Email</th>
+        <th>Password</th>
+        <th>Role</th>
+        <th colspan="2">Actions</th>
+        
+      </tr>
+      <% data.forEach(user => {%>
+        <tr>
+            <td><%= user.email %></td>
+            <td><%= user.password %></td>
+            <td><%= user.role %></td>
+            <td><a href="">Edit</a> | <a href="">Delete</a></td>
+        </tr>
+      <%}); %>
+    </table>
+    
+  </div>
+  <div id="progress">
+    <a href="login.html" id="progress-value"><i class='bx bx-left-arrow-alt'></i></a>
+  </div>
+
+
+
+  
+  <div class="container mt-5" id="update-contact-container"> 
+    <!-- <div id="add-update-msg">
+        <div class="alert alert-success" role="alert">
+            Contact record updated sucessfully
+        </div>
+    </div> -->
+    <h4>Update Contact</h4>
+    <div class="form" id="update-contact">
+        <form id="update-contact-form">
+            <div class="form-group">Name
+                <input type="text" name="update-contact-name" class="form-control" required>
+            </div>
+          <div class="form-group">Email
+            <input type="email" name="update-contact-email" class="form-control" required>
+          </div>
+          <div class="form-group">Password
+          <input type="text" name="update-contact-password" class="form-control" required>
+          <input type="hidden" id="update-contact-id">
+          </div>
+
+          <input type="submit" value="Update Contact Details" class="btn btn-warning" id="update-contact-submit">
+        </form>
+    </div>
+  </div>
+</body>
+</html>

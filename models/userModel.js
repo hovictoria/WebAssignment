@@ -28,31 +28,26 @@ const userSchema = new mongoose.Schema({
   }]
 });
 
-const user = mongoose.model('user', userSchema, 'users');
+const User = mongoose.model('User', userSchema, 'user');
 
-
-async function registerUser(email, password) {
-    const users = await readUsers();
-    if (users[email]) {
-        throw new Error("Email already exists");
-    }
-    users[email] = {
-        password,role: "student",bookmarks:[]
-    };
-    await writeUsers(users);
-}
-
-async function authenticateUser(email, password) {
-    const users = await readUsers();
-
-    const user = users[email];
-
-    if (!user) return false;
-
-    return user.password === password;
-}
-
-module.exports = {
-    registerUser,
-    authenticateUser
+exports.retrieveAll = function() {
+  return User.find();
 };
+
+exports.findByEmail = function(email){
+    return User.findOne({email});
+}
+
+exports.addUser = function(user){
+    return User.create(user);
+}
+
+exports.editUser = function(username,password,role){
+    return User.updateOne({username},{password,role})
+}
+
+exports.deleteUser = function(user){
+    return User.deleteOne({user});
+}
+
+

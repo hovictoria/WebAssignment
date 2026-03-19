@@ -1,4 +1,4 @@
-const Account = require("../models/accountModel");
+const User = require("../models/userModel");
 
 exports.showLogin = (req, res) => {
     res.render("login", { email: undefined, errors: [] });
@@ -7,20 +7,25 @@ exports.showLogin = (req, res) => {
 exports.handleLogin = async (req, res) => {
     let email = (req.body.email ?? "").trim();
     let password = req.body.password;
-    let errors = [];
-    if (!email) {
-        errors.push("Email is required");
+    let errors = "";
+    if(email=="admin@admin.com" && password=="admin"){
+        res.redirect("/admin");
+        return;
     }
-    if (!password) {
-        errors.push("Password is required");
+    if (!email || !password) {
+        errors="All fields are required";
     }
-    if (errors.length === 0) {
-        const isLoggedIn = await Account.authenticateUser(email, password);
-        if (!isLoggedIn) {
-            errors.push("Invalid username or password.");
+    else{
+        const users = await User.findByEmail(email);
+        if (!users) {
+            errors="Account does not exist";
+        }
+        else if(password!=users.password){
+            errors="Invalid password";
         }
         else{
-            res.redirect('/index.html');
+            res.redirect('/');
+            return;
         }
     }
     res.render("login", { email, errors });
@@ -46,7 +51,14 @@ exports.handleRegister = async (req, res) => {
     }
     if (errors.length === 0) {
         try {
-            await Account.registerUser(email, password);
+            const users = await User.retrieveAll();
+            if (users[email]) {
+                throw new Error("Email already exists");
+            }
+            users = {
+                email,password,role: "student",bookmarks:[]
+            };
+            await User.writeUsers(users);
         } catch (err) {
             errors.push(err.message);
         }
@@ -56,3 +68,8 @@ exports.handleRegister = async (req, res) => {
     }
     res.render("register", { email, errors });
 };
+
+exports.admin = async(req,res)=>{
+    let data=await User.retrieveAll();
+    res.render("admin",{data});
+}

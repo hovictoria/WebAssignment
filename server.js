@@ -1,60 +1,49 @@
-/*
-    Step 1: Create an express server object
-
-    Step 2: Set up the server object: Middleware to handle static files and POST requests
-
-    Step 3: Setup simple routes: GET / redirects to ./public/home.html, /about serves a string
-
-    Step 4: Create more complex routes as express Routers (middleware)
-
-    Step 5: Use ./data in the Routers to persist user info
-*/
-
-// (1)
 const express = require('express');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 const path = require('path');
 
 const server = express();
 
-// (2)
-// Serve static files from *./public*
 server.use(express.static(path.join(__dirname, "public")))
-// This Middleware is used to handle the incoming escaped/encoded data
 server.use(express.urlencoded({ extended: true }));
-// Set up the views engine
+
 server.set("view engine", "ejs");
 server.set("views", path.join(__dirname, "views"));
-
-// (3)
-// Handles GET request: Redirect the GET request to a static file.
 server.get('/', (req, res) => {
     res.redirect('/index.html');
 })
 
-// (4)
-// Group the account related routes in a Router object and import it from ./routes/account.js
-const account = require('./routes/account.js')
-// Any route URL that *begins with* /account will be handled by account object (router)
-server.use(account)
+const user = require('./routes/user')
+server.use(user)
 
-// // Order related routes in order Router
-// const order = require('./routes/order.js')
-// // Any route URL that begins with /order will be handled by order object (router)
-// server.use(order)
-
-
-
-// events
 const eventRoutes = require("./routes/eventRoutes");
 server.use(eventRoutes)
 
+// Specify the path to the environment variablef file 'config.env'
+dotenv.config({ path: './config.env' });
 
-// launch the web server
-const hostname = 'localhost'
-const port = 8000
-const callback = function () {
-    console.log(`Server running at http://${hostname}:${port}`)
+// async function to connect to DB
+async function connectDB() {
+  try {
+    // connecting to Database with our config.env file and DB is constant in config.env
+    await mongoose.connect(process.env.DB);
+    console.log("MongoDB connected successfully");
+  } catch (error) {
+    console.error("MongoDB connection failed:", error.message);
+    process.exit(1);
+  }
+};
+
+function startServer() {
+  const hostname = "localhost"; // Define server hostname
+  const port = 8000;// Define port number
+ 
+  // Start the server and listen on the specified hostname and port
+  server.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
+  });
 }
-server.listen(
-    port, hostname, callback
-)
+
+// call connectDB first and when connection is ready we start the web server
+connectDB().then(startServer);
