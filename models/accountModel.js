@@ -30,4 +30,29 @@ const userSchema = new mongoose.Schema({
 
 const user = mongoose.model('User', userSchema, 'users');
 
-module.exports = user;
+
+async function registerUser(email, password) {
+    const users = await readUsers();
+    if (users[email]) {
+        throw new Error("Email already exists");
+    }
+    users[email] = {
+        password,role: "student",bookmarks:[]
+    };
+    await writeUsers(users);
+}
+
+async function authenticateUser(email, password) {
+    const users = await readUsers();
+
+    const user = users[email];
+
+    if (!user) return false;
+
+    return user.password === password;
+}
+
+module.exports = {
+    registerUser,
+    authenticateUser
+};
