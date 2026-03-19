@@ -26,6 +26,6 @@ const rsvpSchema = new mongoose.Schema({
   }
 });
 
-const rsvp = mongoose.model('RSVP', rsvpSchema, 'rsvps');
+const RSVP = mongoose.model('RSVP', rsvpSchema, 'rsvps');
 
-module.exports = rsvp;
+module.exports = RSVP;

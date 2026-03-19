@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
   }]
 });
 
-const user = mongoose.model('User', userSchema, 'users');
+const user = mongoose.model('user', userSchema, 'users');
 
 
 async function registerUser(email, password) {
