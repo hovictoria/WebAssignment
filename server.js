@@ -23,6 +23,7 @@ server.use(express.static(path.join(__dirname, "public")))
 server.use(express.urlencoded({ extended: true }));
 // Set up the views engine
 server.set("view engine", "ejs");
+server.set("views", path.join(__dirname, "views"));
 
 // (3)
 // Handles GET request: Redirect the GET request to a static file.
@@ -45,6 +46,13 @@ server.use(account)
 // const order = require('./routes/order.js')
 // // Any route URL that begins with /order will be handled by order object (router)
 // server.use(order)
+
+
+
+// events
+const eventRoutes = require("./routes/eventRoutes");
+server.use(eventRoutes)
+
 
 // launch the web server
 const hostname = 'localhost'

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Create new event</h1>
+    <% if (error !== '' || success === '' ){ %>
+        <p style="color:red"><%= error %></p>
+
+        <form action="/createEvent" method="post">
+        Title: <br>
+        <input type="text" name="title" value="<%= title %>">
+        <br><br>
+
+        Description: <br>
+        <input type="text" name="description" value="<%= desc %>">
+        <br><br>
+
+        Date: <br>
+        <input type="date" name="date" value="<%= date %>">
+        <br><br>
+
+        Location: <br>
+        <input type="text" name="location" value="<%= location %>">
+        <br><br>
+
+        Category: <br>
+        <input type="text" name="category" value="<%= cat %>">
+        <br><br>
+
+        Organiser: <br>
+        <input type="text" name="organise" value="<%= org %>">
+        <br><br>
+
+        <button>Create</button>
+
+    </form>
+
+    <% } else if (success !== '') {%>
+        <p style="color:green"><%= success %></p>
+        <a href="/">Back</a>
+    <% } %>
+
+    
+</body>
+</html>
