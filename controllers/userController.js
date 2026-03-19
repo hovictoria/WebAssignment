@@ -32,41 +32,40 @@ exports.handleLogin = async (req, res) => {
 };
 
 exports.showRegister = (req, res) => {
-    res.render("register", { email: undefined, errors: [] })
+    res.render("register", { email: undefined, name:undefined, errors: [] })
 };
 
 exports.handleRegister = async (req, res) => {
     let email = (req.body.email ?? "").trim();
+    let name = req.body.name.trim();
     let password = req.body.password;
     let confirmpassword = req.body.confirmpassword;
     let errors = [];
-    if (!email) {
-        errors.push("Email is required");
-    }
-    if (!password) {
-        errors.push("Password is required");
+    if (!email || !password) {
+        errors="All fields are required";
     }
     if (password !== confirmpassword) {
-        errors.push("Passwords don't match");
+        errors="Passwords don't match";
     }
     if (errors.length === 0) {
         try {
-            const users = await User.retrieveAll();
-            if (users[email]) {
+            let users = await User.findByEmail(email);
+            if (users) {
                 throw new Error("Email already exists");
             }
-            users = {
-                email,password,role: "student",bookmarks:[]
+            let newuser = {
+                name,email,password,role: "student",bookmarks:[]
             };
-            await User.writeUsers(users);
+            await User.addUser(newuser);
         } catch (err) {
-            errors.push(err.message);
+            errors=err.message;
         }
     }
     if(errors.length === 0){
         res.redirect('/index.html');
+        return;
     }
-    res.render("register", { email, errors });
+    res.render("register", { email, name, errors});
 };
 
 exports.admin = async(req,res)=>{

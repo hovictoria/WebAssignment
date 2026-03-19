@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  username: {
+  name: {
     type: String,
-    required: [true, 'A user must have a username'],
-    unique: true,
+    required: [true, 'A user must have a name'],
     trim: true
   },
   email: {
@@ -42,8 +41,8 @@ exports.addUser = function(user){
     return User.create(user);
 }
 
-exports.editUser = function(username,password,role){
-    return User.updateOne({username},{password,role})
+exports.editUser = function(email,password,role){
+    return User.updateOne({email},{password,role})
 }
 
 exports.deleteUser = function(user){
