@@ -1,8 +1,61 @@
-// const events = require("../models/eventModel");
+const events = require("../models/eventModel");
 
-exports.showEvents = async(req,res) => {
-    res.render('events')
-}
+//keyword searches title and description, category filters exact category, location filters partial match, date filters events on that exact day, .lean()makes the date easier/faster for EJS rendering
+exports.showEvents = async (req, res) => {
+    try {
+        const keyword = (req.query.keyword || '').trim();
+        const category = (req.query.category || '').trim();
+        const location = (req.query.location || '').trim();
+        const date = (req.query.date || '').trim();
+
+        let filter = {};
+
+        if (keyword) {
+            filter.$or = [
+                { title: { $regex: keyword, $options: 'i' } },
+                { description: { $regex: keyword, $options: 'i' } }
+            ];
+        }
+
+        if (category) {
+            filter.category = category;
+        }
+
+        if (location) {
+            filter.location = { $regex: location, $options: 'i' };
+        }
+
+        if (date) {
+            const selectedDate = new Date(date);
+            const nextDate = new Date(date);
+            nextDate.setDate(nextDate.getDate() + 1);
+
+            filter.date = {
+                $gte: selectedDate,
+                $lt: nextDate
+            };
+        }
+
+        const events = await Event.find(filter).sort({ date: 1 }).lean();
+
+        res.render('events', {
+            events,
+            keyword,
+            category,
+            location,
+            date
+        });
+    } catch (err) {
+        console.log(err);
+        res.render('events', {
+            events: [],
+            keyword: '',
+            category: '',
+            location: '',
+            date: ''
+        });
+    }
+};
 
 
 exports.getCreateEventForm = async(req,res) => {
@@ -14,6 +67,7 @@ exports.getCreateEventForm = async(req,res) => {
 exports.handleCreate = async(req,res) => {
     let error = '';
     let success = ''
+
     // date created
     const createdAt = new Date();       
     const today = new Date();              
@@ -27,17 +81,42 @@ exports.handleCreate = async(req,res) => {
     const cat = req.body.category.trim()
     const org = req.body.organise.trim()
 
+
+    const eventDate = new Date(date);
+
     //input validation
     if (title === '' || desc === '' || location === '' || cat === '' || org === ''){
         error = 'All fields are required'
     }
     //else if event both same event title and date exist: reject
-    else if (date < today){
+    else if (eventDate < today){
         error = 'Event date cannot be in the past'
     }
     else{
-        //add data to db
-        success = 'Event created successfully!'
+        try {
+            const existingEvent = await Event.findOne({
+                title: title,
+                date: eventDate
+            });
+
+            if (existingEvent) {
+                error = 'An event with the same title and date already exists';
+            } else {
+                await Event.create({
+                    title: title,
+                    description: desc,
+                    date: eventDate,
+                    location: location,
+                    category: cat,
+                    organiser: org
+                });
+
+                success = 'Event created successfully!';
+            }
+        } catch (err) {
+            console.log(err);
+            error = 'Failed to create event';
+        }
     }
 
     res.render('createEvent', {error, success, title, desc, date, location, cat, org})

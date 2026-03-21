@@ -6,15 +6,71 @@
     <title>Events</title>
 </head>
 <body>
-    <h1>display events</h1>
+    <h1>Campus Events</h1>
 
-    <a href="/createEvent">Create</a>
-    < eventname/details > 
-    <a href="/createEvent">Edit</a>
-    <a href="/createEvent">Delete</a>
-    <!-- <a href="/get-books?isbn=<%= book.isbn %>">edit</a><br>
-    <a href="/delete-book?isbn=<%= book.isbn %>">delete</a> -->
+    <a href="/createEvent">Create Event</a>
 
+    <hr>
 
+    <form method="GET" action="/events">
+        <div>
+            <label>Keyword:</label>
+            <input type="text" name="keyword" value="<%= keyword %>">
+        </div>
+
+        <br>
+
+        <div>
+            <label>Category:</label>
+            <select name="category">
+                <option value="">All</option>
+                <option value="Academic" <%= category === 'Academic' ? 'selected' : '' %>>Academic</option>
+                <option value="Social" <%= category === 'Social' ? 'selected' : '' %>>Social</option>
+                <option value="Sports" <%= category === 'Sports' ? 'selected' : '' %>>Sports</option>
+                <option value="Workshop" <%= category === 'Workshop' ? 'selected' : '' %>>Workshop</option>
+                <option value="Other" <%= category === 'Other' ? 'selected' : '' %>>Other</option>
+            </select>
+        </div>
+
+        <br>
+
+        <div>
+            <label>Location:</label>
+            <input type="text" name="location" value="<%= location %>">
+        </div>
+
+        <br>
+
+        <div>
+            <label>Date:</label>
+            <input type="date" name="date" value="<%= date %>">
+        </div>
+
+        <br>
+
+        <button type="submit">Search / Filter</button>
+        <a href="/events">Clear</a>
+    </form>
+
+    <hr>
+
+    <% if (events.length === 0) { %>
+        <p>No events found.</p>
+    <% } else { %>
+        <% events.forEach(function(event) { %>
+            <div>
+                <h3><%= event.title %></h3>
+                <p><strong>Description:</strong> <%= event.description %></p>
+                <p><strong>Date:</strong> <%= new Date(event.date).toDateString() %></p>
+                <p><strong>Location:</strong> <%= event.location %></p>
+                <p><strong>Category:</strong> <%= event.category %></p>
+                <p><strong>Organiser:</strong> <%= event.organiser %></p>
+
+                <a href="/createEvent">Edit</a>
+                <a href="/createEvent">Delete</a>
+            </div>
+            <hr>
+        <% }) %>
+    <% } %>
 </body>
 </html>

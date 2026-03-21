@@ -24,9 +24,9 @@ const eventSchema = new mongoose.Schema({
     enum: ['Academic', 'Social', 'Sports', 'Workshop', 'Other']
   },
   organiser: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'An event must have an organiser']
+    type: String,
+    required: [true, 'An event must have an organiser'],
+    trim: true
   }
 }, { timestamps: true });
 
