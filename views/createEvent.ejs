@@ -28,7 +28,14 @@
         <br><br>
 
         Category: <br>
-        <input type="text" name="category" value="<%= cat %>">
+        <select name="category">
+            <option value="">Select category</option>
+            <option value="Academic" <%= cat === 'Academic' ? 'selected' : '' %>>Academic</option>
+            <option value="Social" <%= cat === 'Social' ? 'selected' : '' %>>Social</option>
+            <option value="Sports" <%= cat === 'Sports' ? 'selected' : '' %>>Sports</option>
+            <option value="Workshop" <%= cat === 'Workshop' ? 'selected' : '' %>>Workshop</option>
+            <option value="Other" <%= cat === 'Other' ? 'selected' : '' %>>Other</option>
+        </select>
         <br><br>
 
         Organiser: <br>
@@ -41,7 +48,7 @@
 
     <% } else if (success !== '') {%>
         <p style="color:green"><%= success %></p>
-        <a href="/">Back</a>
+        <a href="/events">Back to Events</a>
     <% } %>
 
     

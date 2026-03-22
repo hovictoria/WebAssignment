@@ -1,4 +1,4 @@
-const events = require("../models/eventModel");
+const Event = require("../models/eventModel");
 
 //keyword searches title and description, category filters exact category, location filters partial match, date filters events on that exact day, .lean()makes the date easier/faster for EJS rendering
 exports.showEvents = async (req, res) => {
@@ -85,7 +85,7 @@ exports.handleCreate = async(req,res) => {
     const eventDate = new Date(date);
 
     //input validation
-    if (title === '' || desc === '' || location === '' || cat === '' || org === ''){
+    if (title === '' || desc === '' || location === '' || cat === '' || org === ''|| date === ''){
         error = 'All fields are required'
     }
     //else if event both same event title and date exist: reject
