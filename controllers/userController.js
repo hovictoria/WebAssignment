@@ -1,38 +1,52 @@
 const User = require("../models/userModel");
 
 exports.showLogin = (req, res) => {
-    res.render("login", { email: undefined, errors: [] });
+    let errors=req.query.errors;
+    res.render("login", { email: undefined, errors,user:"" });
 };
 
 exports.handleLogin = async (req, res) => {
-    let email = (req.body.email ?? "").trim();
-    let password = req.body.password;
-    let errors = "";
-    if(email=="admin@admin.com" && password=="admin"){
-        res.redirect("/admin");
-        return;
-    }
-    if (!email || !password) {
-        errors="All fields are required";
-    }
-    else{
-        const users = await User.findByEmail(email);
-        if (!users) {
-            errors="Account does not exist";
-        }
-        else if(password!=users.password){
-            errors="Invalid password";
+    try{
+        let email = (req.body.email ?? "").trim();
+        let password = req.body.password;
+        let errors = "";
+        if (!email || !password) {
+            errors="All fields are required";
         }
         else{
-            res.redirect('/');
-            return;
+            const users = await User.findByEmail(email);
+            if (!users) {
+                errors="Account does not exist";
+            }
+            else if(password!=users.password){
+                errors="Invalid password";
+            }
+            else{
+                req.session.user = {
+                    id: users._id,
+                    name: users.name,
+                    role: users.role
+                }
+                if(users.role=="admin"){
+                    res.redirect("/admin");
+                    return;
+                }
+                else{
+                    res.redirect("/events");
+                    return;
+                }
+                
+            }
         }
+        res.render("login", { email, errors,user:"" });
+    }catch(err){
+        console.log(err);
+        res.redirect("/login");
     }
-    res.render("login", { email, errors });
 };
 
 exports.showRegister = (req, res) => {
-    res.render("register", { email: undefined, name:undefined, errors: [] })
+    res.render("register", { email: undefined, name:undefined, errors: [],user:"" })
 };
 
 exports.handleRegister = async (req, res) => {
@@ -62,13 +76,27 @@ exports.handleRegister = async (req, res) => {
         }
     }
     if(errors.length === 0){
-        res.redirect('/index.html');
+        res.redirect('/login');
         return;
     }
-    res.render("register", { email, name, errors});
+    res.render("register", { email, name, errors,user:""});
 };
 
-exports.admin = async(req,res)=>{
+exports.adminGet = async(req,res)=>{
+    let user=req.session.user;
     let data=await User.retrieveAll();
-    res.render("admin",{data});
+    let editemail=req.query.email;
+    let edit=await User.findByEmail(editemail);
+    res.render("admin",{data,user,edit});
+}
+
+exports.editUser = async(req,res)=>{
+    let email=req.body.email.trim();
+    let password=req.body.password.trim();
+    let role=req.body.role;
+    let name=req.body.name.trim();
+    let error="";
+    if(email==""||password==""||role==""||name==""){
+        error="All fields are required";
+    }
 }

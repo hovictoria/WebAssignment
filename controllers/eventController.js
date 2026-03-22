@@ -37,22 +37,25 @@ exports.showEvents = async (req, res) => {
         }
 
         const events = await Event.find(filter).sort({ date: 1 }).lean();
-
+        let user=req.session.user;
         res.render('events', {
             events,
             keyword,
             category,
             location,
-            date
+            date,
+            user
         });
     } catch (err) {
         console.log(err);
+        let user=req.session.user;
         res.render('events', {
             events: [],
             keyword: '',
             category: '',
             location: '',
-            date: ''
+            date: '',
+            user
         });
     }
 };
