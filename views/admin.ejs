@@ -1,6 +1,6 @@
 <%- include("common/header") %>
   <div class="container mt-5">
-    <h2>Accounts (<%= data.length %>)</h2>
+    <h2>Users (<%= data.length %>)</h2>
     <table border="1">
       <tr>
         <th>Name</th>
@@ -14,9 +14,9 @@
         <tr>
             <td><%= user.name %></td>
             <td><%= user.email %></td>
-            <td><%= user.password %></td>
+            <td>********</td>
             <td><%= user.role %></td>
-            <td><a href="/admin?email=<%= user.email %>">Edit</a> | <a href="">Delete</a></td>
+            <td><a href="/admin?email=<%= user.email %>#editform">Edit</a> | <a href="/delete-user?email=<%= user.email %>">Delete</a></td>
         </tr>
       <%}); %>
     </table>
@@ -28,16 +28,17 @@
 
 
 <% if(edit){ %>
-  
-    <h4>Update Contact</h4>
+    <div id="editform">
+
+    <h4>Edit User</h4>
         <form action="edit-user" method="post">
-          Name: <input type="text" name="name" class="form-control" value="<%= edit.name %>" required><br>
+          Name:* <input type="text" name="name" value="<%= edit.name %>"><br>
             
-          Email: <input type="email" name="email" class="form-control" value="<%= edit.email %>" required><br>
+          Email:* <input type="email" name="email" value="<%= edit.email %>"><br>
           
-          Password: <input type="text" name="password" class="form-control" value="<%= edit.password %>" required><br>
+          Password: <input type="text" name="password"><br>
           
-          Role:  
+          Role:*  
           <select name="role" class="form-control">
             <option value="Student" <%=edit.role=="Student"? "selected" : ""%>>Student</option>
             <option value="Organiser" <%=edit.role=="Organiser"? "selected" : ""%>>Organiser</option>
@@ -46,6 +47,15 @@
           <br><br>
           <button type="submit">Update</button>
         </form>
+        
+    </div>
+      
   <% } %>
+  <% if(error){ %>
+    <p style="color:red"><%= error %></p>
+    <% } %>
+  <% if(success){ %>
+    <p style="color:green"><%= success %></p>
+    <% } %>
 </body>
 </html>

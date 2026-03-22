@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['student', 'admin'],
+    enum: ['Student', 'Admin'],
     default: 'student'
   },
   bookmarks: [{
@@ -41,12 +41,12 @@ exports.addUser = function(user){
     return User.create(user);
 }
 
-exports.editUser = function(email,password,role){
-    return User.updateOne({email},{password,role})
-}
+exports.editUser = async (email, updateData) => {
+    return User.updateOne({ email: email },updateData);
+};
 
-exports.deleteUser = function(user){
-    return User.deleteOne({user});
+exports.deleteUser = function(email){
+    return User.deleteOne({email});
 }
 
 
