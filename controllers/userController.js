@@ -117,6 +117,7 @@ exports.editUser = async(req,res)=>{
     let role=req.body.role;
     let name=req.body.name.trim();
     let error="";
+    let success="";
     if(email==""||role==""||name==""){
         error="All fields are required";
     }
@@ -130,14 +131,19 @@ exports.editUser = async(req,res)=>{
                 const hashedPassword = await bcrypt.hash(password, 10);
                 updateData.password = hashedPassword;
             }
-            await User.editUser(email,updateData);
+            let result=await User.editUser(email,updateData);
+            if(result.modifiedCount==0){
+                success="No changes made";
+            }else{
+                success="Updated successfully";
+            }
         }catch(error){
             console.log(error);
             error="Something went wrong";
         }
     }
     if(error==""){
-        res.redirect("/admin?success=Updated successfully")
+        res.redirect(`/admin?success=${success}`)
     }else{
         res.redirect(`/admin?error=${error}&email=${email}`)
     }
