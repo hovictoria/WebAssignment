@@ -27,7 +27,8 @@ exports.showEvents = async (req, res) => {
 
         if (date) {
             const selectedDate = new Date(date);
-            const nextDate = new Date(date);
+            selectedDate.setHours(0, 0, 0, 0);
+            const nextDate = new Date(selectedDate);
             nextDate.setDate(nextDate.getDate() + 1);
 
             filter.date = {
