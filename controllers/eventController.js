@@ -86,11 +86,11 @@ exports.handleCreate = async(req,res) => {
 
     // date created
     const createdAt = new Date();       
-    // const todayDate = new Date();
-    // const today = todayDate.toISOString().split('T')[0]             
-    const today = new Date();              
-    today.setHours(0, 0, 0, 0);   
-    const todayStr = today.toISOString().split('T')[0];
+    const todayDate = new Date();
+    const today = todayDate.toISOString().split('T')[0]             
+    // const today = new Date();              
+    // today.setHours(0, 0, 0, 0);   
+    // const todayStr = today.toISOString().split('T')[0];
 
     //get form input
     const title = req.body.title.trim();
@@ -107,8 +107,8 @@ exports.handleCreate = async(req,res) => {
         error = 'All fields are required'
     }
     //else if event both same event title and date exist: reject
-    // else if (date <= today){
-    else if (eventDate < todayStr){
+    else if (date <= today){
+    // else if (eventDate < todayStr){
         error = 'Event date cannot be in the past'
     }
     else{
@@ -120,6 +120,7 @@ exports.handleCreate = async(req,res) => {
                 error = 'An event with the same title and date already exists';
             }
             else{
+                let user = req.session.user;
                 let newEvent = 
                 {
                     title: title,
@@ -127,7 +128,7 @@ exports.handleCreate = async(req,res) => {
                     date: date,
                     location: location,
                     category: cat,
-                    organiser: new mongoose.Types.ObjectId("69bb8aee6f341f93b40a499a")
+                    organiser: user.id
                 };
             let result = await Event.addEvent(newEvent);
             success = 'Event created successfully!'
