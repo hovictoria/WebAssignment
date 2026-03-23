@@ -4,26 +4,30 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <title>Campus Event Board</title>
 </head>
-
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-            <a class="navbar-brand" href="index.html">Campus Event Board</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="index.html">Home</a></li>
-                <li><a href="#">Page 1</a></li>
-                <li><a href="#">Page 2</a></li>
-                <li><a href="#">Page 3</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="/login"><span class="glyphicon glyphicon-user"></span> Log in</a></li>
-            </ul>
-        </div>
+    <h2>Campus Event Board 🏫</h2>
+    <% if(user){ %>
+    <p>Welcome, <%=user.role%> <%= user.name %></p>
+    <% } %>
+    <nav>
+        <a href="/home"><i class="fa-sharp fa-solid fa-house"> Home</i></a> | 
+        <a href="/events"><i class="fa-solid fa-magnifying-glass"> Events</i></a> | 
+        <% if(user.role=="Student" || !user){ %>
+        <a href="/events"><i class="fa-regular fa-calendar-plus"> My RSVP</i></a> | 
+        <a href="#"><i class="fa-regular fa-bookmark"> Bookmarked</i></a> | 
+        <%}if(!user){ %>
+        <a href="/login"><i class="fa-solid fa-arrow-right-to-bracket"> Log in</i></a>
+        <% }else{ %>
+        <a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"> Log Out</i></a>
+        <% } %>
     </nav>
+
+    <hr>

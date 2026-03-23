@@ -1,42 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Events</title>
-</head>
-<body>
+<%- include("common/header") %>
 
-  <h1>Campus Events</h1>
-  <a href="/create-event">+ Create New Event</a> <br><br>
 
-  <% if (error !== '') { %>
-    <p style="color:red">⚠️ <%= error %></p>
-  <% } else { %>
-    <table border="1">
-      <tr>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Date</th>
-        <th>Location</th>
-        <th>Category</th>
-        <th>Edit</th>
-        <th>Delete</th>
-      </tr>
+    <h1>Campus Events</h1>
 
-      <% for (let e of eventlist) { %>
-      <tr>
-        <td><%= e.title %></td>
-        <td><%= e.description %></td>
-        <td><%= new Date(e.date).toLocaleDateString('en-SG') %></td>
-        <td><%= e.location %></td>
-        <td><%= e.category %></td>
-        <td><a href="/update-event?_id=<%= e._id %>">Edit</a></td>
-        <td><a href="/delete-event?_id=<%= e._id %>">Delete</a></td>
-      </tr>
-      <% } %>
-    </table>
-  <% } %>
+    <a href="/create-event">Create Event</a>
 
+    <hr>
+
+    <form method="GET" action="/events">
+        <div>
+            <label>Keyword:</label>
+            <input type="text" name="keyword" value="<%= keyword %>">
+        </div>
+
+        <br>
+
+        <div>
+            <label>Category:</label>
+            <select name="category">
+                <option value="">All</option>
+                <option value="Academic" <%= category === 'Academic' ? 'selected' : '' %>>Academic</option>
+                <option value="Social" <%= category === 'Social' ? 'selected' : '' %>>Social</option>
+                <option value="Sports" <%= category === 'Sports' ? 'selected' : '' %>>Sports</option>
+                <option value="Workshop" <%= category === 'Workshop' ? 'selected' : '' %>>Workshop</option>
+                <option value="Other" <%= category === 'Other' ? 'selected' : '' %>>Other</option>
+            </select>
+        </div>
+
+        <br>
+
+        <div>
+            <label>Location:</label>
+            <input type="text" name="location" value="<%= location %>">
+        </div>
+
+        <br>
+
+        <div>
+            <label>Date:</label>
+            <input type="date" name="date" value="<%= date %>">
+        </div>
+
+        <br>
+
+        <button type="submit">Search / Filter</button>
+        <a href="/events">Clear</a>
+    </form>
+
+    <hr>
+
+    <% if (events.length === 0) { %>
+        <p>No events found.</p>
+    <% } else { %>
+        <% events.forEach(event => { %>
+            <div>
+                <h3><%= event.title %></h3>
+                <p><strong>Description:</strong> <%= event.description %></p>
+                <p><strong>Date:</strong> <%= new Date(event.date).toDateString() %></p>
+                <p><strong>Location:</strong> <%= event.location %></p>
+                <p><strong>Category:</strong> <%= event.category %></p>
+                <p><strong>Organiser:</strong> <%= event.organiser %></p>
+
+                <% if(user.role!="Admin"){ %>
+                <a href="/update-event?_id=<%= event._id %>"">Edit</a>
+                <a href="/delete-event?_id=<%= event._id %>">Delete</a>
+                <% } %>
+            </div>
+            <hr>
+        <% }) %>
+    <% } %>
+
+  
+    
 </body>
 </html>

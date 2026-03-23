@@ -1,75 +1,169 @@
 const User = require("../models/userModel");
+const bcrypt = require('bcryptjs');
 
-exports.showLogin = (req, res) => {
-    res.render("login", { email: undefined, errors: [] });
-};
-
-exports.handleLogin = async (req, res) => {
-    let email = (req.body.email ?? "").trim();
-    let password = req.body.password;
-    let errors = "";
-    if(email=="admin@admin.com" && password=="admin"){
+exports.home=(req,res)=>{
+    let user=req.session.user;
+    if(user.role=="Student"){
+    res.render("studenthome",{user});}
+    else if(user.role=="Admin"){
         res.redirect("/admin");
-        return;
     }
-    if (!email || !password) {
-        errors="All fields are required";
-    }
-    else{
-        const users = await User.findByEmail(email);
-        if (!users) {
-            errors="Account does not exist";
-        }
-        else if(password!=users.password){
-            errors="Invalid password";
-        }
-        else{
-            res.redirect('/');
-            return;
-        }
-    }
-    res.render("login", { email, errors });
-};
+}
+
 
 exports.showRegister = (req, res) => {
-    res.render("register", { email: undefined, errors: [] })
+    res.render("register", { email: undefined, name:undefined, errors: [],user:"" });
 };
 
 exports.handleRegister = async (req, res) => {
     let email = (req.body.email ?? "").trim();
+    let name = req.body.name.trim();
     let password = req.body.password;
     let confirmpassword = req.body.confirmpassword;
     let errors = [];
-    if (!email) {
-        errors.push("Email is required");
-    }
-    if (!password) {
-        errors.push("Password is required");
+    if (!email || !password) {
+        errors="All fields are required";
     }
     if (password !== confirmpassword) {
-        errors.push("Passwords don't match");
+        errors="Passwords don't match";
     }
     if (errors.length === 0) {
         try {
-            const users = await User.retrieveAll();
-            if (users[email]) {
+            let users = await User.findByEmail(email);
+            if (users) {
                 throw new Error("Email already exists");
             }
-            users = {
-                email,password,role: "student",bookmarks:[]
+            password=await bcrypt.hash(password,10);
+            let newuser = {
+                name,email,password,role: "Student",bookmarks:[]
             };
-            await User.writeUsers(users);
+            await User.addUser(newuser);
         } catch (err) {
-            errors.push(err.message);
+            errors=err.message;
         }
     }
     if(errors.length === 0){
-        res.redirect('/index.html');
+        res.redirect('/login');
+        return;
     }
-    res.render("register", { email, errors });
+    res.render("register", { email, name, errors,user:""});
 };
 
-exports.admin = async(req,res)=>{
-    let data=await User.retrieveAll();
-    res.render("admin",{data});
+exports.showLogin = (req, res) => {
+    let errors=req.query.errors;
+    res.render("login", { email: undefined, errors,user:"" });
+};
+
+exports.handleLogin = async (req, res) => {
+    try{
+        let email = (req.body.email ?? "").trim();
+        let password = req.body.password;
+        let errors = "";
+        if (!email || !password) {
+            errors="All fields are required";
+        }
+        else{
+            const users = await User.findByEmail(email);
+            if (!users) {
+                errors="Account does not exist";
+            }
+            else if(!await bcrypt.compare(password,users.password)){
+                errors="Invalid password";
+            }
+            else{
+                req.session.user = {
+                    id: users._id,
+                    name: users.name,
+                    role: users.role
+                }
+                if(users.role=="Admin"){
+                    res.redirect("/admin");
+                    return;
+                }
+                else{
+                    res.redirect("/home");
+                    return;
+                }
+                
+            }
+        }
+        res.render("login", { email, errors,user:"" });
+    }catch(err){
+        console.log(err);
+        res.redirect("/login");
+    }
+};
+
+exports.adminGet = async(req,res)=>{
+    try{
+        let user=req.session.user;
+        let data=await User.retrieveAll();
+        let editemail=req.query.email;
+        let edit=await User.findByEmail(editemail);
+        let error=req.query.error;
+        let success=req.query.success;
+        res.render("admin",{data,user,edit,error,success});
+    }
+    catch(error){
+        console.log(error);
+        res.redirect("/login");
+    }
+    
+}
+
+exports.editUser = async(req,res)=>{
+    let email=req.body.email.trim();
+    let password=req.body.password.trim();
+    let role=req.body.role;
+    let name=req.body.name.trim();
+    let error="";
+    let success="";
+    if(email==""||role==""||name==""){
+        error="All fields are required";
+    }
+    else{
+        try{
+            let updateData = {
+                name: name,
+                role: role
+            };
+            if (password !== "") {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                updateData.password = hashedPassword;
+            }
+            let result=await User.editUser(email,updateData);
+            if(result.modifiedCount==0){
+                success="No changes made";
+            }else{
+                success="Updated successfully";
+            }
+        }catch(error){
+            console.log(error);
+            error="Something went wrong";
+        }
+    }
+    if(error==""){
+        res.redirect(`/admin?success=${success}`)
+    }else{
+        res.redirect(`/admin?error=${error}&email=${email}`)
+    }
+}
+
+exports.deleteUser=async(req,res)=>{
+    let email=req.query.email;
+    try{
+        await User.deleteUser(email);
+        res.redirect("/admin?success=Deleted successfully");
+    }catch(error){
+        console.log(error);
+        res.redirect("/admin?error=Error deleting");
+
+    }
+    
+}
+
+exports.logout = (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/login');
+    });
 }

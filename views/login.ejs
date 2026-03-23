@@ -1,28 +1,21 @@
 <%- include("common/header") %>
 
-    <h1 style="text-align: center;">Login</h1>
+    <h1>Log in</h1>
 
-    <div style=" font-size:20px; width: 100%; padding-left:500px;"><br>
-        <form action="/login" method="post">
-            <label for="email">Email: </label><br>
-            <input type="email" name="email" placeholder="Enter email" size="25" value="<%= email %>"><br><br>
+    <form action="/login" method="post">
+        <label for="email">Email: </label><br>
+        <input type="email" name="email" placeholder="Enter email" value="<%= email %>"><br><br>
 
-            <label for="password">Password:</label><br>
-            <input type="password" name="password" placeholder="Enter password" size="25"><br><br>
-            </div>
-            <div style="text-align: center; font-size:20px;">
-
-            <input type="checkbox" id="check"> &nbsp;
-            <label for="check">Remember Me</label><br><br>
-            <button type="submit" style="font-size: 20px;">Log In</button><br><br>
-            
-        </form>
-        <span>No account yet? </span><a href="/register">Register Now!</a>
+        <label for="password">Password:</label><br>
+        <input type="password" name="password" placeholder="Enter password"><br><br>
+        <button type="submit">Log In</button><br><br>
+        
+    </form>
+    <span>No account yet? </span><a href="/register">Register Now!</a>
     <% if(errors!=""){ %>
         <p style="color:red"><%=errors%></p>
     <% } %>
     
-    </div>
      
 
     

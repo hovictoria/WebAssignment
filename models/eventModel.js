@@ -24,14 +24,22 @@ const eventSchema = new mongoose.Schema({
     enum: ['Academic', 'Social', 'Sports', 'Workshop', 'Other']
   },
   organiser: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'An event must have an organiser']
+    type: String,
+    required: [true, 'An event must have an organiser'],
+    trim: true
   }
 }, { timestamps: true });
 
 const Event = mongoose.model('Event', eventSchema, 'events');
 
+exports.find = function (filter) {
+  return Event.find(filter);
+}
+
+exports.checkExisting = function(title, date){
+  return Event.findOne({title: title,
+                date: date});
+}
 exports.retriveAll = function() {
     return Event.find();
 }
@@ -51,3 +59,5 @@ exports.editEvent = function(id, title, description, date, location, category) {
 exports.deleteEvent = function(id){
     return Event.deleteOne({_id:id})
 }
+
+// module.exports = Event;

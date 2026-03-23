@@ -1,18 +1,81 @@
 const fs = require('fs/promises');
-const Event = require('./../models/eventModel');
+const Event = require('../models/eventModel');
 const mongoose = require('mongoose');
 
-// ------ SHOW ALL events ------
-exports.showEvents = async(req,res) => {
-    let error = '';
-    try{
-        let eventlist = await Event.retriveAll();
-        res.render('events', {eventlist, error});
-    } catch (err){
-        error = 'Error Reading Database.';
-        res.render('events', {eventlist : {}, error});
+// // ------ SHOW ALL events ------
+// exports.showEvents = async(req,res) => {
+//     let error = '';
+//     try{
+//         let eventlist = await Event.retriveAll();
+//         res.render('events', {eventlist, error});
+//     } catch (err){
+//         error = 'Error Reading Database.';
+//         res.render('events', {eventlist : {}, error});
+//     }
+// }
+// const Event = require("../models/eventModel");
+
+
+//keyword searches title and description, category filters exact category, location filters partial match, date filters events on that exact day, .lean()makes the date easier/faster for EJS rendering
+exports.showEvents = async (req, res) => {
+    try {
+        const keyword = (req.query.keyword || '').trim();
+        const category = (req.query.category || '').trim();
+        const location = (req.query.location || '').trim();
+        const date = (req.query.date || '').trim();
+
+        let filter = {};
+
+        if (keyword) {
+            filter.$or = [
+                { title: { $regex: keyword, $options: 'i' } },
+                { description: { $regex: keyword, $options: 'i' } }
+            ];
+        }
+
+        if (category) {
+            filter.category = category;
+        }
+
+        if (location) {
+            filter.location = { $regex: location, $options: 'i' };
+        }
+
+        if (date) {
+            const selectedDate = new Date(date);
+            const nextDate = new Date(date);
+            nextDate.setDate(nextDate.getDate() + 1);
+
+            filter.date = {
+                $gte: selectedDate,
+                $lt: nextDate
+            };
+        }
+
+        const events = await Event.find(filter).sort({ date: 1 }).lean();
+        let user=req.session.user;
+        res.render('events', {
+            events,
+            keyword,
+            category,
+            location,
+            date,
+            user
+        });
+    } catch (err) {
+        console.log(err);
+        let user=req.session.user;
+        res.render('events', {
+            events: [],
+            keyword: '',
+            category: '',
+            location: '',
+            date: '',
+            user
+        });
     }
-}
+};
+
 
 // ------ CREATE event ------
 exports.getCreateEventForm = async(req,res) => {
@@ -24,6 +87,7 @@ exports.getCreateEventForm = async(req,res) => {
 exports.handleCreate = async(req,res) => {
     let error = '';
     let success = ''
+
     // date created
     const createdAt = new Date();       
     const todayDate = new Date();
@@ -36,8 +100,11 @@ exports.handleCreate = async(req,res) => {
     const location = req.body.location.trim();
     const cat = req.body.category.trim();
 
+
+    const eventDate = new Date(date);
+
     //input validation
-    if (title === '' || desc === '' || location === '' || cat === 'default'){
+    if (title === '' || desc === '' || location === '' || cat === 'default'|| date === ''){
         error = 'All fields are required'
     }
     //else if event both same event title and date exist: reject
@@ -47,22 +114,29 @@ exports.handleCreate = async(req,res) => {
     else{
         //add data to db
         try{
-            let newEvent = 
-            {
-                title: title,
-                description: desc,
-                date: date,
-                location: location,
-                category: cat,
-                organiser: new mongoose.Types.ObjectId("69bb8aee6f341f93b40a499a")
-            };
-        let result = await Event.addEvent(newEvent);
-        success = 'Event created successfully!'
+            const existingEvent = await Event.checkExisting(title, eventDate)
+
+            if (existingEvent) {
+                error = 'An event with the same title and date already exists';
+            }
+            else{
+                let newEvent = 
+                {
+                    title: title,
+                    description: desc,
+                    date: date,
+                    location: location,
+                    category: cat,
+                    organiser: new mongoose.Types.ObjectId("69bb8aee6f341f93b40a499a")
+                };
+            let result = await Event.addEvent(newEvent);
+            success = 'Event created successfully!'
+            }
         }
         catch(err){
             console.error(err);
             // console.log(err)
-            error = 'Error adding event!'
+            error = 'Failed to create event.'
         }
     }
 

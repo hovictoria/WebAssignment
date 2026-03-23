@@ -2,9 +2,9 @@ const express = require("express");
 
 const router = express.Router();
 const eventController = require('../controllers/eventController');
+const authMiddleware = require('../middleware/auth-middleware');
 
-// display all events
-router.get('/events', eventController.showEvents);
+router.get('/events', authMiddleware.isLoggedIn,eventController.showEvents);
 
 // create
 router.get('/create-event', eventController.getCreateEventForm);
