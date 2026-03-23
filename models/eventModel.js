@@ -11,7 +11,7 @@ const eventSchema = new mongoose.Schema({
     required: [true, 'An event must have a description']
   },
   date: {
-    type: Date,
+    type: String,
     required: [true, 'An event must have a date']
   },
   location: {
