@@ -98,8 +98,8 @@ exports.adminGet = async(req,res)=>{
     try{
         let user=req.session.user;
         let data=await User.retrieveAll();
-        let editemail=req.query.email;
-        let edit=await User.findByEmail(editemail);
+        let editid=req.query.id;
+        let edit=await User.findByID(editid);
         let error=req.query.error;
         let success=req.query.success;
         res.render("admin",{data,user,edit,error,success});
@@ -116,6 +116,7 @@ exports.editUser = async(req,res)=>{
     let password=req.body.password.trim();
     let role=req.body.role;
     let name=req.body.name.trim();
+    let id=req.body.id;
     let error="";
     let success="";
     if(email==""||role==""||name==""){
@@ -124,18 +125,24 @@ exports.editUser = async(req,res)=>{
     else{
         try{
             let updateData = {
+                email:email,
                 name: name,
                 role: role
             };
-            if (password !== "") {
-                const hashedPassword = await bcrypt.hash(password, 10);
-                updateData.password = hashedPassword;
+            if(await User.findByEmail(email)){
+                error="Account already exists";
             }
-            let result=await User.editUser(email,updateData);
-            if(result.modifiedCount==0){
-                success="No changes made";
-            }else{
-                success="Updated successfully";
+            else{
+                if (password !== "") {
+                    const hashedPassword = await bcrypt.hash(password, 10);
+                    updateData.password = hashedPassword;
+                }
+                let result=await User.editUser(id,updateData);
+                if(result.modifiedCount==0){
+                    success="No changes made";
+                }else{
+                    success="Updated successfully";
+                }
             }
         }catch(error){
             console.log(error);
@@ -145,7 +152,7 @@ exports.editUser = async(req,res)=>{
     if(error==""){
         res.redirect(`/admin?success=${success}`)
     }else{
-        res.redirect(`/admin?error=${error}&email=${email}`)
+        res.redirect(`/admin?error=${error}&id=${id}`)
     }
 }
 

@@ -16,7 +16,7 @@
             <td><%= user.email %></td>
             <td>********</td>
             <td><%= user.role %></td>
-            <td><a href="/admin?email=<%= user.email %>#editform">Edit</a> | <a href="/delete-user?email=<%= user.email %>">Delete</a></td>
+            <td><a href="/admin?id=<%= user._id %>#editform">Edit</a> | <a href="/delete-user?id=<%= user._id %>">Delete</a></td>
         </tr>
       <%}); %>
     </table>
@@ -41,9 +41,9 @@
           Role:*  
           <select name="role" class="form-control">
             <option value="Student" <%=edit.role=="Student"? "selected" : ""%>>Student</option>
-            <option value="Organiser" <%=edit.role=="Organiser"? "selected" : ""%>>Organiser</option>
             <option value="Admin" <%=edit.role=="Admin"? "selected" : ""%>>Admin</option>
           </select>
+          <input type="hidden" name="id" value="<%= edit._id %>">
           <br><br>
           <button type="submit">Update</button>
         </form>

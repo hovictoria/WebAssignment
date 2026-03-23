@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['Student', 'Admin'],
-    default: 'student'
+    default: 'Student'
   },
   bookmarks: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -37,12 +37,16 @@ exports.findByEmail = function(email){
     return User.findOne({email});
 }
 
+exports.findByID = function(id){
+    return User.findOne({_id:id});
+}
+
 exports.addUser = function(user){
     return User.create(user);
 }
 
-exports.editUser = async (email, updateData) => {
-    return User.updateOne({ email: email },updateData);
+exports.editUser = async (id, updateData) => {
+    return User.updateOne({_id:id},updateData);
 };
 
 exports.deleteUser = function(email){

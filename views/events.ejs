@@ -62,8 +62,10 @@
                 <p><strong>Organiser:</strong> <%= event.organiser %></p>
 
                 <% if(user.role!="Admin"){ %>
-                <a href="/update-event?_id=<%= event._id %>"">Edit</a>
+                <a href="/update-event?_id=<%= event._id %>">Edit</a>
                 <a href="/delete-event?_id=<%= event._id %>">Delete</a>
+                <% }if(user.role=="Student"){ %>
+                <a href="">RSVP</a>
                 <% } %>
             </div>
             <hr>
