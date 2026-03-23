@@ -61,8 +61,10 @@
                 <p><strong>Category:</strong> <%= event.category %></p>
                 <p><strong>Organiser:</strong> <%= event.organiser %></p>
 
+                <% if(user.role!="Admin"){ %>
                 <a href="/createEvent">Edit</a>
                 <a href="/createEvent">Delete</a>
+                <% } %>
             </div>
             <hr>
         <% }) %>

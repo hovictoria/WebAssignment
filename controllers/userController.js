@@ -5,7 +5,7 @@ exports.home=(req,res)=>{
     let user=req.session.user;
     if(user.role=="Student"){
     res.render("studenthome",{user});}
-    else{
+    else if(user.role=="Admin"){
         res.redirect("/admin");
     }
 }
