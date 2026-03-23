@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create</title>
+</head>
+<body>
+
+<div>
+  <h1>Create New Event</h1>
+  
+  <% if (error !== '') { %>
+    <p style="color:red">⚠️ <%= error %></p>
+  <% } %>
+
+  <% if (success === '') { %>
+    <form action="/create-event" method="post">
+      <table>
+        <tr>
+          <th>Title</th>
+          <td><input type="text" name="title" value="<%= title %>"></td>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <td><input type="text" name="description" value="<%= desc %>"></td>
+        </tr>
+        <tr>
+          <th>Date</th>
+          <td><input type="date" name="date" value="<%= date %>"></td>
+        </tr>
+        <tr>
+          <th>Location</th>
+          <td><input type="text" name="location" value="<%= location %>"></td>
+        </tr>
+        <tr>
+          <th>Category</th>
+          <td>
+            <select name="category">
+              <option value="" <%= cat === '' ? 'selected' : '' %>>--Select a Category--</option>
+              <option value="Academic" <%= cat === 'Academic' ? 'selected' : '' %>>Academic</option>
+              <option value="Social" <%= cat === 'Social' ? 'selected' : '' %>>Social</option>
+              <option value="Sports" <%= cat === 'Sports' ? 'selected' : '' %>>Sports</option>
+              <option value="Workshop" <%= cat === 'Workshop' ? 'selected' : '' %>>Workshop</option>
+              <option value="Other" <%= cat === 'Other' ? 'selected' : '' %>>Other</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+      <br>
+      <button type="submit">Create Event</button>
+    </form>
+  <% } %>
+
+  <% if (success !== '') { %>
+    <p style="color:green">✅ <%= success %></p>
+  <% } %>
+    <br>
+  <a href="/events">← Back to Events</a>
+</div>
+
+</body>
+</html>

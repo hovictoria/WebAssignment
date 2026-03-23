@@ -32,4 +32,22 @@ const eventSchema = new mongoose.Schema({
 
 const Event = mongoose.model('Event', eventSchema, 'events');
 
-module.exports = Event;
+exports.retriveAll = function() {
+    return Event.find();
+}
+
+exports.addEvent = function(newEvent) {
+    return Event.create(newEvent);
+}
+
+exports.findById = function(id){
+    return Event.findOne({_id:id});
+}
+
+exports.editEvent = function(id, title, description, date, location, category) {
+    return Event.updateOne({_id:id}, {title:title, description:description, date: date, location:location, category:category});
+}
+
+exports.deleteEvent = function(id){
+    return Event.deleteOne({_id:id})
+}
