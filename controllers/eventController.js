@@ -42,17 +42,13 @@ exports.showEvents = async (req, res) => {
         }
 
         if (date) {
-            const selectedDate = new Date(date);
-            const nextDate = new Date(date);
-            nextDate.setDate(nextDate.getDate() + 1);
-
-            filter.date = {
-                $gte: selectedDate,
-                $lt: nextDate
-            };
+            console.log('Filtering by date:', date);
+            filter.date = date;
         }
 
         const events = await Event.find(filter).sort({ date: 1 }).lean();
+        console.log('Filter applied:', filter);
+        console.log('Events found:', events.length);
         let user=req.session.user;
         res.render('events', {
             events,
@@ -90,8 +86,11 @@ exports.handleCreate = async(req,res) => {
 
     // date created
     const createdAt = new Date();       
-    const todayDate = new Date();
-    const today = todayDate.toISOString().split('T')[0]             
+    // const todayDate = new Date();
+    // const today = todayDate.toISOString().split('T')[0]             
+    const today = new Date();              
+    today.setHours(0, 0, 0, 0);   
+    const todayStr = today.toISOString().split('T')[0];
 
     //get form input
     const title = req.body.title.trim();
@@ -101,14 +100,15 @@ exports.handleCreate = async(req,res) => {
     const cat = req.body.category.trim();
 
 
-    const eventDate = new Date(date);
+    const eventDate = date;
 
     //input validation
     if (title === '' || desc === '' || location === '' || cat === 'default'|| date === ''){
         error = 'All fields are required'
     }
     //else if event both same event title and date exist: reject
-    else if (date <= today){
+    // else if (date <= today){
+    else if (eventDate < todayStr){
         error = 'Event date cannot be in the past'
     }
     else{
