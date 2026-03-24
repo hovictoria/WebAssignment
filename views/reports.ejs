@@ -1,0 +1,57 @@
+<%- include("common/header") %>
+
+<h1>Submitted Reports</h1>
+
+<% if (error) { %>
+  <p style="color:red"><%= error %></p>
+<% } %>
+
+<% if (success) { %>
+  <p style="color:green"><%= success %></p>
+<% } %>
+
+<% if (reports.length === 0) { %>
+  <p>No reports submitted.</p>
+<% } else { %>
+  <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>Reporter</th>
+        <th>Reason</th>
+        <th>Details</th>
+        <th>Status</th>
+        <th>Submitted</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% reports.forEach(report => { %>
+        <tr>
+          <td><%= report.event ? report.event.title : 'Deleted event' %></td>
+          <td><%= report.reporter ? report.reporter.name : 'Deleted user' %></td>
+          <td><%= report.reason %></td>
+          <td><%= report.details %></td>
+          <td><%= report.status %></td>
+          <td><%= new Date(report.createdAt).toLocaleString() %></td>
+          <td>
+            <form action="/reports/update-status" method="post" style="display:inline;">
+              <input type="hidden" name="id" value="<%= report._id %>">
+              <select name="status">
+                <option value="Pending" <%= report.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                <option value="Reviewed" <%= report.status === 'Reviewed' ? 'selected' : '' %>>Reviewed</option>
+                <option value="Resolved" <%= report.status === 'Resolved' ? 'selected' : '' %>>Resolved</option>
+              </select>
+              <button type="submit">Update</button>
+            </form>
+            |
+            <a href="/reports/delete?id=<%= report._id %>">Delete</a>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+</body>
+</html>

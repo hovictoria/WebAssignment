@@ -20,10 +20,14 @@
     <nav>
         <a href="/home"><i class="fa-sharp fa-solid fa-house"> Home</i></a> | 
         <a href="/events"><i class="fa-solid fa-magnifying-glass"> Events</i></a> | 
-        <% if(user.role=="Student" || !user){ %>
+        <% if(!user || user.role=="Student"){ %>
         <a href="/events"><i class="fa-regular fa-calendar-plus"> My RSVP</i></a> | 
         <a href="#"><i class="fa-regular fa-bookmark"> Bookmarked</i></a> | 
-        <%}if(!user){ %>
+        <% } %>
+        <% if(user && user.role=="Admin"){ %>
+        <a href="/reports"><i class="fa-solid fa-flag"> Reports</i></a> |
+        <% } %>
+        <% if(!user){ %>
         <a href="/login"><i class="fa-solid fa-arrow-right-to-bracket"> Log in</i></a>
         <% }else{ %>
         <a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"> Log Out</i></a>

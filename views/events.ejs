@@ -98,6 +98,10 @@
                                 <% } %>
                                 <a href="">RSVP</a>
                             <% } %>
+                            <% if (user) { %>
+                                |
+                                <a href="/report-event?_id=<%= event._id %>">Report</a>
+                            <% } %>
                         </td>
                     </tr>
                 <% }) %>

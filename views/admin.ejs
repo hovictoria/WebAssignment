@@ -1,4 +1,15 @@
 <%- include("common/header") %>
+  <h1>Welcome, <%= user.name %> 👋</h1>
+
+  <hr>
+
+  <h2>🚩 Reports</h2>
+  <p>
+    <a href="/reports">View Reports</a>
+  </p>
+
+  <hr>
+
   <div class="container mt-5">
     <h2>Users (<%= data.length %>)</h2>
     <table border="1">
