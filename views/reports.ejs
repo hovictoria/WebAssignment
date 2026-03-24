@@ -18,7 +18,7 @@
       <tr>
         <th>Event</th>
         <th>Reporter</th>
-        <th>Reason</th>
+        <th>Category</th>
         <th>Details</th>
         <th>Status</th>
         <th>Submitted</th>
@@ -31,7 +31,7 @@
           <td><%= report.event ? report.event.title : 'Deleted event' %></td>
           <td><%= report.reporter ? report.reporter.name : 'Deleted user' %></td>
           <td><%= report.reason %></td>
-          <td><%= report.details %></td>
+          <td><%= report.details || '-' %></td>
           <td><%= report.status %></td>
           <td><%= new Date(report.createdAt).toLocaleString() %></td>
           <td>

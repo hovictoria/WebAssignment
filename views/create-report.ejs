@@ -18,7 +18,12 @@
 
     <div>
       <label>Reason:</label>
-      <input type="text" name="reason" value="<%= reason %>">
+      <select name="reason">
+        <option value="">-- Select a category --</option>
+        <% reportReasons.forEach(reportReason => { %>
+          <option value="<%= reportReason %>" <%= reason === reportReason ? 'selected' : '' %>><%= reportReason %></option>
+        <% }) %>
+      </select>
     </div>
 
     <br>

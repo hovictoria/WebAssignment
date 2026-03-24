@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Event = require('../models/eventModel');
 const Report = require('../models/reportModel');
 
+const reportReasons = ['Spam', 'Duplicate event', 'Inappropriate content', 'False information', 'Wrong category', 'Offensive language', 'Other'];
+
 exports.getCreateReportForm = async (req, res) => {
   const eventId = req.query._id;
 
@@ -19,6 +21,7 @@ exports.getCreateReportForm = async (req, res) => {
       event,
       reason: '',
       details: '',
+      reportReasons,
       error: '',
       success: '',
       user: req.session.user
@@ -48,8 +51,10 @@ exports.handleCreateReport = async (req, res) => {
       return res.redirect('/events');
     }
 
-    if (reason === '' || details === '') {
-      error = 'All fields are required';
+    if (!reportReasons.includes(reason)) {
+      error = 'Please select a reason';
+    } else if (reason === 'Other' && details === '') {
+      error = 'Details are required when reason is Other';
     } else {
       await Report.createReport({
         event: eventId,
@@ -65,6 +70,7 @@ exports.handleCreateReport = async (req, res) => {
       event,
       reason,
       details,
+      reportReasons,
       error,
       success,
       user: req.session.user
@@ -75,6 +81,7 @@ exports.handleCreateReport = async (req, res) => {
       event,
       reason,
       details,
+      reportReasons,
       error: 'Failed to submit report',
       success,
       user: req.session.user

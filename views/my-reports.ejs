@@ -13,7 +13,7 @@
     <thead>
       <tr>
         <th>Event</th>
-        <th>Reason</th>
+        <th>Category</th>
         <th>Details</th>
         <th>Status</th>
         <th>Submitted</th>
@@ -24,7 +24,7 @@
         <tr>
           <td><%= report.event ? report.event.title : 'Deleted event' %></td>
           <td><%= report.reason %></td>
-          <td><%= report.details %></td>
+          <td><%= report.details || '-' %></td>
           <td><%= report.status %></td>
           <td><%= new Date(report.createdAt).toLocaleString() %></td>
         </tr>

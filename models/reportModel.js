@@ -14,11 +14,11 @@ const reportSchema = new mongoose.Schema({
   reason: {
     type: String,
     required: [true, 'A report must include a reason'],
-    trim: true
+    trim: true,
+    enum: ['Spam', 'Duplicate event', 'Inappropriate content', 'False information', 'Wrong category', 'Offensive language', 'Other']
   },
   details: {
     type: String,
-    required: [true, 'A report must include details'],
     trim: true
   },
   status: {
