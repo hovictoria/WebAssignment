@@ -1,4 +1,6 @@
 <%- include("common/header") %>
+  <% const students = data.filter(account => account.role === 'Student'); %>
+  <% const admins = data.filter(account => account.role === 'Admin'); %>
   <h1>Welcome, <%= user.name %> 👋</h1>
 
   <hr>
@@ -11,7 +13,7 @@
   <hr>
 
   <div class="container mt-5">
-    <h2>Users (<%= data.length %>)</h2>
+    <h2>Students (<%= students.length %>)</h2>
     <table border="1">
       <tr>
         <th>Name</th>
@@ -21,7 +23,7 @@
         <th colspan="2">Actions</th>
         
       </tr>
-      <% data.forEach(user => {%>
+      <% students.forEach(user => {%>
         <tr>
             <td><%= user.name %></td>
             <td><%= user.email %></td>
@@ -32,6 +34,30 @@
       <%}); %>
     </table>
     
+  </div>
+
+  <br>
+
+  <div class="container mt-5">
+    <h2>Admins (<%= admins.length %>)</h2>
+    <table border="1">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Password</th>
+        <th>Role</th>
+        <th colspan="2">Actions</th>
+      </tr>
+      <% admins.forEach(user => {%>
+        <tr>
+            <td><%= user.name %></td>
+            <td><%= user.email %></td>
+            <td>********</td>
+            <td><%= user.role %></td>
+            <td><a href="/admin?id=<%= user._id %>#editform">Edit</a> | <a href="/delete-user?id=<%= user._id %>">Delete</a></td>
+        </tr>
+      <%}); %>
+    </table>
   </div>
   <div id="progress">
     <a href="login.html" id="progress-value"><i class='bx bx-left-arrow-alt'></i></a>

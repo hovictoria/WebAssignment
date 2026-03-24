@@ -2,6 +2,30 @@ const fs = require('fs/promises');
 const Event = require('../models/eventModel');
 const mongoose = require('mongoose');
 
+function canDeleteEvent(user, event) {
+    if (!user || !event) {
+        return false;
+    }
+
+    if (user.role === 'Admin') {
+        return true;
+    }
+
+    return String(event.organiser) === String(user.id);
+}
+
+function canEditEvent(user, event) {
+    if (!user || !event) {
+        return false;
+    }
+
+    if (user.role === 'Admin') {
+        return true;
+    }
+
+    return String(event.organiser) === String(user.id);
+}
+
 // // ------ SHOW ALL events ------
 // exports.showEvents = async(req,res) => {
 //     let error = '';
@@ -165,6 +189,9 @@ exports.getEvent = async(req,res) => {
     const id = req.query._id;
     try{
         let result = await Event.findById(id);
+        if (!canEditEvent(req.session.user, result)) {
+            return res.render('update-event', {result:{}, date:'', success: '', error: 'You are not allowed to edit this event.'});
+        }
         const d = new Date(result.date);
         const ymd = d.toISOString().split('T')[0];
         res.render('update-event', {result, date:ymd, success: '', error: ''});
@@ -212,6 +239,11 @@ exports.updateBook = async(req,res) => {
         return res.render('update-event', {result:currentData, date, success: '', error});
     }
     try{
+        const existingEvent = await Event.findById(id);
+        if (!canEditEvent(req.session.user, existingEvent)) {
+            return res.render('update-event', {result:currentData, date, success: '', error: 'You are not allowed to edit this event.'});
+        }
+
         let result = await Event.editEvent(id, title, desc, date, time, location, cat);
         success = 'Event created successfully!';
         res.render('update-event', {result, date, success, error:''})
@@ -230,6 +262,9 @@ exports.getDelEvent = async(req,res) => {
     const id = req.query._id;
     try{
         let result = await Event.findById(id);
+        if (!canDeleteEvent(req.session.user, result)) {
+            return res.render('delete-event', {result:{}, date:'', success: '', error: 'You are not allowed to delete this event.'});
+        }
         const d = new Date(result.date);
         const ymd = d.toISOString().split('T')[0];
         res.render('delete-event', {result, date:ymd, success: '', error: ''});
@@ -249,6 +284,11 @@ exports.deleteAnEvent = async(req, res) => {
     const id = req.body._id;
 
     try{
+        const event = await Event.findById(id);
+        if (!canDeleteEvent(req.session.user, event)) {
+            return res.render('delete-event', {success: '', error: 'You are not allowed to delete this event.', result: event || {}});
+        }
+
         let result = await Event.deleteEvent(id);
         success = 'Event deleted!';
     }

@@ -89,17 +89,25 @@
                         <td><%= event.category %></td>
                         <td><%= event.organiser %></td>
                         <td>
-                            <% if (user && user.role !== 'Admin') { %>
-                                <a href="/update-event?_id=<%= event._id %>">Edit</a> |
+                            <% const canEdit = user && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
+                            <% const canDelete = user && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
+                            <% let hasAction = false; %>
+                            <% if (canEdit) { %>
+                                <a href="/update-event?_id=<%= event._id %>">Edit</a>
+                                <% hasAction = true; %>
+                            <% } %>
+                            <% if (canDelete) { %>
+                                <% if (hasAction) { %>|<% } %>
                                 <a href="/delete-event?_id=<%= event._id %>">Delete</a>
+                                <% hasAction = true; %>
                             <% } %>
                             <% if (user && user.role === 'Student') { %>
-                                <% if (user.role !== 'Admin') { %>|
-                                <% } %>
+                                <% if (hasAction) { %>|<% } %>
                                 <a href="">RSVP</a>
+                                <% hasAction = true; %>
                             <% } %>
                             <% if (user) { %>
-                                |
+                                <% if (hasAction) { %>|<% } %>
                                 <a href="/report-event?_id=<%= event._id %>">Report</a>
                             <% } %>
                         </td>
