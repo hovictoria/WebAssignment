@@ -7,14 +7,15 @@ const authMiddleware = require('../middleware/auth-middleware');
 router.get('/events', authMiddleware.isLoggedIn,eventController.showEvents);
 
 // create
-router.get('/create-event', eventController.getCreateEventForm);
-router.post('/create-event', eventController.handleCreate);
+router.get('/create-event', authMiddleware.isLoggedIn, eventController.getCreateEventForm);
+router.post('/create-event', authMiddleware.isLoggedIn, eventController.handleCreate);
 
 // edit
-router.get('/update-event', eventController.getEvent);
-router.post('/update-event', eventController.updateBook);
+router.get('/update-event', authMiddleware.isLoggedIn, eventController.getEvent);
+router.post('/update-event', authMiddleware.isLoggedIn, eventController.updateBook);
 
 // delete
-router.get('/delete-event', eventController.getDelEvent);
-router.post('/delete-event', eventController.deleteAnEvent)
+router.get('/delete-event', authMiddleware.isLoggedIn, eventController.getDelEvent);
+router.post('/delete-event', authMiddleware.isLoggedIn, eventController.deleteAnEvent);
+
 module.exports = router;

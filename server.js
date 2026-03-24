@@ -32,6 +32,9 @@ server.use(user)
 const eventRoutes = require("./routes/eventRoutes");
 server.use(eventRoutes)
 
+const reportRoutes = require('./routes/reportRoutes');
+server.use(reportRoutes)
+
 async function connectDB() {
   try {
     await mongoose.connect(process.env.DB);

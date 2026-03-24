@@ -1,0 +1,47 @@
+<%- include("common/header") %>
+
+<h1>Report Event</h1>
+
+<p><strong>Event:</strong> <%= event.title %></p>
+
+<% if (error) { %>
+  <p style="color:red"><%= error %></p>
+<% } %>
+
+<% if (success) { %>
+  <p style="color:green"><%= success %></p>
+<% } %>
+
+<% if (!success) { %>
+  <form action="/report-event" method="post">
+    <input type="hidden" name="eventId" value="<%= event._id %>">
+
+    <div>
+      <label>Reason:</label>
+      <select name="reason">
+        <option value="">-- Select a category --</option>
+        <% reportReasons.forEach(reportReason => { %>
+          <option value="<%= reportReason %>" <%= reason === reportReason ? 'selected' : '' %>><%= reportReason %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <br>
+
+    <div>
+      <label>Details:</label>
+      <textarea name="details" rows="5" cols="50"><%= details %></textarea>
+    </div>
+
+    <br>
+
+    <button type="submit">Submit Report</button>
+  </form>
+<% } %>
+
+<br>
+
+<a href="/events">← Back to Events</a>
+
+</body>
+</html>

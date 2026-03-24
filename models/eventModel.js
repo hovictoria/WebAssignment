@@ -14,6 +14,11 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: [true, 'An event must have a date']
   },
+  time: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   location: {
     type: String,
     required: [true, 'An event must have a location']
@@ -52,8 +57,8 @@ exports.findById = function(id){
     return Event.findOne({_id:id});
 }
 
-exports.editEvent = function(id, title, description, date, location, category) {
-    return Event.updateOne({_id:id}, {title:title, description:description, date: date, location:location, category:category});
+exports.editEvent = function(id, title, description, date, time, location, category) {
+    return Event.updateOne({_id:id}, {title:title, description:description, date: date, time: time, location:location, category:category});
 }
 
 exports.deleteEvent = function(id){
