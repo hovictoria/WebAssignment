@@ -74,7 +74,8 @@ exports.handleLogin = async (req, res) => {
                 req.session.user = {
                     id: users._id,
                     name: users.name,
-                    role: users.role
+                    role: users.role,
+                    email:users.email
                 }
                 if(users.role=="Admin"){
                     res.redirect("/admin");
@@ -98,8 +99,8 @@ exports.adminGet = async(req,res)=>{
     try{
         let user=req.session.user;
         let data=await User.retrieveAll();
-        let editid=req.query.id;
-        let edit=await User.findByID(editid);
+        let email=req.query.email;
+        let edit=await User.findByEmail(email);
         let error=req.query.error;
         let success=req.query.success;
         res.render("admin",{data,user,edit,error,success});
@@ -111,12 +112,12 @@ exports.adminGet = async(req,res)=>{
     
 }
 
+
 exports.editUser = async(req,res)=>{
-    let email=req.body.email.trim();
+    let email=req.body.email;
     let password=req.body.password.trim();
     let role=req.body.role;
     let name=req.body.name.trim();
-    let id=req.body.id;
     let error="";
     let success="";
     if(email==""||role==""||name==""){
@@ -125,25 +126,20 @@ exports.editUser = async(req,res)=>{
     else{
         try{
             let updateData = {
-                email:email,
                 name: name,
                 role: role
             };
-            if(await User.findByEmail(email)){
-                error="Account already exists";
+            if (password !== "") {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                updateData.password = hashedPassword;
             }
-            else{
-                if (password !== "") {
-                    const hashedPassword = await bcrypt.hash(password, 10);
-                    updateData.password = hashedPassword;
-                }
-                let result=await User.editUser(id,updateData);
-                if(result.modifiedCount==0){
-                    success="No changes made";
-                }else{
-                    success="Updated successfully";
-                }
+            let result=await User.editUser(email,updateData);
+            if(result.modifiedCount==0){
+                success="No changes made";
+            }else{
+                success="Updated successfully";
             }
+            
         }catch(error){
             console.log(error);
             error="Something went wrong";
@@ -152,8 +148,65 @@ exports.editUser = async(req,res)=>{
     if(error==""){
         res.redirect(`/admin?success=${success}`)
     }else{
-        res.redirect(`/admin?error=${error}&id=${id}`)
+        res.redirect(`/admin?error=${error}&email=${email}`)
     }
+}
+
+exports.profileGet = async(req,res)=>{
+    try{
+        let user=req.session.user;
+        let edit=req.query.edit;
+        let del=req.query.delete;
+        let message=req.query.message;
+        res.render("profile",{user,edit,del,message});
+    }catch(error){
+        console.log(error);
+    }
+}
+
+exports.profileEdit = async(req,res)=>{
+    let name=req.body.name.trim();
+    let password=req.body.password;
+    let email=req.body.email;
+    let message="";
+    if(name==""){
+        message="Name is required";
+    }
+    else{
+        try{
+            let updateData = {
+                name: name
+            };
+            if (password !== "") {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                updateData.password = hashedPassword;
+            }
+            let result=await User.editUser(email,updateData);
+            if(result.modifiedCount==0){
+                message="No changes made";
+            }else{
+                message="Updated successfully";
+            }
+            req.session.user.name = name;
+        }catch(error){
+            message=error;
+            console.log(error);
+        }
+    }
+    res.redirect(`/profile?message=${message}`);
+}
+
+exports.profileDelete=async(req,res)=>{
+    let email=req.body.email;
+    try{
+        await User.deleteUser(email);
+        res.redirect("/login?errors=Account deleted");
+    }catch(error){
+        console.log(error);
+        res.redirect("/profile?message=Error deleting");
+
+    }
+    
 }
 
 exports.deleteUser=async(req,res)=>{

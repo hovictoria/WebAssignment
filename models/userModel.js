@@ -37,16 +37,12 @@ exports.findByEmail = function(email){
     return User.findOne({email});
 }
 
-exports.findByID = function(id){
-    return User.findOne({_id:id});
-}
-
 exports.addUser = function(user){
     return User.create(user);
 }
 
-exports.editUser = async (id, updateData) => {
-    return User.updateOne({_id:id},updateData);
+exports.editUser = async (email, updateData) => {
+    return User.updateOne({email},updateData);
 };
 
 exports.deleteUser = function(email){
