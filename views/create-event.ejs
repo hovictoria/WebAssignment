@@ -37,7 +37,7 @@
           <th>Category</th>
           <td>
             <select name="category">
-              <option value="" <%= cat === '' ? 'selected' : '' %>>--Select a Category--</option>
+              <option value="default" <%= cat === '' || cat === 'default' ? 'selected' : '' %>>--Select a Category--</option>
               <option value="Academic" <%= cat === 'Academic' ? 'selected' : '' %>>Academic</option>
               <option value="Social" <%= cat === 'Social' ? 'selected' : '' %>>Social</option>
               <option value="Sports" <%= cat === 'Sports' ? 'selected' : '' %>>Sports</option>

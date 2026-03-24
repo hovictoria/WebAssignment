@@ -103,8 +103,8 @@ exports.handleCreate = async(req,res) => {
     const eventDate = date;
 
     //input validation
-    if (title === '' || desc === '' || location === '' || cat === 'default'|| date === ''){
-        error = 'All fields are required'
+    if (title === '' || desc === '' || location === '' || cat === '' || cat === 'default' || date === ''){
+        error = 'All fields are required (please choose a category)'
     }
     //else if event both same event title and date exist: reject
     else if (date <= today){
