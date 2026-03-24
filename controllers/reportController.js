@@ -102,6 +102,26 @@ exports.showReports = async (req, res) => {
   }
 };
 
+exports.showMyReports = async (req, res) => {
+  try {
+    const reports = await Report.findReportsByReporter(req.session.user.id);
+    res.render('my-reports', {
+      reports,
+      user: req.session.user,
+      error: '',
+      success: ''
+    });
+  } catch (err) {
+    console.log(err);
+    res.render('my-reports', {
+      reports: [],
+      user: req.session.user,
+      error: 'Failed to load your reports',
+      success: ''
+    });
+  }
+};
+
 exports.updateReportStatus = async (req, res) => {
   const id = req.body.id;
   const status = (req.body.status || '').trim();

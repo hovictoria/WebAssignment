@@ -1,0 +1,37 @@
+<%- include("common/header") %>
+
+<h1>My Reports</h1>
+
+<% if (error) { %>
+  <p style="color:red"><%= error %></p>
+<% } %>
+
+<% if (reports.length === 0) { %>
+  <p>You have not submitted any reports yet.</p>
+<% } else { %>
+  <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>Reason</th>
+        <th>Details</th>
+        <th>Status</th>
+        <th>Submitted</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% reports.forEach(report => { %>
+        <tr>
+          <td><%= report.event ? report.event.title : 'Deleted event' %></td>
+          <td><%= report.reason %></td>
+          <td><%= report.details %></td>
+          <td><%= report.status %></td>
+          <td><%= new Date(report.createdAt).toLocaleString() %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+</body>
+</html>

@@ -23,8 +23,8 @@ const reportSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'reviewed', 'resolved'],
-    default: 'pending'
+    enum: ['Pending', 'Reviewed', 'Resolved'],
+    default: 'Pending'
   }
 }, { timestamps: true });
 
@@ -36,6 +36,13 @@ exports.createReport = function (newReport) {
 
 exports.findAllReports = function () {
   return Report.find()
+    .populate('event')
+    .populate('reporter')
+    .sort({ createdAt: -1 });
+};
+
+exports.findReportsByReporter = function (reporterId) {
+  return Report.find({ reporter: reporterId })
     .populate('event')
     .populate('reporter')
     .sort({ createdAt: -1 });

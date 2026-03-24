@@ -12,25 +12,27 @@
   <p style="color:green"><%= success %></p>
 <% } %>
 
-<form action="/report-event" method="post">
-  <input type="hidden" name="eventId" value="<%= event._id %>">
+<% if (!success) { %>
+  <form action="/report-event" method="post">
+    <input type="hidden" name="eventId" value="<%= event._id %>">
 
-  <div>
-    <label>Reason:</label>
-    <input type="text" name="reason" value="<%= reason %>">
-  </div>
+    <div>
+      <label>Reason:</label>
+      <input type="text" name="reason" value="<%= reason %>">
+    </div>
 
-  <br>
+    <br>
 
-  <div>
-    <label>Details:</label>
-    <textarea name="details" rows="5" cols="50"><%= details %></textarea>
-  </div>
+    <div>
+      <label>Details:</label>
+      <textarea name="details" rows="5" cols="50"><%= details %></textarea>
+    </div>
 
-  <br>
+    <br>
 
-  <button type="submit">Submit Report</button>
-</form>
+    <button type="submit">Submit Report</button>
+  </form>
+<% } %>
 
 <br>
 
