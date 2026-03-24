@@ -23,6 +23,7 @@ exports.showEvents = async (req, res) => {
         const category = (req.query.category || '').trim();
         const location = (req.query.location || '').trim();
         const date = (req.query.date || '').trim();
+        const sortBy = (req.query.sortBy || 'date').trim();
 
         let filter = {};
 
@@ -46,7 +47,17 @@ exports.showEvents = async (req, res) => {
             filter.date = date;
         }
 
-        const events = await Event.find(filter).sort({ date: 1 }).lean();
+        let sortOption = { date: 1 };
+        if (sortBy === 'title') {
+            sortOption = { title: 1 };
+        } else if (sortBy === 'titleDesc') {
+            sortOption = { title: -1 };
+        }
+
+        const events = await Event.find(filter)
+            .sort(sortOption)
+            .collation({ locale: 'en', strength: 2 })
+            .lean();
         console.log('Filter applied:', filter);
         console.log('Events found:', events.length);
         let user=req.session.user;
@@ -56,6 +67,7 @@ exports.showEvents = async (req, res) => {
             category,
             location,
             date,
+            sortBy,
             user
         });
     } catch (err) {
@@ -67,6 +79,7 @@ exports.showEvents = async (req, res) => {
             category: '',
             location: '',
             date: '',
+            sortBy: 'date',
             user
         });
     }
@@ -75,7 +88,7 @@ exports.showEvents = async (req, res) => {
 
 // ------ CREATE event ------
 exports.getCreateEventForm = async(req,res) => {
-    res.render('create-event', {error: '', success:'', title:'', desc:'', date:'', location:'', cat:''})
+    res.render('create-event', {error: '', success:'', title:'', desc:'', date:'', time:'', location:'', cat:''})
     
 }
 
@@ -96,6 +109,7 @@ exports.handleCreate = async(req,res) => {
     const title = req.body.title.trim();
     const desc = req.body.description.trim();
     const date = req.body.date; // yyyy/mm/dd
+    const time = (req.body.time || '').trim();
     const location = req.body.location.trim();
     const cat = req.body.category.trim();
 
@@ -103,7 +117,7 @@ exports.handleCreate = async(req,res) => {
     const eventDate = date;
 
     //input validation
-    if (title === '' || desc === '' || location === '' || cat === '' || cat === 'default' || date === ''){
+    if (title === '' || desc === '' || location === '' || cat === '' || cat === 'default' || date === '' || time === ''){
         error = 'All fields are required (please choose a category)'
     }
     //else if event both same event title and date exist: reject
@@ -126,6 +140,7 @@ exports.handleCreate = async(req,res) => {
                     title: title,
                     description: desc,
                     date: date,
+                    time: time,
                     location: location,
                     category: cat,
                     organiser: user.id
@@ -141,7 +156,7 @@ exports.handleCreate = async(req,res) => {
         }
     }
 
-    res.render('create-event', {error, success, title, desc, date, location, cat})
+    res.render('create-event', {error, success, title, desc, date, time, location, cat})
 }
 
 
@@ -171,6 +186,7 @@ exports.updateBook = async(req,res) => {
     const title = req.body.title.trim();
     const desc = req.body.description.trim();
     const date = req.body.date;
+    const time = (req.body.time || '').trim();
     const location = req.body.location.trim();
     const cat = req.body.category.trim();
     const id = req.body._id;
@@ -180,12 +196,13 @@ exports.updateBook = async(req,res) => {
             title: title,
                 description: desc,
                 date: date,
+                time: time,
                 location: location,
                 category: cat,
         }
 
     //input validation
-    if (title === '' || desc === '' || location === '' || cat === 'default'){
+    if (title === '' || desc === '' || location === '' || cat === 'default' || time === ''){
         error = 'All fields are required'
         return res.render('update-event', {result:currentData, date, success: '', error});
     }
@@ -195,7 +212,7 @@ exports.updateBook = async(req,res) => {
         return res.render('update-event', {result:currentData, date, success: '', error});
     }
     try{
-        let result = await Event.editEvent(id, title, desc, date, location, cat);
+        let result = await Event.editEvent(id, title, desc, date, time, location, cat);
         success = 'Event created successfully!';
         res.render('update-event', {result, date, success, error:''})
     }
