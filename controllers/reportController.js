@@ -86,12 +86,18 @@ exports.handleCreateReport = async (req, res) => {
       reason,
       error: err.message
     });
+
+    let submitError = 'Failed to submit report';
+    if (err.name === 'ValidationError' && err.errors && err.errors.details && err.errors.details.kind === 'maxlength') {
+      submitError = 'Failed to submit report. Length exceeds character limit.';
+    }
+
     res.render('create-report', {
       event,
       reason,
       details,
       reportReasons,
-      error: 'Failed to submit report',
+      error: submitError,
       success,
       user: req.session.user
     });
