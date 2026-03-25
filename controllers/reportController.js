@@ -27,7 +27,11 @@ exports.getCreateReportForm = async (req, res) => {
       user: req.session.user
     });
   } catch (err) {
-    console.log(err);
+    console.error('Failed to load report form', {
+      eventId,
+      userId: req.session.user ? req.session.user.id : null,
+      error: err.message
+    });
     res.redirect('/events');
   }
 };
@@ -76,7 +80,12 @@ exports.handleCreateReport = async (req, res) => {
       user: req.session.user
     });
   } catch (err) {
-    console.log(err);
+    console.error('Failed to submit report', {
+      eventId,
+      userId: req.session.user ? req.session.user.id : null,
+      reason,
+      error: err.message
+    });
     res.render('create-report', {
       event,
       reason,
@@ -99,7 +108,10 @@ exports.showReports = async (req, res) => {
       success: req.query.success || ''
     });
   } catch (err) {
-    console.log(err);
+    console.error('Failed to load all reports', {
+      userId: req.session.user ? req.session.user.id : null,
+      error: err.message
+    });
     res.render('reports', {
       reports: [],
       user: req.session.user,
@@ -119,7 +131,10 @@ exports.showMyReports = async (req, res) => {
       success: ''
     });
   } catch (err) {
-    console.log(err);
+    console.error('Failed to load user reports', {
+      userId: req.session.user ? req.session.user.id : null,
+      error: err.message
+    });
     res.render('my-reports', {
       reports: [],
       user: req.session.user,
@@ -142,7 +157,12 @@ exports.updateReportStatus = async (req, res) => {
     await Report.updateStatus(id, status);
     res.redirect('/reports?success=Report status updated');
   } catch (err) {
-    console.log(err);
+    console.error('Failed to update report status', {
+      reportId: id,
+      status,
+      userId: req.session.user ? req.session.user.id : null,
+      error: err.message
+    });
     res.redirect('/reports?error=Failed to update report');
   }
 };
@@ -154,7 +174,11 @@ exports.deleteReport = async (req, res) => {
     await Report.deleteReport(id);
     res.redirect('/reports?success=Report deleted');
   } catch (err) {
-    console.log(err);
+    console.error('Failed to delete report', {
+      reportId: id,
+      userId: req.session.user ? req.session.user.id : null,
+      error: err.message
+    });
     res.redirect('/reports?error=Failed to delete report');
   }
 };
