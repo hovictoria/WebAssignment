@@ -114,9 +114,7 @@
 
                             <% if (user) { %>
                                 <% if (hasAction) { %>|<% } %>
-                                <button onclick="toggleBookmark('<%= event._id %>', this)">
-                                    ☆ Bookmark
-                                </button>
+                                <a href="#" onclick="toggleBookmark('<%= event._id %>', this); return false;">Bookmark</a>
                                 <% hasAction = true; %>
                             <% } %>
 
@@ -139,8 +137,7 @@ async function toggleBookmark(eventId, btn) {
     const data = await response.json();
 
     if (data.success) {
-      btn.textContent = '★ Bookmarked';
-      btn.style.background = '#4CAF50';
+      btn.textContent = 'Bookmarked';
     } else {
       alert(data.error);
     }
