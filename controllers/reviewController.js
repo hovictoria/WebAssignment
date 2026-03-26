@@ -29,3 +29,46 @@ exports.getReviewsByEvent = async (req, res) => {
     res.send(error.message);
   }
 };
+
+exports.updateReview = async (req,res) =>{
+  try{
+    const reviewID= req.params.id;
+    const review= await Review.findOne({_id:reviewID})
+    if(!review){
+      return res.send('Review not found')
+    }
+    if (!req.user || String(review.user) !== String(req.session.id)){ //!req.user checks if user is logged in anot...need?
+      return res.send('Not authorized');
+    }
+
+    review.comment= req.body.comment;
+    review.rating=req.body.rating
+    review.edited=true
+    
+    await review.save()
+
+    res.redirect('/events')
+
+  } catch (error){
+    res.send(error.message)
+  }
+}
+
+exports.deleteReview = async (req,res) =>{
+  try{
+  const reviewID= req.params.id
+  const review= await Review.findOne({_id:reviewID})
+
+  if (!review){
+    return res.send('Review not found')
+  }
+ if(!req.user || String(review.user) !== String(req.session.id)){ 
+      return res.send('Not authorized');
+    }
+
+    await review.deleteOne();
+    res.redirect('/events')
+
+} catch(error){
+  res.send(error.message)
+}}
