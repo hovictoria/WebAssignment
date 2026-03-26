@@ -109,14 +109,46 @@
                             <% if (user) { %>
                                 <% if (hasAction) { %>|<% } %>
                                 <a href="/report-event?_id=<%= event._id %>">Report</a>
+                                <% hasAction = true; %>
                             <% } %>
+
+                            <% if (user) { %>
+                                <% if (hasAction) { %>|<% } %>
+                                <button onclick="toggleBookmark('<%= event._id %>', this)">
+                                    ☆ Bookmark
+                                </button>
+                                <% hasAction = true; %>
+                            <% } %>
+
+
                         </td>
                     </tr>
                 <% }) %>
             </tbody>
         </table>
     <% } %>
+<script>
+async function toggleBookmark(eventId, btn) {
+  try {
+    const response = await fetch('/api/bookmarks/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ eventId })
+    });
 
+    const data = await response.json();
+
+    if (data.success) {
+      btn.textContent = '★ Bookmarked';
+      btn.style.background = '#4CAF50';
+    } else {
+      alert(data.error);
+    }
+  } catch (error) {
+    alert('Error: ' + error.message);
+  }
+}
+</script>
   
     
 </body>

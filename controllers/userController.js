@@ -200,7 +200,9 @@ exports.profileDelete=async(req,res)=>{
     let email=req.body.email;
     try{
         await User.deleteUser(email);
-        res.redirect("/login?errors=Account deleted");
+        req.session.destroy(() => {
+            res.redirect("/login?errors=Account deleted");
+        });
     }catch(error){
         console.log(error);
         res.redirect("/profile?message=Error deleting");

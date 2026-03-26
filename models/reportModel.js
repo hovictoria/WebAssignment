@@ -19,7 +19,8 @@ const reportSchema = new mongoose.Schema({
   },
   details: {
     type: String,
-    trim: true
+    trim: true,
+    maxlength: [500, 'Details cannot exceed 500 characters']
   },
   status: {
     type: String,
