@@ -1,348 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Bookmarked Events</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<%- include("common/header") %>
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f5f5;
-      padding: 20px;
-    }
+    <h1>My Bookmarked Events</h1>
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-    }
+    <% if (error) { %>
+        <p><%= error %></p>
+    <% } %>
 
-    header {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+    <% if (success) { %>
+        <p><%= success %></p>
+    <% } %>
 
-    h1 {
-      color: #333;
-      margin-bottom: 10px;
-    }
+    <a href="/events">Back to Events</a>
 
-    .back-link {
-      color: #2196F3;
-      text-decoration: none;
-    }
+    <br><br>
 
-    .back-link:hover {
-      text-decoration: underline;
-    }
+    <% if (!bookmarks || bookmarks.length === 0) { %>
+        <p>No bookmarked events yet.</p>
+    <% } else { %>
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Category</th>
+                    <th>Saved At</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% bookmarks.forEach((bookmark) => { %>
+                    <tr>
+                        <td><%= bookmark.eventDetails ? bookmark.eventDetails.title : 'Event' %></td>
+                        <td><%= bookmark.eventDetails ? bookmark.eventDetails.date : 'N/A' %></td>
+                        <td><%= bookmark.eventDetails ? bookmark.eventDetails.location : 'N/A' %></td>
+                        <td><%= bookmark.eventDetails ? bookmark.eventDetails.category : 'N/A' %></td>
+                        <td><%= new Date(bookmark.savedAt).toLocaleDateString() %></td>
+                        <td>
+                            <form action="/bookmarks/<%= bookmark.bookmarkId %>/update" method="POST">
+                                <input type="text" name="notes" value="<%= bookmark.notes %>">
+                                <button type="submit">Save Notes</button>
+                            </form>
+                        </td>
+                        <td>
+                            <a href="/events">View Events</a>
+                            <form action="/bookmarks/<%= bookmark.bookmarkId %>/delete" method="POST">
+                                <button type="submit">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } %>
 
-    .bookmarks-grid {
-      display: grid;
-      gap: 15px;
-    }
-
-    .bookmark-card {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
-    }
-
-    .bookmark-card:hover {
-      transform: translateY(-2px);
-    }
-
-    .event-title {
-      font-size: 1.3em;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 10px;
-    }
-
-    .event-info {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 15px;
-      color: #666;
-      font-size: 0.95em;
-    }
-
-    .event-info p {
-      margin: 5px 0;
-    }
-
-    .notes-section {
-      background: #f9f9f9;
-      padding: 12px;
-      border-radius: 4px;
-      margin: 15px 0;
-      border-left: 4px solid #2196F3;
-    }
-
-    .notes-label {
-      font-weight: bold;
-      color: #333;
-    }
-
-    .notes-text {
-      color: #666;
-      margin-top: 5px;
-      font-style: italic;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    button {
-      padding: 8px 15px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.9em;
-      transition: background-color 0.2s;
-    }
-
-    .btn-view {
-      background: #2196F3;
-      color: white;
-    }
-
-    .btn-view:hover {
-      background: #1976D2;
-    }
-
-    .btn-edit {
-      background: #4CAF50;
-      color: white;
-    }
-
-    .btn-edit:hover {
-      background: #388E3C;
-    }
-
-    .btn-delete {
-      background: #f44336;
-      color: white;
-    }
-
-    .btn-delete:hover {
-      background: #D32F2F;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: #999;
-    }
-
-    .empty-state-icon {
-      font-size: 3em;
-      margin-bottom: 10px;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-    }
-
-    .modal-content {
-      background: white;
-      margin: 10% auto;
-      padding: 30px;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 500px;
-    }
-
-    .modal-header {
-      font-size: 1.3em;
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-
-    textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-family: inherit;
-      font-size: 14px;
-      margin-bottom: 15px;
-      resize: vertical;
-      min-height: 100px;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>📌 My Bookmarked Events</h1>
-      <a href="/" class="back-link">← Back to Events</a>
-    </header>
-
-    <div id="bookmarksList"></div>
-
-    <!-- Edit Notes Modal -->
-    <div id="editModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">Edit Notes</div>
-        <textarea id="notesInput" placeholder="Add your personal notes about this event..."></textarea>
-        <div class="modal-actions">
-          <button class="btn-delete" onclick="closeModal()">Cancel</button>
-          <button class="btn-edit" onclick="saveNotes()">Save Notes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    let currentBookmarkId = null;
-
-    // Load and display all bookmarks
-    async function loadBookmarks() {
-      try {
-        const response = await fetch('/api/bookmarks');
-        const data = await response.json();
-
-        const list = document.getElementById('bookmarksList');
-
-        if (!data.success || !data.bookmarks || data.bookmarks.length === 0) {
-          list.innerHTML = `
-            <div class="empty-state">
-              <div class="empty-state-icon">📚</div>
-              <p>No bookmarked events yet.</p>
-              <p>Browse events and bookmark your favorites!</p>
-            </div>
-          `;
-          return;
-        }
-
-        // Display each bookmark
-        list.innerHTML = data.bookmarks.map(b => `
-          <div class="bookmark-card">
-            <div class="event-title">${b.eventDetails?.title || 'Event'}</div>
-            
-            <div class="event-info">
-              <p><strong>📅 Date:</strong> ${new Date(b.eventDetails?.date).toLocaleDateString()}</p>
-              <p><strong>📍 Location:</strong> ${b.eventDetails?.location || 'N/A'}</p>
-              <p><strong>🏷️ Category:</strong> ${b.eventDetails?.category || 'N/A'}</p>
-              <p><strong>💾 Saved:</strong> ${new Date(b.savedAt).toLocaleDateString()}</p>
-            </div>
-
-            ${b.notes ? `
-              <div class="notes-section">
-                <div class="notes-label">Your Notes:</div>
-                <div class="notes-text">${b.notes}</div>
-              </div>
-            ` : ''}
-
-            <div class="actions">
-              <button class="btn-view" onclick="viewEvent('${b.eventId}')">View Event</button>
-              <button class="btn-edit" onclick="openEditModal('${b.bookmarkId}', '${b.notes}')">Edit Notes</button>
-              <button class="btn-delete" onclick="deleteBookmark('${b.bookmarkId}')">Remove</button>
-            </div>
-          </div>
-        `).join('');
-
-      } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('bookmarksList').innerHTML = 
-          '<p style="color: red; padding: 20px;">Error loading bookmarks</p>';
-      }
-    }
-
-    function openEditModal(bookmarkId, notes) {
-      currentBookmarkId = bookmarkId;
-      document.getElementById('notesInput').value = notes || '';
-      document.getElementById('editModal').style.display = 'block';
-    }
-
-    async function saveNotes() {
-      if (!currentBookmarkId) return;
-
-      try {
-        const notes = document.getElementById('notesInput').value;
-        const response = await fetch(`/api/bookmarks/${currentBookmarkId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ notes })
-        });
-
-        const data = await response.json();
-        if (data.success) {
-          alert('Notes saved!');
-          closeModal();
-          loadBookmarks();
-        } else {
-          alert('Error: ' + data.error);
-        }
-      } catch (error) {
-        alert('Error: ' + error.message);
-      }
-    }
-
-    async function deleteBookmark(bookmarkId) {
-      if (!confirm('Remove this bookmark?')) return;
-
-      try {
-        const response = await fetch(`/api/bookmarks/${bookmarkId}`, {
-          method: 'DELETE'
-        });
-
-        const data = await response.json();
-        if (data.success) {
-          alert('Bookmark removed');
-          loadBookmarks();
-        } else {
-          alert('Error: ' + data.error);
-        }
-      } catch (error) {
-        alert('Error: ' + error.message);
-      }
-    }
-
-    function viewEvent(eventId) {
-      window.location.href = `/event/${eventId}`;
-    }
-
-    function closeModal() {
-      document.getElementById('editModal').style.display = 'none';
-      currentBookmarkId = null;
-    }
-
-    // Close modal when clicking outside
-    window.onclick = function(e) {
-      const modal = document.getElementById('editModal');
-      if (e.target === modal) closeModal();
-    }
-
-    // Load bookmarks when page loads
-    loadBookmarks();
-  </script>
 </body>
 </html>

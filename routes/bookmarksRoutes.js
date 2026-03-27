@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const Bookmark = require('../models/Bookmark');
-const Event = require('../models/Event');
+const Bookmark = require('../models/bookmarkModel');
+const Event = require('../models/eventModel');
+const authMiddleware = require('../middleware/auth-middleware');
+const bookmarksController = require('../controllers/bookmarksController');
 
 // ============================================================================
 // MIDDLEWARE: Check if user is logged in
 // ============================================================================
 const checkAuth = (req, res, next) => {
-  if (!req.session || !req.session.userId) {
+  if (!req.session || !req.session.user) {
     return res.status(401).json({ 
       success: false,
       error: 'Please log in first' 
@@ -30,7 +32,7 @@ const checkBookmarkOwnership = async (req, res, next) => {
       });
     }
     
-    if (bookmark.userId !== req.session.userId) {
+    if (bookmark.userId !== req.session.user.id) {
       return res.status(403).json({ 
         success: false,
         error: 'You can only manage your own bookmarks' 
@@ -51,7 +53,12 @@ const checkBookmarkOwnership = async (req, res, next) => {
 // CREATE: POST /api/bookmarks/add
 // This adds a new bookmark to the database
 // ============================================================================
-router.post('/bookmarks/add', checkAuth, async (req, res) => {
+router.get('/bookmarks', authMiddleware.isLoggedIn, bookmarksController.showBookmarksPage);
+router.get('/bookmarks/add/:eventId', authMiddleware.isLoggedIn, bookmarksController.addBookmark);
+router.post('/bookmarks/:bookmarkId/update', authMiddleware.isLoggedIn, bookmarksController.updateBookmark);
+router.post('/bookmarks/:bookmarkId/delete', authMiddleware.isLoggedIn, bookmarksController.deleteBookmark);
+
+router.post('/api/bookmarks/add', checkAuth, async (req, res) => {
   try {
     const { eventId, notes } = req.body;
     
@@ -72,7 +79,7 @@ router.post('/bookmarks/add', checkAuth, async (req, res) => {
     }
     
     // Validation: Event must exist
-    const eventExists = await Event.findOne({ eventId });
+    const eventExists = await Event.findById(eventId);
     if (!eventExists) {
       return res.status(404).json({ 
         success: false,
@@ -82,7 +89,7 @@ router.post('/bookmarks/add', checkAuth, async (req, res) => {
     
     // Validation: Check if already bookmarked
     const existingBookmark = await Bookmark.findOne({
-      userId: req.session.userId,
+      userId: req.session.user.id,
       eventId: eventId
     });
     
@@ -103,7 +110,7 @@ router.post('/bookmarks/add', checkAuth, async (req, res) => {
     
     // Create the bookmark
     const newBookmark = new Bookmark({
-      userId: req.session.userId,
+      userId: req.session.user.id,
       eventId: eventId,
       notes: notes || ''
     });
@@ -131,10 +138,10 @@ router.post('/bookmarks/add', checkAuth, async (req, res) => {
 // READ: GET /api/bookmarks
 // This gets all bookmarks for the logged-in user
 // ============================================================================
-router.get('/bookmarks', checkAuth, async (req, res) => {
+router.get('/api/bookmarks', checkAuth, async (req, res) => {
   try {
     // Get all bookmarks for this user
-    const bookmarks = await Bookmark.find({ userId: req.session.userId })
+    const bookmarks = await Bookmark.find({ userId: req.session.user.id })
       .sort({ savedAt: -1 }); // Most recent first
     
     if (bookmarks.length === 0) {
@@ -149,7 +156,7 @@ router.get('/bookmarks', checkAuth, async (req, res) => {
     // Get event details for each bookmark (retrieval from 2 schemas)
     const bookmarksWithDetails = await Promise.all(
       bookmarks.map(async (bookmark) => {
-        const event = await Event.findOne({ eventId: bookmark.eventId });
+        const event = await Event.findById(bookmark.eventId);
         return {
           bookmarkId: bookmark.bookmarkId,
           eventId: bookmark.eventId,
@@ -180,12 +187,12 @@ router.get('/bookmarks', checkAuth, async (req, res) => {
 // READ: GET /api/bookmarks/check/:eventId
 // This checks if a specific event is bookmarked
 // ============================================================================
-router.get('/bookmarks/check/:eventId', checkAuth, async (req, res) => {
+router.get('/api/bookmarks/check/:eventId', checkAuth, async (req, res) => {
   try {
     const { eventId } = req.params;
     
     const bookmark = await Bookmark.findOne({
-      userId: req.session.userId,
+      userId: req.session.user.id,
       eventId: eventId
     });
     
@@ -207,7 +214,7 @@ router.get('/bookmarks/check/:eventId', checkAuth, async (req, res) => {
 // UPDATE: PUT /api/bookmarks/:bookmarkId
 // This updates the notes on a bookmark
 // ============================================================================
-router.put('/bookmarks/:bookmarkId', checkAuth, checkBookmarkOwnership, async (req, res) => {
+router.put('/api/bookmarks/:bookmarkId', checkAuth, checkBookmarkOwnership, async (req, res) => {
   try {
     const { notes } = req.body;
     
@@ -245,7 +252,7 @@ router.put('/bookmarks/:bookmarkId', checkAuth, checkBookmarkOwnership, async (r
 // DELETE: DELETE /api/bookmarks/:bookmarkId
 // This removes a bookmark
 // ============================================================================
-router.delete('/bookmarks/:bookmarkId', checkAuth, checkBookmarkOwnership, async (req, res) => {
+router.delete('/api/bookmarks/:bookmarkId', checkAuth, checkBookmarkOwnership, async (req, res) => {
   try {
     const result = await Bookmark.findOneAndDelete({ 
       bookmarkId: req.params.bookmarkId 

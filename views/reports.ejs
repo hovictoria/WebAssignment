@@ -2,6 +2,10 @@
 
 <h1>Submitted Reports</h1>
 
+<% const pendingReports = reports.filter(report => report.status === 'Pending'); %>
+<% const reviewedReports = reports.filter(report => report.status === 'Reviewed'); %>
+<% const resolvedReports = reports.filter(report => report.status === 'Resolved'); %>
+
 <% if (error) { %>
   <p style="color:red"><%= error %></p>
 <% } %>
@@ -13,44 +17,71 @@
 <% if (reports.length === 0) { %>
   <p>No reports submitted.</p>
 <% } else { %>
-  <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
-    <thead>
-      <tr>
-        <th>Event</th>
-        <th>Reporter</th>
-        <th>Category</th>
-        <th>Details</th>
-        <th>Status</th>
-        <th>Submitted</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% reports.forEach(report => { %>
+  <% function renderReportTable(sectionReports) { %>
+    <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+      <thead>
         <tr>
-          <td><%= report.event ? report.event.title : 'Deleted event' %></td>
-          <td><%= report.reporter ? report.reporter.name : 'Deleted user' %></td>
-          <td><%= report.reason %></td>
-          <td><%= report.details || '-' %></td>
-          <td><%= report.status %></td>
-          <td><%= new Date(report.createdAt).toLocaleString() %></td>
-          <td>
-            <form action="/reports/update-status" method="post" style="display:inline;">
-              <input type="hidden" name="id" value="<%= report._id %>">
-              <select name="status">
-                <option value="Pending" <%= report.status === 'Pending' ? 'selected' : '' %>>Pending</option>
-                <option value="Reviewed" <%= report.status === 'Reviewed' ? 'selected' : '' %>>Reviewed</option>
-                <option value="Resolved" <%= report.status === 'Resolved' ? 'selected' : '' %>>Resolved</option>
-              </select>
-              <button type="submit">Update</button>
-            </form>
-            |
-            <a href="/reports/delete?id=<%= report._id %>">Delete</a>
-          </td>
+          <th>Event</th>
+          <th>Reporter</th>
+          <th>Category</th>
+          <th>Details</th>
+          <th>Status</th>
+          <th>Submitted</th>
+          <th>Actions</th>
         </tr>
-      <% }) %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% sectionReports.forEach(report => { %>
+          <tr>
+            <td><%= report.event ? report.event.title : 'Deleted event' %></td>
+            <td><%= report.reporter ? report.reporter.name : 'Deleted user' %></td>
+            <td><%= report.reason %></td>
+            <td><%= report.details || '-' %></td>
+            <td><%= report.status %></td>
+            <td><%= new Date(report.createdAt).toLocaleString() %></td>
+            <td>
+              <form action="/reports/update-status" method="post" style="display:inline;">
+                <input type="hidden" name="id" value="<%= report._id %>">
+                <select name="status">
+                  <option value="Pending" <%= report.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                  <option value="Reviewed" <%= report.status === 'Reviewed' ? 'selected' : '' %>>Reviewed</option>
+                  <option value="Resolved" <%= report.status === 'Resolved' ? 'selected' : '' %>>Resolved</option>
+                </select>
+                <button type="submit">Update</button>
+              </form>
+              |
+              <a href="/reports/delete?id=<%= report._id %>">Delete</a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <h2>Pending (<%= pendingReports.length %>)</h2>
+  <% if (pendingReports.length === 0) { %>
+    <p>No pending reports.</p>
+  <% } else { %>
+    <% renderReportTable(pendingReports); %>
+  <% } %>
+
+  <br>
+
+  <h2>Reviewed (<%= reviewedReports.length %>)</h2>
+  <% if (reviewedReports.length === 0) { %>
+    <p>No reviewed reports.</p>
+  <% } else { %>
+    <% renderReportTable(reviewedReports); %>
+  <% } %>
+
+  <br>
+
+  <h2>Resolved (<%= resolvedReports.length %>)</h2>
+  <% if (resolvedReports.length === 0) { %>
+    <p>No resolved reports.</p>
+  <% } else { %>
+    <% renderReportTable(resolvedReports); %>
+  <% } %>
 <% } %>
 
 </body>
