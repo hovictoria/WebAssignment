@@ -15,6 +15,17 @@
         <label for="confirmPassword">Confirm Password:</label><br>
         <input type="password" size="25" name="confirmpassword" placeholder="Confirm password"><br><br>
 
+        <label for="role">Register As:</label><br>
+        <select name="role" id="role" onchange="toggleAdminCode()">
+            <option value="Student" <%= role === 'Student' ? 'selected' : '' %>>Student</option>
+            <option value="Admin" <%= role === 'Admin' ? 'selected' : '' %>>Admin</option>
+        </select><br><br>
+
+        <div id="adminCodeSection" style="display:<%= role === 'Admin' ? 'block' : 'none' %>;">
+            <label for="adminCode">Admin Registration Code:</label><br>
+            <input type="password" size="25" name="adminCode" id="adminCode" placeholder="Enter admin code" value="<%= adminCode %>"><br><br>
+        </div>
+
         <button type="submit">Register</button><br><br>
 
         <span>Registered? </span><a href="/login">Log In!</a>
@@ -23,5 +34,19 @@
     <% if(errors!=""){ %>
         <p style="color:red"><%= errors %></p>
     <% } %>
+    <script>
+        function toggleAdminCode() {
+            const roleSelect = document.getElementById('role');
+            const adminCodeSection = document.getElementById('adminCodeSection');
+            const adminCodeInput = document.getElementById('adminCode');
+
+            if (roleSelect.value === 'Admin') {
+                adminCodeSection.style.display = 'block';
+            } else {
+                adminCodeSection.style.display = 'none';
+                adminCodeInput.value = '';
+            }
+        }
+    </script>
 </body>
 </html>
