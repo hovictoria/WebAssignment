@@ -2,6 +2,8 @@ const fs = require('fs/promises');
 const User = require("../models/userModel");
 const Event = require('../models/eventModel');
 const mongoose = require('mongoose');
+const reviewModel = require('../models/reviewModel');
+
 
 function canDeleteEvent(user, event) {
     if (!user || !event) {
@@ -114,13 +116,17 @@ exports.showEvents = async (req, res) => {
 exports.getDetails = async (req,res) => {
     let error = '';
     const id = req.query._id;
+    let userID= req.session.user.id;
+    console.log(userID)
     try{
         let event = await Event.findById(id).populate('organiser', 'name');
-        res.render('event-details', {event, error: ''});
+        const reviews = await reviewModel.findByEvent(id); 
+        res.render('event-details', {event, error: '',reviews,userID});
     } catch (err){
         error = 'Error Reading Database.';
-        res.render('event-details', {event: {}, error: 'Error getting event details.'});
+        res.render('event-details', {event: {}, error: 'Error getting event details.',reviews:[],userID});
     }
+
 }
 
 
@@ -313,3 +319,4 @@ exports.deleteAnEvent = async(req, res) => {
 
     res.render('delete-event', {success, error, result})
 }
+

@@ -22,4 +22,6 @@ router.post('/update-event', authMiddleware.isLoggedIn, eventController.updateBo
 router.get('/delete-event', authMiddleware.isLoggedIn, eventController.getDelEvent);
 router.post('/delete-event', authMiddleware.isLoggedIn, eventController.deleteAnEvent);
 
+
+
 module.exports = router;

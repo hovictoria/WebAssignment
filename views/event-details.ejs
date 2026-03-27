@@ -31,12 +31,66 @@
         </tr>
         <tr>
             <th>Organiser:</th>
-            <td><%= event.organiser.name %></td>
+            <td><%= event.organiser ? event.organiser.name : 'Unknown' %></td>
         </tr>
         
     </table>
-<br>
-<a href="/events">← Back to Events</a>
 
+     <h2>Discussion Forum</h2>
+
+    <% if (userID) { %>
+        <form action="/review/create" method="POST">
+            <input type="hidden" name="eventID" value="<%= event._id %>">
+
+            <label>Rating:</label><br>
+            <input type="number" name="rating" min="1" max="5" required><br><br>
+
+            <label>Comment:</label><br>
+            <textarea name="comment" required>something</textarea><br><br>
+
+            <button type="submit">Post Review</button>
+        </form>
+    <% } else { %>
+        <p>You must be logged in to post a review.</p>
+    <% } %>
+
+    <hr>
+
+    <!-- ===================== -->
+    <!-- DISPLAY REVIEWS -->
+    <!-- ===================== -->
+    <h2>Reviews</h2>
+
+    <% reviews.forEach(review => { %>
+        <div style="border:1px solid black; padding:10px; margin-bottom:10px;">
+
+            <p><strong>Rating:</strong> <%= review.rating %></p>
+            <p><strong>Comment:</strong> <%= review.comment %></p>
+
+            <% if (review.edited) { %>
+                <small>(edited)</small>
+            <% } %>
+
+            <!-- ===================== -->
+            <!-- UPDATE + DELETE (ONLY OWNER) -->
+            <!-- ===================== -->
+            <% if (session && String(review.user) === String(session.userID)) { %>
+
+                <!-- UPDATE -->
+                <form action="/reviews/update/<%= review._id %>" method="POST">
+                    <input type="text" name="comment" value="<%= review.comment %>">
+                    <input type="number" name="rating" value="<%= review.rating %>" min="1" max="5">
+                    <button type="submit">Update</button>
+                </form>
+
+                <!-- DELETE -->
+                <form action="/reviews/delete/<%= review._id %>" method="POST">
+                    <button type="submit">Delete</button>
+                </form>
+
+            <% } %>
+
+        </div>
+    <% }) %>
 </body>
 </html>

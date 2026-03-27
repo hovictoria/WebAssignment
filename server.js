@@ -44,6 +44,9 @@ server.use(comment)
 const bookmarksRoutes = require('./routes/bookmarksRoutes');
 server.use(bookmarksRoutes);
 
+const reviewRoutes = require('./routes/reviewRoutes');
+server.use('/review', reviewRoutes);
+
 async function connectDB() {
   try {
     await mongoose.connect(process.env.DB);
