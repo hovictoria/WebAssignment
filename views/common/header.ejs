@@ -15,24 +15,24 @@
 <body>
     <h2>Campus Event Board 🏫</h2>
     <% if(user){ %>
-    <p>Welcome, <%=user.role%> <%= user.name %></p>
+    <p>Welcome, <%= user.name %> 👋</p>
     <% } %>
     <nav>
         <a href="/home"><i class="fa-sharp fa-solid fa-house"> Home</i></a> | 
         <a href="/events"><i class="fa-solid fa-magnifying-glass"> Events</i></a> | 
         <% if(!user || user.role=="Student"){ %>
-        <a href="/my-rsvps"><i class="fa-regular fa-calendar-plus"> My RSVPs</i></a> | 
-        <a href="#"><i class="fa-regular fa-bookmark"> Bookmarked</i></a> | 
-        <a href="/my-reports"><i class="fa-solid fa-flag"> My Reports</i></a> | 
-        <a href="/profile"><i class="fa-solid fa-user"> Profile</i></a> | 
+            <a href="/my-rsvps"><i class="fa-regular fa-calendar-plus"> My RSVPs</i></a> | 
+            <a href="/bookmarks"><i class="fa-regular fa-bookmark"> Bookmarked</i></a> | 
+            <a href="/my-reports"><i class="fa-solid fa-flag"> My Reports</i></a> | 
         <%}%>
+        <a href="/profile"><i class="fa-solid fa-user"> Profile</i></a> | 
         <% if(user && user.role=="Admin"){ %>
-        <a href="/reports"><i class="fa-solid fa-flag"> Reports</i></a> |
+            <a href="/reports"><i class="fa-solid fa-flag"> Reports</i></a> |
         <% } %>
         <% if(!user){ %>
-        <a href="/login"><i class="fa-solid fa-arrow-right-to-bracket"> Log in</i></a>
+            <a href="/login"><i class="fa-solid fa-arrow-right-to-bracket"> Log in</i></a>
         <% }else{ %>
-        <a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"> Log Out</i></a>
+            <a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"> Log Out</i></a>
         <% } %>
     </nav>
 
