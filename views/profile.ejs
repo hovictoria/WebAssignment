@@ -20,11 +20,11 @@
             <td><%=user.role%></td>
         </tr>
         <tr>
-            <td colspan="2"><a href="/profile?edit=<%=user.email%>">Edit</a> | <a href="/profile?delete=<%=user.email%>">Delete</a></td>
+            <td colspan="2"><a href="/user/profile?edit=<%=user.email%>">Edit</a> | <a href="/user/profile?delete=<%=user.email%>">Delete</a></td>
         </tr>
     </table>
     <%} else{ %>
-    <form action="profileedit" method="post">
+    <form action="/user/profileedit" method="post">
     <table>
         <tr>
             <td>Name: </td>
@@ -46,17 +46,20 @@
         </tr>
     </table><br>
     <button type="submit">Update</button>
-    <a href="/profile"><button type="button">Cancel</button></a>
+    <a href="/user/profile"><button type="button">Cancel</button></a>
     </form>
     <% } %>
-    <% if(message){ %>
-    <p><%= message %></p>
+    <% if(error){ %>
+    <p style="color:red"><%= error %></p>
+    <% } %>
+  <% if(success){ %>
+    <p style="color:green"><%= success %></p>
     <% } %>
     <% if (del) { %>
     <p><strong>⚠️ This action cannot be undone! Are you sure you want to delete this event?</strong></p>
-    <form action="/profiledelete" method="POST">
+    <form action="/user/profiledelete" method="POST">
         <input type="hidden" name="email" value="<%= user.email %>">
         <button type="submit">🗑️ Confirm Delete</button>
-        <a href="/profile"><button type="button">Cancel</button></a>
+        <a href="/user/profile"><button type="button">Cancel</button></a>
     </form>
     <% } %>

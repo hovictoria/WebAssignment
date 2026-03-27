@@ -1,7 +1,7 @@
 exports.isLoggedIn = (req, res, next) => {
     if (!req.session.user) {
         console.log("User not logged in, redirecting to /login");
-        return res.redirect('/login?errors=Please login first');
+        return res.redirect('/user/login?errors=Please login first');
     }
     next();
 }
@@ -10,7 +10,7 @@ exports.isLoggedIn = (req, res, next) => {
 exports.isAdmin = (req, res, next) => {
     if (req.session.user.role !== "Admin") {
         console.log("Not an admin user, redirecting to index.html");
-        return res.redirect('/login?errors=Please login first');
+        return res.redirect('/user/login?errors=Please login first');
     }
     next();
 }
@@ -19,9 +19,9 @@ exports.hasLoggedIn = (req, res, next) => {
     if (req.session.user) {
         console.log("User alr logged in");
         if(req.session.user.role=="Student"){
-            return res.redirect("/home");
+            return res.redirect("/user/home");
         }
-        return res.redirect("/admin");
+        return res.redirect("/user/admin");
         
     }
     next();

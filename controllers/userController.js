@@ -7,7 +7,7 @@ exports.home=(req,res)=>{
     if(user.role=="Student"){
     res.render("studenthome",{user});}
     else if(user.role=="Admin"){
-        res.redirect("/admin");
+        res.redirect("/user/admin");
     }
 }
 
@@ -74,7 +74,7 @@ exports.handleRegister = async (req, res) => {
             res.redirect('/admin');
             return;
         }
-        res.redirect('/home');
+        res.redirect('/user/home');
         return;
     }
     res.render("register", { email, name, role, errors, user:""});
@@ -84,7 +84,7 @@ exports.handleRegister = async (req, res) => {
 exports.showAdminCode = (req, res) => {
     //if not pending admin registration
     if (!req.session.pendingAdminRegistration) {
-        res.redirect("/register");
+        res.redirect("/user/register");
         return;
     }
 
@@ -97,7 +97,7 @@ exports.handleAdminCode = async (req, res) => {
     const pendingUser = req.session.pendingAdminRegistration;
 
     if (!pendingUser) {
-        res.redirect("/register");
+        res.redirect("/user/register");
         return;
     }
 
@@ -136,7 +136,7 @@ exports.handleAdminCode = async (req, res) => {
             email: createdUser.email
         };
 
-        res.redirect("/admin");
+        res.redirect("/user/admin");
     } catch (err) {
         res.render("admin-code", { errors: "Something went wrong", user: "" });
     }
@@ -171,11 +171,11 @@ exports.handleLogin = async (req, res) => {
                     email:users.email
                 }
                 if(users.role=="Admin"){
-                    res.redirect("/admin");
+                    res.redirect("/user/admin");
                     return;
                 }
                 else{
-                    res.redirect("/home");
+                    res.redirect("/user/home");
                     return;
                 }
                 
@@ -184,7 +184,7 @@ exports.handleLogin = async (req, res) => {
         res.render("login", { email, errors,user:"" });
     }catch(err){
         console.log(err);
-        res.redirect("/login");
+        res.redirect("/user/login");
     }
 };
 
@@ -240,9 +240,9 @@ exports.editUser = async(req,res)=>{
         }
     }
     if(error==""){
-        res.redirect(`/admin?success=${success}`)
+        res.redirect(`/user/admin?success=${success}`)
     }else{
-        res.redirect(`/admin?error=${error}&email=${email}`)
+        res.redirect(`/user/admin?error=${error}&email=${email}`)
     }
 }
 
@@ -251,8 +251,9 @@ exports.profileGet = async(req,res)=>{
         let user=req.session.user;
         let edit=req.query.edit;
         let del=req.query.delete;
-        let message=req.query.message;
-        res.render("profile",{user,edit,del,message});
+        let error=req.query.error;
+        let success=req.query.success;
+        res.render("profile",{user,edit,del,error,success});
     }catch(error){
         console.log(error);
     }
@@ -262,9 +263,10 @@ exports.profileEdit = async(req,res)=>{
     let name=req.body.name.trim();
     let password=req.body.password;
     let email=req.body.email;
-    let message="";
+    let error="";
+    let success="";
     if(name==""){
-        message="Name is required";
+        error="Name is required";
     }
     else{
         try{
@@ -277,17 +279,16 @@ exports.profileEdit = async(req,res)=>{
             }
             let result=await User.editUser(email,updateData);
             if(result.modifiedCount==0){
-                message="No changes made";
+                success="No changes made";
             }else{
-                message="Updated successfully";
+                success="Updated successfully";
             }
             req.session.user.name = name;
         }catch(error){
-            message=error;
             console.log(error);
         }
     }
-    res.redirect(`/profile?message=${message}`);
+    res.redirect(`/user/profile?error=${error}&success=${success}`);
 }
 
 exports.profileDelete=async(req,res)=>{
@@ -295,11 +296,11 @@ exports.profileDelete=async(req,res)=>{
     try{
         await User.deleteUser(email);
         req.session.destroy(() => {
-            res.redirect("/login?errors=Account deleted");
+            res.redirect("/user/login?errors=Account deleted");
         });
     }catch(error){
         console.log(error);
-        res.redirect("/profile?message=Error deleting");
+        res.redirect("/user/profile?message=Error deleting");
 
     }
     
@@ -309,10 +310,10 @@ exports.deleteUser=async(req,res)=>{
     let email=req.query.email;
     try{
         await User.deleteUser(email);
-        res.redirect("/admin?success=Deleted successfully");
+        res.redirect("/user/admin?success=Deleted successfully");
     }catch(error){
         console.log(error);
-        res.redirect("/admin?error=Error deleting");
+        res.redirect("/user/admin?error=Error deleting");
 
     }
     
@@ -320,6 +321,6 @@ exports.deleteUser=async(req,res)=>{
 
 exports.logout = (req, res) => {
     req.session.destroy(() => {
-        res.redirect('/login');
+        res.redirect('/user/login');
     });
 }

@@ -2,7 +2,7 @@
 
     <h1>Log in</h1>
 
-    <form action="/login" method="post">
+    <form action="/user/login" method="post">
         <label for="email">Email: </label><br>
         <input type="email" name="email" placeholder="Enter email" value="<%= email %>"><br><br>
 
@@ -11,7 +11,7 @@
         <button type="submit">Log In</button><br><br>
         
     </form>
-    <span>No account yet? </span><a href="/register">Register Now!</a>
+    <span>No account yet? </span><a href="/user/register">Register Now!</a>
     <% if(errors!=""){ %>
         <p style="color:red"><%=errors%></p>
     <% } %>

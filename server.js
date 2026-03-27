@@ -25,8 +25,8 @@ server.get('/', (req, res) => {
   res.redirect('/index.html',{user});
 })
 
-const user = require('./routes/userRoutes')
-server.use(user)
+const userRoutes = require('./routes/userRoutes')
+server.use("/user",userRoutes)
 
 const eventRoutes = require("./routes/eventRoutes");
 server.use(eventRoutes)
