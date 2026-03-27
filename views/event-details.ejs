@@ -69,9 +69,6 @@
         <form action="/review/create" method="POST">
             <input type="hidden" name="eventID" value="<%= event._id %>">
 
-            <label>Rating:</label><br>
-            <input type="number" name="rating" min="1" max="5" required><br><br>
-
             <label>Comment:</label><br>
             <textarea name="comment" required></textarea><br><br>
 
@@ -91,27 +88,28 @@
     <% reviews.forEach(review => { %>
         <div style="border:1px solid black; padding:10px; margin-bottom:10px;">
 
-            <p><strong>Rating:</strong> <%= review.rating %></p>
+            <p><strong>User:</strong> <%= review.user && review.user.name ? review.user.name : 'Unknown user' %></p>
             <p><strong>Comment:</strong> <%= review.comment %></p>
+            <p><strong>Posted:</strong> <%= new Date(review.createdAt).toLocaleString() %></p>
 
             <% if (review.edited) { %>
                 <small>(edited)</small>
+                <p><strong>Last updated:</strong> <%= new Date(review.updatedAt).toLocaleString() %></p>
             <% } %>
 
             <!-- ===================== -->
             <!-- UPDATE + DELETE (ONLY OWNER) -->
             <!-- ===================== -->
-            <% if (user && String(review.user) === String(user.id)) { %>
+            <% if (user && review.user && String(review.user._id || review.user) === String(user.id)) { %>
 
                 <!-- UPDATE -->
-                <form action="/reviews/update/<%= review._id %>" method="POST">
+                <form action="/review/update/<%= review._id %>" method="POST">
                     <input type="text" name="comment" value="<%= review.comment %>">
-                    <input type="number" name="rating" value="<%= review.rating %>" min="1" max="5">
                     <button type="submit">Update</button>
                 </form>
 
                 <!-- DELETE -->
-                <form action="/reviews/delete/<%= review._id %>" method="POST">
+                <form action="/review/delete/<%= review._id %>" method="POST">
                     <button type="submit">Delete</button>
                 </form>
 

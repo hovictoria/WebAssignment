@@ -120,11 +120,11 @@ exports.getDetails = async (req,res) => {
     try{
         let event = await Event.findById(id);
         let organiser = await User.findByID(event.organiser);
-        const reviews = await reviewModel.findByEvent(id); 
-        res.render('event-details', { event, organiser, error: '', user,reviews });
+        const reviews = await reviewModel.findByEvent(id);
+        res.render('event-details', { event, organiser, error: '', user, reviews });
     } catch (err){
         error = 'Error Reading Database.';
-        res.render('event-details', {event: {}, error: 'Error getting event details.', user,reviews:[]});
+        res.render('event-details', { event: {}, error: 'Error getting event details.', user, reviews: [] });
     }
 
 }
