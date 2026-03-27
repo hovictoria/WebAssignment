@@ -65,7 +65,7 @@
 
      <h2>Discussion Forum</h2>
 
-    <% if (userID) { %>
+    <% if (user) { %>
         <form action="/review/create" method="POST">
             <input type="hidden" name="eventID" value="<%= event._id %>">
 
@@ -73,7 +73,7 @@
             <input type="number" name="rating" min="1" max="5" required><br><br>
 
             <label>Comment:</label><br>
-            <textarea name="comment" required>something</textarea><br><br>
+            <textarea name="comment" required></textarea><br><br>
 
             <button type="submit">Post Review</button>
         </form>
@@ -87,7 +87,7 @@
     <!-- DISPLAY REVIEWS -->
     <!-- ===================== -->
     <h2>Reviews</h2>
-
+    <% if(reviews!=[]){ %>
     <% reviews.forEach(review => { %>
         <div style="border:1px solid black; padding:10px; margin-bottom:10px;">
 
@@ -101,7 +101,7 @@
             <!-- ===================== -->
             <!-- UPDATE + DELETE (ONLY OWNER) -->
             <!-- ===================== -->
-            <% if (session && String(review.user) === String(session.userID)) { %>
+            <% if (user && String(review.user) === String(user.id)) { %>
 
                 <!-- UPDATE -->
                 <form action="/reviews/update/<%= review._id %>" method="POST">
@@ -118,6 +118,6 @@
             <% } %>
 
         </div>
-    <% }) %>
+    <% })} %>
 </body>
 </html>

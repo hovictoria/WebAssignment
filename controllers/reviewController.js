@@ -8,7 +8,7 @@ exports.createReview = async (req, res) => {
         const eventID = req.body.eventID;
 
         const userID = req.session.userID;
-
+        console.log(comment);
         await reviewModel.createReview({user:userID, event:eventID,rating, comment});
 
         res.redirect(`/event-details?_id=${eventID}`); 
