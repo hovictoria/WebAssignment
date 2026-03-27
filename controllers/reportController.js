@@ -46,21 +46,21 @@ exports.handleCreateReport = async (req, res) => { //this function handles the f
   let success = '';
 
   try {
-    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+    if (!mongoose.Types.ObjectId.isValid(eventId)) { //if invalid redirect user to /events.
       return res.redirect('/events');
     }
 
     event = await Event.findById(eventId);
     if (!event) {
-      return res.redirect('/events');
+      return res.redirect('/events'); //if event not found redirect user to /events.
     }
 
-    if (!reportReasons.includes(reason)) {
+    if (!reportReasons.includes(reason)) { //if reason is not in the predefined list of report reasons, set an error message.
       error = 'Please select a reason';
-    } else if (reason === 'Other' && details === '') {
+    } else if (reason === 'Other' && details === '') { //if reason is "Other" but details are empty, set an error message indicating that details are required.
       error = 'Details are required when reason is Other';
     } else {
-      await Report.createReport({
+      await Report.createReport({ //if validation passes, create a new report in the database with the provided event ID, reporter ID (from the session), reason, details, and a default status of "Pending".
         event: eventId,
         reporter: req.session.user.id,
         reason,
@@ -70,7 +70,7 @@ exports.handleCreateReport = async (req, res) => { //this function handles the f
       success = 'Report submitted successfully';
     }
 
-    res.render('create-report', {
+    res.render('create-report', {  //re-render the form with the original input values and any error or success messages. This allows the user to correct any issues without losing their input.
       event,
       reason,
       details,
@@ -80,7 +80,7 @@ exports.handleCreateReport = async (req, res) => { //this function handles the f
       user: req.session.user
     });
   } catch (err) {
-    console.error('Failed to submit report', {
+    console.error('Failed to submit report', { //
       eventId,
       userId: req.session.user ? req.session.user.id : null,
       reason,
@@ -88,7 +88,7 @@ exports.handleCreateReport = async (req, res) => { //this function handles the f
     });
 
     let submitError = 'Failed to submit report';
-    if (err.name === 'ValidationError' && err.errors && err.errors.details && err.errors.details.kind === 'maxlength') {
+    if (err.name === 'ValidationError' && err.errors && err.errors.details && err.errors.details.kind === 'maxlength') { //if the error is a Mongoose validation error related to the "details" field exceeding the maximum length, set a specific error message indicating that the character limit was exceeded.
       submitError = 'Failed to submit report. Length exceeds character limit.';
     }
 
@@ -106,7 +106,7 @@ exports.handleCreateReport = async (req, res) => { //this function handles the f
 
 exports.showReports = async (req, res) => {
   try {
-    const reports = await Report.findAllReports();
+    const reports = await Report.findAllReports(); //this function retrieves all reports from the database and renders them on the "reports" page. It also handles any errors that occur during the retrieval process and logs them with relevant details.
     res.render('reports', {
       reports,
       user: req.session.user,
@@ -114,7 +114,7 @@ exports.showReports = async (req, res) => {
       success: req.query.success || ''
     });
   } catch (err) {
-    console.error('Failed to load all reports', {
+    console.error('Failed to load all reports', { 
       userId: req.session.user ? req.session.user.id : null,
       error: err.message
     });
