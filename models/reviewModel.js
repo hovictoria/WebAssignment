@@ -11,12 +11,6 @@ const reviewSchema = new mongoose.Schema({
     ref: 'Event',
     required: [true, 'A review must have an event']
   },
-  rating: {
-    type: Number,
-    required: [true, 'A review must have a rating'],
-    min: [1, 'Rating must be at least 1'],
-    max: [5, 'Rating must be at most 5']
-  },
   comment: {
     type: String,
     required: [true, 'A review must have content']
@@ -39,11 +33,18 @@ exports.findById = function(id) {
 };
 
 exports.findByEvent = function(eventId) {
-    return Review.find({ event: eventId });
+    return Review.find({ event: eventId }).populate('user', 'name');
+};
+
+exports.findByUserAndEvent = function(userId, eventId) {
+    return Review.findOne({ user: userId, event: eventId });
 };
 
 exports.updateReview = function(id, comment) {
-    return Review.updateOne({ _id: id },{ comment: comment });
+    return Review.updateOne(
+        { _id: id },
+        { comment: comment, edited: true }
+    );
 };
 
 exports.deleteReview = function(id) {

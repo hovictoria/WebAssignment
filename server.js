@@ -38,9 +38,6 @@ server.use(reportRoutes)
 const rsvpRoutes = require('./routes/rsvpRoutes');
 server.use(rsvpRoutes)
 
-const comment=require('./routes/reviewRoutes')
-server.use(comment)
-
 const bookmarksRoutes = require('./routes/bookmarksRoutes');
 server.use(bookmarksRoutes);
 
