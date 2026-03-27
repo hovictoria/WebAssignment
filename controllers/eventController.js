@@ -112,14 +112,15 @@ exports.showEvents = async (req, res) => {
 
 // ------ VIEW event ------
 exports.getDetails = async (req,res) => {
+    let user=req.session.user;
     let error = '';
     const id = req.query._id;
     try{
         let event = await Event.findById(id).populate('organiser', 'name');
-        res.render('event-details', {event, error: ''});
+        res.render('event-details', {event, error: '', user});
     } catch (err){
         error = 'Error Reading Database.';
-        res.render('event-details', {event: {}, error: 'Error getting event details.'});
+        res.render('event-details', {event: {}, error: 'Error getting event details.', user});
     }
 }
 
