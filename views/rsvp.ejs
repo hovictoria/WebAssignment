@@ -1,0 +1,77 @@
+<%- include("common/header") %>
+
+<h1>RSVP for Event</h1>
+
+<% if (error) { %>
+  <p><%= error %></p>
+<% } %>
+
+<% if (success) { %>
+  <p><%= success %></p>
+<% } %>
+
+<h2><%= event.title %></h2>
+<p><strong>Description:</strong> <%= event.description %></p>
+<p><strong>Date:</strong> <%= new Date(event.date).toDateString() %></p>
+<p><strong>Time:</strong> <%= event.time || '-' %></p>
+<p><strong>Location:</strong> <%= event.location %></p>
+<p><strong>Category:</strong> <%= event.category %></p>
+
+<hr>
+
+<form action="/create-rsvp" method="POST">
+  <input type="hidden" name="eventId" value="<%= event._id %>">
+
+  <label>Status:</label>
+  <select name="status">
+    <option value="Going" <%= myRsvp && myRsvp.status === 'Going' ? 'selected' : '' %>>Going</option>
+    <option value="Maybe" <%= myRsvp && myRsvp.status === 'Maybe' ? 'selected' : '' %>>Maybe</option>
+    <option value="Not going" <%= myRsvp && myRsvp.status === 'Not going' ? 'selected' : '' %>>Not Going</option>
+  </select>
+
+  <br><br>
+
+  <label>Note:</label>
+  <textarea name="note"><%= myRsvp ? myRsvp.note : '' %></textarea>
+
+  <br><br>
+
+  <button type="submit">
+    <%= myRsvp ? 'Update RSVP' : 'Submit RSVP' %>
+  </button>
+</form>
+
+<hr>
+
+<h2>Attendees</h2>
+
+<% if (!rsvps || rsvps.length === 0) { %>
+  <p>No RSVPs yet.</p>
+<% } else { %>
+  <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Status</th>
+        <th>Note</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% rsvps.forEach(rsvp => { %>
+        <tr>
+          <td><%= rsvp.user.name %></td>
+          <td><%= rsvp.status %></td>
+          <td><%= rsvp.note || '-' %></td>
+          <td><%= new Date(rsvp.rsvpDate).toDateString() %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+<br>
+<a href="/events">Back to Events</a>
+
+</body>
+</html>

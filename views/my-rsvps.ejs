@@ -1,14 +1,20 @@
+<%- include("common/header") %>
+
 <h1>My RSVPs</h1>
 
-<% rsvps.forEach(r => { %>
-  <div>
-    <h3><%= r.event.title %></h3>
-    <p>Status: <%= r.status %></p>
-    <p>Note: <%= r.note %></p>
+<% if (!rsvps || rsvps.length === 0) { %>
+  <p>No RSVPs yet.</p>
+<% } else { %>
+  <% rsvps.forEach(r => { %>
+    <div>
+      <h3><%= r.event.title %></h3>
+      <p>Status: <%= r.status %></p>
+      <p>Note: <%= r.note || '-' %></p>
 
-    <form action="/delete-rsvp" method="POST">
-      <input type="hidden" name="id" value="<%= r._id %>">
-      <button type="submit">Delete</button>
-    </form>
-  </div>
-<% }) %>
+      <form action="/delete-rsvp" method="POST">
+        <input type="hidden" name="id" value="<%= r._id %>">
+        <button type="submit">Delete</button>
+      </form>
+    </div>
+  <% }) %>
+<% } %>

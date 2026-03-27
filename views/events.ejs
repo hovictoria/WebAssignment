@@ -103,7 +103,7 @@
                             <% } %>
                             <% if (user && user.role === 'Student') { %>
                                 <% if (hasAction) { %>|<% } %>
-                                <a href="">RSVP</a>
+                                <a href="/rsvp?_id=<%= event._id %>">RSVP</a>
                                 <% hasAction = true; %>
                             <% } %>
                             <% if (user) { %>

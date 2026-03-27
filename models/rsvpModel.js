@@ -13,8 +13,8 @@ const rsvpSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['going', 'not going', 'maybe'],
-    default: 'going'
+    enum: ['Going', 'Maybe', 'Not going'],
+    default: 'Going'
   },
   rsvpDate: {
     type: Date,
