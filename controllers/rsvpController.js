@@ -1,6 +1,37 @@
 const RSVP = require('../models/rsvpModel');
 const Event = require('../models/eventModel');
 
+// SHOW RSVP PAGE FOR ONE EVENT
+exports.getRsvpPage = async (req, res) => {
+  try {
+    const eventId = req.query._id;
+    const userId = req.session.user.id;
+
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.send("Event not found");
+    }
+
+    const rsvps = await RSVP.find({ event: eventId }).populate('user');
+    const myRsvp = await RSVP.findOne({ user: userId, event: eventId });
+
+    let user = req.session.user || null;
+
+    res.render('rsvp', {
+      event,
+      rsvps,
+      myRsvp,
+      error: '',
+      success: '',
+      user
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading RSVP page");
+  }
+};
+
 // CREATE RSVP
 exports.createRsvp = async (req, res) => {
   try {
@@ -11,30 +42,32 @@ exports.createRsvp = async (req, res) => {
       return res.send("Status is required");
     }
 
-    // Check event exists
     const event = await Event.findById(eventId);
     if (!event) {
       return res.send("Event not found");
     }
 
-    // Prevent duplicate RSVP
     const existing = await RSVP.findOne({ user: userId, event: eventId });
+
     if (existing) {
-      return res.send("You already RSVP'd");
+      existing.status = status;
+      existing.note = note;
+      existing.rsvpDate = Date.now();
+      await existing.save();
+    } else {
+      await RSVP.create({
+        user: userId,
+        event: eventId,
+        status,
+        note
+      });
     }
 
-    await RSVP.create({
-      user: userId,
-      event: eventId,
-      status,
-      note
-    });
-
-    res.redirect(`/event-details?_id=${eventId}`);
+    res.redirect(`/rsvp?_id=${eventId}`);
 
   } catch (err) {
     console.log(err);
-    res.send("Error creating RSVP");
+    res.send("Error saving RSVP");
   }
 };
 
@@ -45,7 +78,8 @@ exports.showMyRsvps = async (req, res) => {
 
     const rsvps = await RSVP.find({ user: userId }).populate('event');
 
-    res.render('my-rsvps', { rsvps });
+    let user = req.session.user;
+    res.render('my-rsvps', { rsvps, user });
 
   } catch (err) {
     console.log(err);

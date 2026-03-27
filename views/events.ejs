@@ -65,16 +65,12 @@
     <% if (events.length === 0) { %>
         <p>No events found.</p>
     <% } else { %>
-        <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+        <table border="1" cellpadding="8" cellspacing="0" style="width:80%; border-collapse:collapse; margin: 0 auto;">
             <thead>
                 <tr>
                     <th>Name of Event</th>
-                    <th>Description</th>
                     <th>Date</th>
-                    <th>Time</th>
-                    <th>Location</th>
                     <th>Category</th>
-                    <th>Organiser</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -82,16 +78,13 @@
                 <% events.forEach(event => { %>
                     <tr>
                         <td><%= event.title %></td>
-                        <td><%= event.description %></td>
                         <td><%= new Date(event.date).toDateString() %></td>
-                        <td><%= event.time || '-' %></td>
-                        <td><%= event.location %></td>
                         <td><%= event.category %></td>
-                        <td><%= event.organiser %></td>
                         <td>
                             <% const canEdit = user && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
                             <% const canDelete = user && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
                             <% let hasAction = false; %>
+                            <a href="/event-details?_id=<%= event._id %>">Details</a> |
                             <% if (canEdit) { %>
                                 <a href="/update-event?_id=<%= event._id %>">Edit</a>
                                 <% hasAction = true; %>
@@ -103,7 +96,7 @@
                             <% } %>
                             <% if (user && user.role === 'Student') { %>
                                 <% if (hasAction) { %>|<% } %>
-                                <a href="">RSVP</a>
+                                <a href="/rsvp?_id=<%= event._id %>">RSVP</a>
                                 <% hasAction = true; %>
                             <% } %>
                             <!-- checks if user is logged in before showing report option -->

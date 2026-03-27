@@ -1,4 +1,5 @@
 const fs = require('fs/promises');
+const User = require("../models/userModel");
 const Event = require('../models/eventModel');
 const mongoose = require('mongoose');
 
@@ -37,7 +38,6 @@ function canEditEvent(user, event) {
 //         res.render('events', {eventlist : {}, error});
 //     }
 // }
-// const Event = require("../models/eventModel");
 
 
 //keyword searches title and description, category filters exact category, location filters partial match, date filters events on that exact day, .lean()makes the date easier/faster for EJS rendering
@@ -108,6 +108,20 @@ exports.showEvents = async (req, res) => {
         });
     }
 };
+
+
+// ------ VIEW event ------
+exports.getDetails = async (req,res) => {
+    let error = '';
+    const id = req.query._id;
+    try{
+        let event = await Event.findById(id).populate('organiser', 'name');
+        res.render('event-details', {event, error: ''});
+    } catch (err){
+        error = 'Error Reading Database.';
+        res.render('event-details', {event: {}, error: 'Error getting event details.'});
+    }
+}
 
 
 // ------ CREATE event ------

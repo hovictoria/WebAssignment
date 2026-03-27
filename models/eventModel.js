@@ -31,7 +31,8 @@ const eventSchema = new mongoose.Schema({
   organiser: {
     type: mongoose.Schema.Types.ObjectId,
     required: [true, 'An event must have an organiser'],
-    trim: true
+    trim: true,
+    ref: 'User'
   }
 }, { timestamps: true });
 
