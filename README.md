@@ -27,7 +27,7 @@ Make sure you have the following installed:
 2. **Navigate to the project folder**
 
 3. **Install dependencies**
-
+```npm install```
 
 4. **Configure environment variables**
 
@@ -39,9 +39,13 @@ PORT=8000
 ---
 
 ## Running the Application
+```nodemon server.js```
 
-Then open your browser and go to:
 ---
+Then open your browser and go to:
+```http://localhost:8000```
+---
+
 
 ## Test Accounts
 
