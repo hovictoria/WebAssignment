@@ -4,15 +4,8 @@ exports.createReview = async (req, res) => {
     try {
         const comment = req.body.comment;
         const eventID = req.body.eventID;
-
         const userID = req.session.user.id;
-        const existingReview = await reviewModel.findByUserAndEvent(userID, eventID);
-
-        if (existingReview) {
-            await reviewModel.updateReview(existingReview._id, comment);
-        } else {
-            await reviewModel.createReview({ user: userID, event: eventID, comment });
-        }
+        await reviewModel.createReview({ user: userID, event: eventID, comment });
 
         res.redirect(`/event-details?_id=${eventID}`);
     } catch (error) {

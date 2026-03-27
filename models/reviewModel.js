@@ -36,10 +36,6 @@ exports.findByEvent = function(eventId) {
     return Review.find({ event: eventId }).populate('user', 'name');
 };
 
-exports.findByUserAndEvent = function(userId, eventId) {
-    return Review.findOne({ user: userId, event: eventId });
-};
-
 exports.updateReview = function(id, comment) {
     return Review.updateOne(
         { _id: id },

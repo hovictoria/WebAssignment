@@ -121,11 +121,10 @@ exports.getDetails = async (req,res) => {
         let event = await Event.findById(id);
         let organiser = await User.findByID(event.organiser);
         const reviews = await reviewModel.findByEvent(id);
-        const userHasReview = !!(user && reviews.some(review => String(review.user) === String(user.id)));
-        res.render('event-details', { event, organiser, error: '', user, reviews, userHasReview });
+        res.render('event-details', { event, organiser, error: '', user, reviews });
     } catch (err){
         error = 'Error Reading Database.';
-        res.render('event-details', { event: {}, error: 'Error getting event details.', user, reviews: [], userHasReview: false });
+        res.render('event-details', { event: {}, error: 'Error getting event details.', user, reviews: [] });
     }
 
 }
