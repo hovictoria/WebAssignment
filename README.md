@@ -108,7 +108,7 @@ Then open your browser and go to:
 
 ## Project Structure
 
-\```
+```
 campus-event-board/
 ├── app.js
 ├── .env
@@ -165,7 +165,7 @@ campus-event-board/
 │
 └── public/
     └── index.html
-\```
+```
 
 ## Notes
 - All event dates must be set in the future due to form validation rules.
