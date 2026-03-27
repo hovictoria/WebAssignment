@@ -10,6 +10,8 @@ router.get("/logout",userController.logout);
 
 router.get("/register", authMiddleware.hasLoggedIn,userController.showRegister);
 router.post("/register", authMiddleware.hasLoggedIn, userController.handleRegister);
+router.get("/register/admin-code", authMiddleware.hasLoggedIn, userController.showAdminCode);
+router.post("/register/admin-code", authMiddleware.hasLoggedIn, userController.handleAdminCode);
 
 router.get("/profile",authMiddleware.isLoggedIn,userController.profileGet);
 router.post("/profileedit",userController.profileEdit);

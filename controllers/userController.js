@@ -13,7 +13,8 @@ exports.home=(req,res)=>{
 
 
 exports.showRegister = (req, res) => {
-    res.render("register", { email: undefined, name: undefined, role: "Student", adminCode: "", errors: [], user: "" });
+    delete req.session.pendingAdminRegistration;
+    res.render("register", { email: undefined, name: undefined, role: "Student", errors: "", user: "" });
 };
 
 exports.handleRegister = async (req, res) => {
@@ -22,7 +23,6 @@ exports.handleRegister = async (req, res) => {
     let password = req.body.password;
     let confirmpassword = req.body.confirmpassword;
     let role = (req.body.role ?? "Student").trim();
-    let adminCode = (req.body.adminCode ?? "").trim();
     let errors = [];
     const allowedRoles = ["Student", "Admin"];
 
@@ -35,25 +35,29 @@ exports.handleRegister = async (req, res) => {
     if (password !== confirmpassword) {
         errors="Passwords don't match";
     }
-    if (role === "Admin") {
-        if (!adminCode) {
-            errors="Admin registration code is required";
-        }
-        else if (adminCode !== ADMIN_REGISTER_CODE) {
-            errors="Invalid admin registration code";
-        }
-    }
     if (errors.length === 0) {
         try {
             let users = await User.findByEmail(email);
             if (users) {
                 throw new Error("Email already exists");
             }
-            password=await bcrypt.hash(password,10);
-            let newuser = {
-                name,email,password,role,bookmarks:[]
-            };
-            const createdUser = await User.addUser(newuser);
+            password = await bcrypt.hash(password, 10);
+
+            if (role === "Admin") {
+                req.session.pendingAdminRegistration = {
+                    name,
+                    email,
+                    password,
+                    role,
+                    bookmarks: []
+                };
+                res.redirect("/register/admin-code");
+                return;
+            }
+
+            const createdUser = await User.addUser({
+                name, email, password, role, bookmarks: []
+            });
 
             req.session.user = {
                 id: createdUser._id,
@@ -73,7 +77,65 @@ exports.handleRegister = async (req, res) => {
         res.redirect('/home');
         return;
     }
-    res.render("register", { email, name, role, adminCode, errors, user:""});
+    res.render("register", { email, name, role, errors, user:""});
+};
+
+exports.showAdminCode = (req, res) => {
+    if (!req.session.pendingAdminRegistration) {
+        res.redirect("/register");
+        return;
+    }
+
+    res.render("admin-code", { errors: "", user: "" });
+};
+
+exports.handleAdminCode = async (req, res) => {
+    const adminCode = (req.body.adminCode ?? "").trim();
+    const pendingUser = req.session.pendingAdminRegistration;
+
+    if (!pendingUser) {
+        res.redirect("/register");
+        return;
+    }
+
+    if (!adminCode) {
+        res.render("admin-code", { errors: "Admin registration code is required", user: "" });
+        return;
+    }
+
+    if (adminCode !== ADMIN_REGISTER_CODE) {
+        res.render("admin-code", { errors: "Incorrect admin code", user: "" });
+        return;
+    }
+
+    try {
+        const existingUser = await User.findByEmail(pendingUser.email);
+        if (existingUser) {
+            delete req.session.pendingAdminRegistration;
+            res.render("register", {
+                email: pendingUser.email,
+                name: pendingUser.name,
+                role: pendingUser.role,
+                errors: "Email already exists",
+                user: ""
+            });
+            return;
+        }
+
+        const createdUser = await User.addUser(pendingUser);
+        delete req.session.pendingAdminRegistration;
+
+        req.session.user = {
+            id: createdUser._id,
+            name: createdUser.name,
+            role: createdUser.role,
+            email: createdUser.email
+        };
+
+        res.redirect("/admin");
+    } catch (err) {
+        res.render("admin-code", { errors: "Something went wrong", user: "" });
+    }
 };
 
 exports.showLogin = (req, res) => {

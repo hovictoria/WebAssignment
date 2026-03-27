@@ -1,0 +1,17 @@
+<%- include("common/header") %>
+
+    <h1>Admin Registration</h1>
+
+    <form action="/register/admin-code" method="post">
+        <label for="adminCode">Admin Registration Code:</label><br>
+        <input type="password" size="25" name="adminCode" id="adminCode" placeholder="Enter admin code"><br><br>
+
+        <button type="submit">Submit Code</button><br><br>
+        <a href="/register">Back to Register</a>
+    </form>
+
+    <% if(errors!=""){ %>
+        <p style="color:red"><%= errors %></p>
+    <% } %>
+</body>
+</html>
