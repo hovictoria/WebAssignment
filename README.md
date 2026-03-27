@@ -107,59 +107,65 @@ Then open your browser and go to:
 ---
 
 ## Project Structure
-project/
+
+\```
+campus-event-board/
 ├── app.js
 ├── .env
 ├── README.md
 ├── package.json
+│
+├── middleware/
+│   └── auth-middleware.js
+│
 ├── routes/
-│ ├── eventRoutes.js
-│ ├── userRoutes.js
-│ ├── rsvpRoutes.js
-│ ├── reviewRoutes.js
-│ ├── bookmarkRoutes.js
-│ └── reportRoutes.js
+│   ├── eventRoutes.js
+│   ├── userRoutes.js
+│   ├── rsvpRoutes.js
+│   ├── reviewRoutes.js
+│   ├── bookmarkRoutes.js
+│   └── reportRoutes.js
+│
 ├── controllers/
-│ ├── eventController.js
-│ ├── userController.js
-│ ├── rsvpController.js
-│ ├── reviewController.js
-│ ├── bookmarkController.js
-│ └── reportController.js
+│   ├── eventController.js
+│   ├── userController.js
+│   ├── rsvpController.js
+│   ├── reviewController.js
+│   ├── bookmarkController.js
+│   └── reportController.js
+│
 ├── models/
-│ ├── eventModel.js
-│ ├── userModel.js
-│ ├── rsvpModel.js
-│ ├── reviewModel.js
-│ ├── bookmarkModel.js
-│ └── reportModel.js
+│   ├── eventModel.js
+│   ├── userModel.js
+│   ├── rsvpModel.js
+│   ├── reviewModel.js
+│   ├── bookmarkModel.js
+│   └── reportModel.js
+│
 ├── views/
-│ ├── common/
-│ │ └── header.ejs
-│ ├── admin-code.ejs
-│ ├── admin.ejs
-│ ├── bookmarks.ejs
-│ ├── create-event.ejs
-│ ├── create-report.ejs
-│ ├── delete-event.ejs
-│ ├── event-details.ejs
-│ ├── events.ejs
-│ ├── login.ejs
-│ ├── my-reports.ejs
-│ ├── my-rsvps.ejs
-│ ├── profile.ejs
-│ ├── register.ejs
-│ ├── reports.ejs
-│ ├── rsvp.ejs
-│ ├── studenthome.ejs
-│ └── update-details.ejs
+│   ├── common/
+│   │   └── header.ejs
+│   ├── admin.ejs
+│   ├── admin-code.ejs
+│   ├── bookmarks.ejs
+│   ├── create-event.ejs
+│   ├── create-report.ejs
+│   ├── delete-event.ejs
+│   ├── event-details.ejs
+│   ├── events.ejs
+│   ├── login.ejs
+│   ├── my-reports.ejs
+│   ├── my-rsvps.ejs
+│   ├── profile.ejs
+│   ├── register.ejs
+│   ├── reports.ejs
+│   ├── rsvp.ejs
+│   ├── studenthome.ejs
+│   └── update-details.ejs
+│
 └── public/
-└── index.html
-└── middleware/
-└── auth-middleware.js
-
-
----
+    └── index.html
+\```
 
 ## Notes
 - All event dates must be set in the future due to form validation rules.
