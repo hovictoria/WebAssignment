@@ -31,11 +31,36 @@
         </tr>
         <tr>
             <th>Organiser:</th>
-            <td><%= event.organiser.name %></td>
+            <td><%= organiser.name %></td>
         </tr>
         
     </table>
-<br>
+    <br>
+
+    <% let hasAction = false; %>
+    <% if (user && user.role === 'Student') { %>
+        <% if (hasAction) { %>|<% } %>
+        <a href="/rsvp?_id=<%= event._id %>">RSVP</a>
+        <% hasAction = true; %>
+    <% } %>
+    <!-- checks if user is logged in before showing report option -->
+    <% if (user) { %>
+        <!-- add | if there are previous actions -->
+        <% if (hasAction) { %>|<% } %>
+        <!-- builds the report link, sends the event's Mongo _id string: /report-event?_id=<event id> -->
+        <a href="/report-event?_id=<%= event._id %>">Report</a>
+        <!-- marks that this row has at least one action -->
+        <% hasAction = true; %>
+    <% } %>
+
+    <% if (user) { %>
+        <% if (hasAction) { %>|<% } %>
+        <a href="/bookmarks/add/<%= event._id %>">Bookmark</a>
+        <% hasAction = true; %>
+    <% } %>
+
+
+    <br><br>
 <a href="/events">← Back to Events</a>
 
 </body>
