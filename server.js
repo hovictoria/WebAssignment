@@ -4,7 +4,6 @@ const path = require('path');
 const session = require('express-session');
 const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
-const bcrypt = require('bcryptjs');
 
 const server = express();
 

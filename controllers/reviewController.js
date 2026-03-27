@@ -7,7 +7,7 @@ exports.createReview = async (req, res) => {
         const comment = req.body.comment;
         const eventID = req.body.eventID;
 
-        const userID = req.session.userID;
+        const userID = req.session.user.id;
         console.log(comment);
         await reviewModel.createReview({user:userID, event:eventID,rating, comment});
 

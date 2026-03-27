@@ -25,14 +25,15 @@
     </table>
     <%} else{ %>
     <form action="profileedit" method="post">
-    <table border="1" style="border-collapse:collapse;">
+    <table>
         <tr>
             <td>Name: </td>
             <td><input type="text" name="name" value="<%= user.name %>"></td>
         </tr>
         <tr>
             <td>Email: </td>
-            <td><input type="text" name="email" value="<%= user.email %>" readonly></td>
+            <td><%= user.email %></td>
+            <input type="hidden" name="email" value="<%= user.email %>">
         </tr>
         <tr>
             <td>Password: </td>
@@ -40,7 +41,8 @@
         </tr>
         <tr>
             <td>Role: </td>
-            <td><input type="text" name="role" value="<%= user.role %>" readonly></td>
+            <td><%= user.role %></td>
+            <input type="hidden" name="role" value="<%= user.role %>">
         </tr>
     </table><br>
     <button type="submit">Update</button>
