@@ -44,19 +44,19 @@ exports.handleRegister = async (req, res) => {
             password = await bcrypt.hash(password, 10);
 
             if (role === "Admin") {
+                //set pendingAdminRegistration to user information
                 req.session.pendingAdminRegistration = {
                     name,
                     email,
                     password,
-                    role,
-                    bookmarks: []
+                    role
                 };
                 res.redirect("/register/admin-code");
                 return;
             }
 
             const createdUser = await User.addUser({
-                name, email, password, role, bookmarks: []
+                name, email, password, role
             });
 
             req.session.user = {
@@ -80,7 +80,9 @@ exports.handleRegister = async (req, res) => {
     res.render("register", { email, name, role, errors, user:""});
 };
 
+//get user to enter admin code before creating admin account
 exports.showAdminCode = (req, res) => {
+    //if not pending admin registration
     if (!req.session.pendingAdminRegistration) {
         res.redirect("/register");
         return;
@@ -89,6 +91,7 @@ exports.showAdminCode = (req, res) => {
     res.render("admin-code", { errors: "", user: "" });
 };
 
+//if admin code is incorrect, show error message
 exports.handleAdminCode = async (req, res) => {
     const adminCode = (req.body.adminCode ?? "").trim();
     const pendingUser = req.session.pendingAdminRegistration;
@@ -111,7 +114,8 @@ exports.handleAdminCode = async (req, res) => {
     try {
         const existingUser = await User.findByEmail(pendingUser.email);
         if (existingUser) {
-            delete req.session.pendingAdminRegistration;
+            //set pendingAdminRegistration to null and render registration when account exists
+            req.session.pendingAdminRegistration=null;
             res.render("register", {
                 email: pendingUser.email,
                 name: pendingUser.name,
@@ -123,8 +127,8 @@ exports.handleAdminCode = async (req, res) => {
         }
 
         const createdUser = await User.addUser(pendingUser);
-        delete req.session.pendingAdminRegistration;
-
+        req.session.pendingAdminRegistration=null;
+        //set session user to registered user account
         req.session.user = {
             id: createdUser._id,
             name: createdUser.name,
@@ -192,7 +196,8 @@ exports.adminGet = async(req,res)=>{
         let edit=await User.findByEmail(email);
         let error=req.query.error;
         let success=req.query.success;
-        res.render("admin",{data,user,edit,error,success});
+        let del=req.query.delete;
+        res.render("admin",{data,user,edit,error,success,del});
     }
     catch(error){
         console.log(error);

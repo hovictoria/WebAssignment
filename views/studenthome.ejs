@@ -1,54 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard</title>
-</head>
-<body>
+<%- include("common/header") %>
+    <h2>✨ What You Can Do</h2>
 
-    <h1>Welcome, <%= user.name %> 👋</h1>
-
+    <ul>
+        <li>📅 Browse upcoming events like hackathons, concerts, and workshops</li>
+        <li>📝 Create and manage your own events</li>
+        <li>✅ RSVP and keep track of events you’re attending</li>
+        <li>🔖 Save events for later</li>
+        <li>💬 Join discussions and comment on events</li>
+        <li>🚩 Report issues if needed</li>
+    </ul>
     <hr>
-
-    <h2>📅 Events</h2>
     <p>
-        <a href="/events">View All Events</a> |
-        <a href="/create-event">Create Event</a>
-    </p>
-
-    <hr>
-
-    <h2>✅ My RSVPs</h2>
-    <p>
-        <a href="/my-rsvps">View My RSVPs</a>
-    </p>
-
-    <hr>
-
-    <h2>🔖 Saved Events</h2>
-    <p>
-        <a href="/bookmarks">View Saved Events</a>
-    </p>
-
-    <hr>
-
-    <h2>🚩 My Reports</h2>
-    <p>
-        <a href="/my-reports">View My Reports</a>
-    </p>
-
-    <hr>
-
-    <h2>💬 Comments</h2>
-    <p>
-        <a href="/my-comments">View My Comments</a>
-    </p>
-
-    <hr>
-
-    <h2>👤 Account</h2>
-    <p>
-        <a href="/profile">View Profile</a> |
-        <a href="/logout">Logout</a>
+    💡 Tip: Use the navigation bar at the top to access all features easily.
     </p>
 
 </body>

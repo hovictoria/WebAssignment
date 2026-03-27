@@ -20,11 +20,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['Student', 'Admin'],
     default: 'Student'
-  },
-  bookmarks: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event'
-  }]
+  }
 });
 
 const User = mongoose.model('User', userSchema, 'user');

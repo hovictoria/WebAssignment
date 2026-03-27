@@ -2,7 +2,7 @@
 
     <h1>Profile</h1>
     <% if(!edit){ %>
-    <table border="1">
+    <table border="1" cellpadding="8" cellspacing="0" style="width:25%; border-collapse:collapse;">
         <tr>
             <td>Name: </td>
             <td><%=user.name%></td>
@@ -25,7 +25,7 @@
     </table>
     <%} else{ %>
     <form action="profileedit" method="post">
-    <table border="1">
+    <table border="1" style="border-collapse:collapse;">
         <tr>
             <td>Name: </td>
             <td><input type="text" name="name" value="<%= user.name %>"></td>
@@ -36,7 +36,7 @@
         </tr>
         <tr>
             <td>Password: </td>
-            <td><input type="text" name="password"></td>
+            <td><input type="text" name="password" placeholder="leave empty if no change"></td>
         </tr>
         <tr>
             <td>Role: </td>
