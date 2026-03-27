@@ -106,9 +106,13 @@
                                 <a href="">RSVP</a>
                                 <% hasAction = true; %>
                             <% } %>
+                            <!-- checks if user is logged in before showing report option -->
                             <% if (user) { %>
+                                <!-- add | if there are previous actions -->
                                 <% if (hasAction) { %>|<% } %>
+                                <!-- builds the report link, sends the event's Mongo _id string: /report-event?_id=<event id> -->
                                 <a href="/report-event?_id=<%= event._id %>">Report</a>
+                                <!-- marks that this row has at least one action -->
                                 <% hasAction = true; %>
                             <% } %>
 
