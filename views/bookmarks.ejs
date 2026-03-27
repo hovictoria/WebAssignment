@@ -289,8 +289,8 @@
         const notes = document.getElementById('notesInput').value;
         const response = await fetch(`/api/bookmarks/${currentBookmarkId}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ notes })
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ notes }).toString()
         });
 
         const data = await response.json();

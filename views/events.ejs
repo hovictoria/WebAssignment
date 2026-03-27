@@ -114,7 +114,7 @@
 
                             <% if (user) { %>
                                 <% if (hasAction) { %>|<% } %>
-                                <a href="#" onclick="toggleBookmark('<%= event._id %>', this); return false;">Bookmark</a>
+                                <a href="/bookmarks/add/<%= event._id %>">Bookmark</a>
                                 <% hasAction = true; %>
                             <% } %>
 
@@ -125,28 +125,5 @@
             </tbody>
         </table>
     <% } %>
-<script>
-async function toggleBookmark(eventId, btn) {
-  try {
-    const response = await fetch('/api/bookmarks/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ eventId })
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      btn.textContent = 'Bookmarked';
-    } else {
-      alert(data.error);
-    }
-  } catch (error) {
-    alert('Error: ' + error.message);
-  }
-}
-</script>
-  
-    
 </body>
 </html>
