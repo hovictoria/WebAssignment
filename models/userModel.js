@@ -49,4 +49,8 @@ exports.deleteUser = function(email){
     return User.deleteOne({email});
 }
 
+exports.findByID = function(id){
+  return User.findOne({_id: id})
+}
+
 
