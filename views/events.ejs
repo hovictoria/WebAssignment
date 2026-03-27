@@ -65,16 +65,12 @@
     <% if (events.length === 0) { %>
         <p>No events found.</p>
     <% } else { %>
-        <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+        <table border="1" cellpadding="8" cellspacing="0" style="width:80%; border-collapse:collapse; margin: 0 auto;">
             <thead>
                 <tr>
                     <th>Name of Event</th>
-                    <th>Description</th>
                     <th>Date</th>
-                    <th>Time</th>
-                    <th>Location</th>
                     <th>Category</th>
-                    <th>Organiser</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -82,16 +78,13 @@
                 <% events.forEach(event => { %>
                     <tr>
                         <td><%= event.title %></td>
-                        <td><%= event.description %></td>
                         <td><%= new Date(event.date).toDateString() %></td>
-                        <td><%= event.time || '-' %></td>
-                        <td><%= event.location %></td>
                         <td><%= event.category %></td>
-                        <td><%= event.organiser %></td>
                         <td>
                             <% const canEdit = user && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
                             <% const canDelete = user && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
                             <% let hasAction = false; %>
+                            <a href="/event-details?_id=<%= event._id %>">Details</a> |
                             <% if (canEdit) { %>
                                 <a href="/update-event?_id=<%= event._id %>">Edit</a>
                                 <% hasAction = true; %>
@@ -106,17 +99,19 @@
                                 <a href="/rsvp?_id=<%= event._id %>">RSVP</a>
                                 <% hasAction = true; %>
                             <% } %>
+                            <!-- checks if user is logged in before showing report option -->
                             <% if (user) { %>
+                                <!-- add | if there are previous actions -->
                                 <% if (hasAction) { %>|<% } %>
+                                <!-- builds the report link, sends the event's Mongo _id string: /report-event?_id=<event id> -->
                                 <a href="/report-event?_id=<%= event._id %>">Report</a>
+                                <!-- marks that this row has at least one action -->
                                 <% hasAction = true; %>
                             <% } %>
 
                             <% if (user) { %>
                                 <% if (hasAction) { %>|<% } %>
-                                <button onclick="toggleBookmark('<%= event._id %>', this)">
-                                    ☆ Bookmark
-                                </button>
+                                <a href="/bookmarks/add/<%= event._id %>">Bookmark</a>
                                 <% hasAction = true; %>
                             <% } %>
 
@@ -127,29 +122,5 @@
             </tbody>
         </table>
     <% } %>
-<script>
-async function toggleBookmark(eventId, btn) {
-  try {
-    const response = await fetch('/api/bookmarks/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ eventId })
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      btn.textContent = '★ Bookmarked';
-      btn.style.background = '#4CAF50';
-    } else {
-      alert(data.error);
-    }
-  } catch (error) {
-    alert('Error: ' + error.message);
-  }
-}
-</script>
-  
-    
 </body>
 </html>

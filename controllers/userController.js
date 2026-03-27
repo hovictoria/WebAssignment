@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require('bcryptjs');
+const ADMIN_REGISTER_CODE = "admin123";
 
 exports.home=(req,res)=>{
     let user=req.session.user;
@@ -12,20 +13,35 @@ exports.home=(req,res)=>{
 
 
 exports.showRegister = (req, res) => {
-    res.render("register", { email: undefined, name:undefined, errors: [],user:"" });
+    res.render("register", { email: undefined, name: undefined, role: "Student", adminCode: "", errors: [], user: "" });
 };
 
 exports.handleRegister = async (req, res) => {
     let email = (req.body.email ?? "").trim();
-    let name = req.body.name.trim();
+    let name = (req.body.name ?? "").trim();
     let password = req.body.password;
     let confirmpassword = req.body.confirmpassword;
+    let role = (req.body.role ?? "Student").trim();
+    let adminCode = (req.body.adminCode ?? "").trim();
     let errors = [];
-    if (!email || !password) {
+    const allowedRoles = ["Student", "Admin"];
+
+    if (!email || !password || !name || !confirmpassword) {
         errors="All fields are required";
+    }
+    if (!allowedRoles.includes(role)) {
+        errors="Invalid role selected";
     }
     if (password !== confirmpassword) {
         errors="Passwords don't match";
+    }
+    if (role === "Admin") {
+        if (!adminCode) {
+            errors="Admin registration code is required";
+        }
+        else if (adminCode !== ADMIN_REGISTER_CODE) {
+            errors="Invalid admin registration code";
+        }
     }
     if (errors.length === 0) {
         try {
@@ -35,18 +51,29 @@ exports.handleRegister = async (req, res) => {
             }
             password=await bcrypt.hash(password,10);
             let newuser = {
-                name,email,password,role: "Student",bookmarks:[]
+                name,email,password,role,bookmarks:[]
             };
-            await User.addUser(newuser);
+            const createdUser = await User.addUser(newuser);
+
+            req.session.user = {
+                id: createdUser._id,
+                name: createdUser.name,
+                role: createdUser.role,
+                email: createdUser.email
+            };
         } catch (err) {
             errors=err.message;
         }
     }
     if(errors.length === 0){
-        res.redirect('/login');
+        if (req.session.user.role === "Admin") {
+            res.redirect('/admin');
+            return;
+        }
+        res.redirect('/home');
         return;
     }
-    res.render("register", { email, name, errors,user:""});
+    res.render("register", { email, name, role, adminCode, errors, user:""});
 };
 
 exports.showLogin = (req, res) => {

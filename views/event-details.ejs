@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <h1><%= event.title %></h1>
+    <table border="1">
+        <tr>
+            <th>Description:</th>
+            <td><%= event.description %></td>
+        </tr>
+        <tr>
+            <th>Date:</th>
+            <td><%= new Date(event.date).toDateString() %></td>
+        </tr>
+        <tr>
+            <th>Time:</th>
+            <td><%= event.time || '-' %></td>
+        </tr>
+        <tr>
+            <th>Location:</th>
+            <td><%= event.location %></td>
+        </tr>
+        <tr>
+            <th>Category:</th>
+            <td><%= event.category %></td>
+        </tr>
+        <tr>
+            <th>Organiser:</th>
+            <td><%= event.organiser.name %></td>
+        </tr>
+        
+    </table>
+<br>
+<a href="/events">← Back to Events</a>
+
+</body>
+</html>
