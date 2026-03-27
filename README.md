@@ -38,13 +38,15 @@ PORT=8000
 
 ---
 
-## Running the Application
-```nodemon server.js```
+5. **Start the application**
+   ```bash
+   nodemon server.js
+   ```
 
----
-Then open your browser and go to:
-```http://localhost:8000```
----
+6. **Open your browser**
+   ```
+   http://localhost:8000
+   ```
 
 
 ## Test Accounts
@@ -67,7 +69,55 @@ Then open your browser and go to:
 
 
 > ⚠️ Ensure your IP address is whitelisted on MongoDB Atlas before running.
+---
+## Usage
 
+### For Students
+1. 📅 Browse upcoming events like hackathons, concerts, and workshops
+2. 📝 Create and manage your own events
+3. ✅ RSVP and keep track of events you’re attending
+4. 🔖 Save events for later
+5. 💬 Join discussions and comment on events
+6. 🚩 Report issues if needed
+
+### For Admins
+1. 👤 User Management
+- View all registered user accounts
+- Edit user details, including:
+   - Name
+   - Password (securely updated with hashing)
+   - Role (e.g., student, organizer, admin)
+- Maintain proper role-based access control across the system
+2. 🚩 Report Management
+- View all submitted reports from users
+- Update report status (e.g., pending, resolved)
+- Monitor and moderate inappropriate content or issues raised by users
+3. 📅 Event Oversight
+- View all events created on the platform
+- Monitor event details to ensure compliance with platform guidelines
+4. 🔐 Access Control
+- Admin-only routes are protected using authentication and authorization
+- Only users with the admin role can access these features
+
+### For Developers
+- **Models**: Define data structures in the `models/` directory
+- **Controllers**: Handle business logic in the `controllers/` directory
+- **Routes**: Define API endpoints in the `routes/` directory
+- **Views**: Create EJS templates in the `views/` directory
+
+---
+
+## API Endpoints
+### Tea Menu
+- `GET /menu` - Get all teas
+
+### Order
+- `GET /order` - Create new order
+
+### Reviews
+- `GET /reviews` - Get all reviews
+- `GET /reviews/create` - Get review form to provide review
+- `POST /reviews/create` - Create new review
 ---
 
 ## Features & Functionality
