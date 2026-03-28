@@ -83,21 +83,21 @@ PORT=8000
 ### For Admins
 1. 👤 User Management
 - View all registered user accounts
-- Edit user details, including:
-   - Name
-   - Password (securely updated with hashing)
-   - Role (e.g., student, organizer, admin)
-- Maintain proper role-based access control across the system
+   - Edit user details, including:
+      - Name
+      - Password (securely updated with hashing)
+      - Role (e.g., student, organizer, admin)
+   - Maintain proper role-based access control across the system
 2. 🚩 Report Management
-- View all submitted reports from users
-- Update report status (e.g., pending, resolved)
-- Monitor and moderate inappropriate content or issues raised by users
+   - View all submitted reports from users
+   - Update report status (e.g., pending, resolved)
+   - Monitor and moderate inappropriate content or issues raised by users
 3. 📅 Event Oversight
-- View all events created on the platform
-- Monitor event details to ensure compliance with platform guidelines
+   - View all events created on the platform
+   - Monitor event details to ensure compliance with platform guidelines
 4. 🔐 Access Control
-- Admin-only routes are protected using authentication and authorization
-- Only users with the admin role can access these features
+   - Admin-only routes are protected using authentication and authorization
+   - Only users with the admin role can access these features
 
 ### For Developers
 - **Models**: Define data structures in the `models/` directory
@@ -108,11 +108,25 @@ PORT=8000
 ---
 
 ## API Endpoints
-### Tea Menu
-- `GET /menu` - Get all teas
+### Login 
+- `GET /user/login` - Show login page
+- `POST /user/login` - Login user
 
-### Order
-- `GET /order` - Create new order
+### Register
+- `GET /user/register` - Show login page
+- `POST /user/register` - Login user
+- `GET /user/register/admin-code` - Show admin code page
+- `POST /user/register/admin-code` - Authenticate admin user
+
+### Student
+- `GET /user/home` - Show student home page
+- `POST /user/profileedit` - Edit own profile
+- `POST /user/profiledelete` - Delete own account
+
+### Admin
+- `GET /user/admin` - Show admin home page
+- `POST /user/edit-user` - Edit selected profile
+- `POST /user/delete-user` - Delete selected account
 
 ### Reviews
 - `GET /reviews` - Get all reviews
