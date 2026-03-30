@@ -139,9 +139,10 @@ PORT=8000
 ### 1. Event Management (Wansim)
 - **Create:** Post a new campus event with title, date, location, description and category
 - **Read:** Browse all events on the event listing page; click into individual event details
-- **Update:** Edit event title, date, venue, description, and category
-- **Delete:** Remove an event permanently
-
+- **Update:** Edit event details (title, date, venue, description, category) — only accessible by the event organiser
+- **Delete:** Remove an event permanently — only accessible by the event organiser 
+- **Authorization:** Edit and Delete buttons are only visible to the event organiser who created it
+  
 ### 2. RSVP System (Yijun)
 - **Create:** RSVP to an event with a status (Going / Maybe / Not Going)
 - **Read:** View attendee list for an event; view your personal RSVP history
