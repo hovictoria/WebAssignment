@@ -1,6 +1,5 @@
 <%- include("common/header") %>
 
-
     <h1>Campus Events</h1>
 
     <a href="/create-event">Create Event</a>
@@ -9,15 +8,15 @@
 
     <form method="GET" action="/events">
         <div>
-            <label>Keyword:</label>
-            <input type="text" name="keyword" value="<%= keyword %>">
+            <label for="keyword">Keyword:</label>
+            <input type="text" id="keyword" name="keyword" value="<%= keyword %>">
         </div>
 
         <br>
 
         <div>
-            <label>Category:</label>
-            <select name="category">
+            <label for="category">Category:</label>
+            <select id="category" name="category">
                 <option value="">All</option>
                 <option value="Academic" <%= category === 'Academic' ? 'selected' : '' %>>Academic</option>
                 <option value="Social" <%= category === 'Social' ? 'selected' : '' %>>Social</option>
@@ -30,15 +29,15 @@
         <br>
 
         <div>
-            <label>Location:</label>
-            <input type="text" name="location" value="<%= location %>">
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" value="<%= location %>">
         </div>
 
         <br>
 
         <div>
-            <label>Date:</label>
-            <input type="date" name="date" value="<%= date %>">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" value="<%= date %>">
         </div>
 
         <br>
@@ -48,10 +47,9 @@
                 <button type="submit">Search / Filter</button>
                 <a href="/events">Clear</a>
             </div>
-
             <div>
-                <label>Sort by:</label>
-                <select name="sortBy" onchange="this.form.submit()">
+                <label for="sortBy">Sort by:</label>
+                <select id="sortBy" name="sortBy" onchange="this.form.submit()">
                     <option value="date" <%= sortBy === 'date' ? 'selected' : '' %>>Date</option>
                     <option value="title" <%= sortBy === 'title' ? 'selected' : '' %>>Title (A-Z)</option>
                     <option value="titleDesc" <%= sortBy === 'titleDesc' ? 'selected' : '' %>>Title (Z-A)</option>
@@ -84,7 +82,7 @@
                             <% const canEdit = user && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
                             <% const canDelete = user && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
                             <% let hasAction = false; %>
-                            <a href="/event-details?_id=<%= event._id %>">Details</a> 
+                            <a href="/event-details?_id=<%= event._id %>">Details</a>
                             <% if (canEdit) { %>
                                 | <a href="/update-event?_id=<%= event._id %>">Edit</a>
                                 <% hasAction = true; %>
@@ -92,15 +90,13 @@
                             <% if (canDelete) { %>
                                 <% if (hasAction) { %>|<% } %>
                                 <a href="/delete-event?_id=<%= event._id %>">Delete</a>
-                                <% hasAction = true; %>
                             <% } %>
-                        
-
                         </td>
                     </tr>
-                <% }) %>
+                <% }); %>
             </tbody>
         </table>
     <% } %>
+
 </body>
 </html>

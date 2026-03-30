@@ -7,7 +7,7 @@ const authMiddleware = require('../middleware/auth-middleware');
 router.get('/events', authMiddleware.isLoggedIn,eventController.showEvents);
 
 // view all details
-router.get('/event-details',authMiddleware.isLoggedIn, eventController.getDetails)
+router.get('/event-details',authMiddleware.isLoggedIn, eventController.getDetails);
 
 
 // create

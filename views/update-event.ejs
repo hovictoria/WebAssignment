@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Update</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Event</title>
 </head>
 <body>
 
-  <h1>Edit Event</h1>
+    <h1>Edit Event</h1>
 
-  <% if (error !== '') { %>
-    <p style="color:red">⚠️ <%= error %></p>
-  <% } %>
+    <% if (error !== '') { %>
+        <p style="color:red">⚠️ <%= error %></p>
+    <% } %>
 
-  <% if (success === '' && Object.keys(result).length !== 0) { %>
-    <form action="/update-event" method="post">
-      <table>
-        <tr>
-          <th>Title</th>
-          <td><input type="text" name="title" value="<%= result.title %>"></td>
-        </tr>
-        <tr>
-          <th>Description</th>
-          <td><input type="text" name="description" value="<%= result.description %>"></td>
-        </tr>
-        <tr>
-          <th>Date</th>
-          <td><input type="date" name="date" value="<%= date %>"></td>
-        </tr>
-        <tr>
-          <th>Time</th>
-          <td><input type="time" name="time" value="<%= result.time || '' %>"></td>
-        </tr>
-        <tr>
-          <th>Location</th>
-          <td><input type="text" name="location" value="<%= result.location %>"></td>
-        </tr>
-        <tr>
-          <th>Category</th>
-          <td>
-            <select name="category">
-              <option value="" <%= result.category === '' ? 'selected' : '' %>>--Select a Category--</option>
-              <option value="Academic" <%= result.category === 'Academic' ? 'selected' : '' %>>Academic</option>
-              <option value="Social" <%= result.category === 'Social' ? 'selected' : '' %>>Social</option>
-              <option value="Sports" <%= result.category === 'Sports' ? 'selected' : '' %>>Sports</option>
-              <option value="Workshop" <%= result.category === 'Workshop' ? 'selected' : '' %>>Workshop</option>
-              <option value="Other" <%= result.category === 'Other' ? 'selected' : '' %>>Other</option>
-            </select>
-          </td>
-        </tr>
-      </table>
-      <br>
-      <input type="hidden" name="_id" value="<%= result._id %>">
-      <button type="submit">💾 Update Event</button>
-    </form>
-  <% } %>
+    <% if (success === '' && Object.keys(result).length !== 0) { %>
+        <form action="/update-event" method="post">
+            <table>
+                <tr>
+                    <th><label for="title">Title</label></th>
+                    <td><input type="text" id="title" name="title" value="<%= result.title %>"></td>
+                </tr>
+                <tr>
+                    <th><label for="description">Description</label></th>
+                    <td><input type="text" id="description" name="description" value="<%= result.description %>"></td>
+                </tr>
+                <tr>
+                    <th><label for="date">Date</label></th>
+                    <td><input type="date" id="date" name="date" value="<%= date %>"></td>
+                </tr>
+                <tr>
+                    <th><label for="time">Time</label></th>
+                    <td><input type="time" id="time" name="time" value="<%= result.time || '' %>"></td>
+                </tr>
+                <tr>
+                    <th><label for="location">Location</label></th>
+                    <td><input type="text" id="location" name="location" value="<%= result.location %>"></td>
+                </tr>
+                <tr>
+                    <th><label for="category">Category</label></th>
+                    <td>
+                        <select id="category" name="category">
+                            <option value="" <%= result.category === '' ? 'selected' : '' %>>--Select a Category--</option>
+                            <option value="Academic" <%= result.category === 'Academic' ? 'selected' : '' %>>Academic</option>
+                            <option value="Social" <%= result.category === 'Social' ? 'selected' : '' %>>Social</option>
+                            <option value="Sports" <%= result.category === 'Sports' ? 'selected' : '' %>>Sports</option>
+                            <option value="Workshop" <%= result.category === 'Workshop' ? 'selected' : '' %>>Workshop</option>
+                            <option value="Other" <%= result.category === 'Other' ? 'selected' : '' %>>Other</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <input type="hidden" name="_id" value="<%= result._id %>">
+            <button type="submit">💾 Update Event</button>
+        </form>
+    <% } %>
 
-  <% if (success !== '') { %>
-    <p style="color:green">✅ <%= success %></p>
-  <% } %>
-<br>
-  <a href="/events">← Back to Events</a>
+    <% if (success !== '') { %>
+        <p style="color:green">✅ <%= success %></p>
+    <% } %>
+    <br>
+    <a href="/events">← Back to Events</a>
 
 </body>
 </html>

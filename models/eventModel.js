@@ -1,69 +1,66 @@
 const mongoose = require('mongoose');
 
 const eventSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: [true, 'An event must have a title'],
-    trim: true
-  },
-  description: {
-    type: String,
-    required: [true, 'An event must have a description']
-  },
-  date: {
-    type: String,
-    required: [true, 'An event must have a date']
-  },
-  time: {
-    type: String,
-    trim: true,
-    default: ''
-  },
-  location: {
-    type: String,
-    required: [true, 'An event must have a location']
-  },
-  category: {
-    type: String,
-    required: [true, 'An event must have a category'],
-    enum: ['Academic', 'Social', 'Sports', 'Workshop', 'Other']
-  },
-  organiser: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: [true, 'An event must have an organiser'],
-    trim: true,
-    ref: 'User'
-  }
+    title: {
+        type: String,
+        required: [true, 'An event must have a title'],
+        trim: true
+    },
+    description: {
+        type: String,
+        required: [true, 'An event must have a description']
+    },
+    date: {
+        type: String,
+        required: [true, 'An event must have a date']
+    },
+    time: {
+        type: String,
+        trim: true,
+        default: ''
+    },
+    location: {
+        type: String,
+        required: [true, 'An event must have a location']
+    },
+    category: {
+        type: String,
+        required: [true, 'An event must have a category'],
+        enum: ['Academic', 'Social', 'Sports', 'Workshop', 'Other']
+    },
+    organiser: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: [true, 'An event must have an organiser'],
+        ref: 'User'
+    }
 }, { timestamps: true });
 
 const Event = mongoose.model('Event', eventSchema, 'events');
 
 exports.find = function (filter) {
-  return Event.find(filter);
-}
+    return Event.find(filter);
+};
 
-exports.checkExisting = function(title, date){
-  return Event.findOne({title: title,
-                date: date});
-}
-exports.retriveAll = function() {
+exports.checkExisting = function (title, date) {
+    return Event.findOne({ title, date });
+};
+
+exports.retriveAll = function () {
     return Event.find();
-}
+};
 
-exports.addEvent = function(newEvent) {
+exports.addEvent = function (newEvent) {
     return Event.create(newEvent);
-}
+};
 
-exports.findById = function(id){
-    return Event.findOne({_id:id});
-}
+exports.findById = function (id) {
+    return Event.findOne({ _id: id });
+};
 
-exports.editEvent = function(id, title, description, date, time, location, category) {
-    return Event.updateOne({_id:id}, {title:title, description:description, date: date, time: time, location:location, category:category});
-}
+exports.editEvent = function (id, title, description, date, time, location, category) {
+    return Event.updateOne({ _id: id }, { title, description, date, time, location, category });
+};
 
-exports.deleteEvent = function(id){
-    return Event.deleteOne({_id:id})
-}
-
-// module.exports = Event;
+exports.deleteEvent = function (id) {
+    return Event.deleteOne({ _id: id });
+};

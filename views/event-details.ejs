@@ -3,37 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title><%= event.title %></title>
 </head>
 <body>
 
     <h1><%= event.title %></h1>
+
     <table border="1">
         <tr>
-            <th>Description:</th>
+            <th><label>Description</label></th>
             <td><%= event.description %></td>
         </tr>
         <tr>
-            <th>Date:</th>
+            <th><label>Date</label></th>
             <td><%= new Date(event.date).toDateString() %></td>
         </tr>
         <tr>
-            <th>Time:</th>
+            <th><label>Time</label></th>
             <td><%= event.time || '-' %></td>
         </tr>
         <tr>
-            <th>Location:</th>
+            <th><label>Location</label></th>
             <td><%= event.location %></td>
         </tr>
         <tr>
-            <th>Category:</th>
+            <th><label>Category</label></th>
             <td><%= event.category %></td>
         </tr>
         <tr>
-            <th>Organiser:</th>
+            <th><label>Organiser</label></th>
             <td><%= organiser.name %></td>
         </tr>
-        
     </table>
     <br>
 
@@ -43,79 +43,57 @@
         <a href="/rsvp?_id=<%= event._id %>">RSVP</a>
         <% hasAction = true; %>
     <% } %>
-    <!-- checks if user is logged in before showing report option -->
     <% if (user) { %>
-        <!-- add | if there are previous actions -->
         <% if (hasAction) { %>|<% } %>
-        <!-- builds the report link, sends the event's Mongo _id string: /report-event?_id=<event id> -->
         <a href="/report-event?_id=<%= event._id %>">Report</a>
-        <!-- marks that this row has at least one action -->
         <% hasAction = true; %>
     <% } %>
-
     <% if (user) { %>
         <% if (hasAction) { %>|<% } %>
         <a href="/bookmarks/add/<%= event._id %>">Bookmark</a>
         <% hasAction = true; %>
     <% } %>
 
-
     <br><br>
-<a href="/events">← Back to Events</a>
+    <a href="/events">← Back to Events</a>
 
-     <h2>Discussion Forum</h2>
+    <h2>Discussion Forum</h2>
 
     <% if (user) { %>
         <form action="/review/create" method="POST">
             <input type="hidden" name="eventID" value="<%= event._id %>">
-
-            <label>Comment:</label><br>
-            <textarea name="comment" required></textarea><br><br>
-
-            <button type="submit">Post Review</button>
+            <label for="comment">Comment:</label><br>
+            <textarea id="comment" name="comment" required></textarea><br><br>
+            <button type="submit">Post Comment</button>
         </form>
     <% } else { %>
-        <p>You must be logged in to post a review.</p>
+        <p>You must be logged in to post a comment.</p>
     <% } %>
 
     <hr>
 
-    <!-- ===================== -->
-    <!-- DISPLAY REVIEWS -->
-    <!-- ===================== -->
     <h2>Reviews</h2>
-    <% if(reviews!=[]){ %>
     <% reviews.forEach(review => { %>
         <div style="border:1px solid black; padding:10px; margin-bottom:10px;">
-
             <p><strong>User:</strong> <%= review.user && review.user.name ? review.user.name : 'Unknown user' %></p>
             <p><strong>Comment:</strong> <%= review.comment %></p>
             <p><strong>Posted:</strong> <%= new Date(review.createdAt).toLocaleString() %></p>
-
             <% if (review.edited) { %>
                 <small>(edited)</small>
                 <p><strong>Last updated:</strong> <%= new Date(review.updatedAt).toLocaleString() %></p>
             <% } %>
-
-            <!-- ===================== -->
-            <!-- UPDATE + DELETE (ONLY OWNER) -->
-            <!-- ===================== -->
             <% if (user && review.user && String(review.user._id || review.user) === String(user.id)) { %>
-
-                <!-- UPDATE -->
                 <form action="/review/update/<%= review._id %>" method="POST">
-                    <input type="text" name="comment" value="<%= review.comment %>">
+                    <label for="edit-comment-<%= review._id %>">Edit:</label>
+                    <input type="text" id="edit-comment-<%= review._id %>" name="comment" value="<%= review.comment %>">
                     <button type="submit">Update</button>
                 </form>
-
-                <!-- DELETE -->
                 <form action="/review/delete/<%= review._id %>" method="POST">
                     <button type="submit">Delete</button>
                 </form>
-
             <% } %>
-
         </div>
-    <% })} %>
+    <% }); %>
+
 </body>
 </html>
