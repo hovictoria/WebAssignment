@@ -3,18 +3,63 @@
 <h1>My RSVPs</h1>
 
 <% if (!rsvps || rsvps.length === 0) { %>
-  <p>No RSVPs yet.</p>
+  <p>You have not RSVP'd to any events yet.</p>
 <% } else { %>
-  <% rsvps.forEach(r => { %>
-    <div>
-      <h3><%= r.event.title %></h3>
-      <p>Status: <%= r.status %></p>
-      <p>Note: <%= r.note || '-' %></p>
 
-      <form action="/delete-rsvp" method="POST">
-        <input type="hidden" name="id" value="<%= r._id %>">
-        <button type="submit">Delete</button>
-      </form>
-    </div>
-  <% }) %>
+  <form method="GET" action="/my-rsvps" style="margin-bottom: 15px;">
+    <label for="sortBy">Sort by:</label>
+    <select name="sortBy" id="sortBy">
+      <option value="oldest" <%= sortBy === 'oldest' ? 'selected' : '' %>>Oldest to Newest</option>
+      <option value="newest" <%= sortBy === 'newest' ? 'selected' : '' %>>Newest to Oldest</option>
+    </select>
+    <button type="submit">Sort</button>
+  </form>
+
+  <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>Status</th>
+        <th>Note</th>
+        <th>RSVP Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% rsvps.forEach(r => { %>
+        <tr>
+          <td><%= r.event ? r.event.title : 'Deleted Event' %></td>
+
+          <td>
+            <% if (r.status === 'Going') { %>
+              <span style="color: green;">Going</span>
+            <% } else if (r.status === 'Maybe') { %>
+              <span style="color: orange;">Maybe</span>
+            <% } else { %>
+              <span style="color: red;">Not going</span>
+            <% } %>
+          </td>
+
+          <td><%= r.note || '-' %></td>
+          <td><%= new Date(r.rsvpDate).toDateString() %></td>
+
+          <td>
+            <% if (r.event) { %>
+              <a href="/rsvp?_id=<%= r.event._id %>">Edit</a>
+
+              <form action="/delete-rsvp" method="POST" style="display:inline;">
+                <input type="hidden" name="id" value="<%= r._id %>">
+                <button type="submit" onclick="return confirm('Are you sure you want to cancel this RSVP?')">
+                  Delete
+                </button>
+              </form>
+            <% } else { %>
+              -
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
 <% } %>

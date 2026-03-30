@@ -75,11 +75,21 @@ exports.createRsvp = async (req, res) => {
 exports.showMyRsvps = async (req, res) => {
   try {
     const userId = req.session.user.id;
+    const sortBy = req.query.sortBy || 'oldest';
 
-    const rsvps = await RSVP.find({ user: userId }).populate('event');
+    let sortOption = { rsvpDate: 1 }; // oldest first
+    if (sortBy === 'newest') {
+      sortOption = { rsvpDate: -1 };
+    }
+
+    let rsvps = await RSVP.find({ user: userId })
+      .populate('event')
+      .sort(sortOption);
+
+    rsvps = rsvps.filter(r => r.event);
 
     let user = req.session.user;
-    res.render('my-rsvps', { rsvps, user });
+    res.render('my-rsvps', { rsvps, user, sortBy });
 
   } catch (err) {
     console.log(err);
