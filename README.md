@@ -45,7 +45,8 @@ PORT=8000
 
 6. **Open your browser**
    ```
-   http://localhost:8000
+   http://localhost:8000/index.html   ← Landing page
+   http://localhost:8000              ← Main app
    ```
 
 
@@ -238,5 +239,4 @@ campus-event-board/
 
 ## Notes
 - All event dates must be set in the future due to form validation rules.
-- Only Admins can delete events and manage reports.
-- Students must be logged in to RSVP, comment, or bookmark events.
+- Students must be logged in to view events, RSVP, comment, or bookmark events.
