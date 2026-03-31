@@ -91,11 +91,20 @@
                             <% } %>
                         </td>
                         <td><%= event.title %></td>
-                        <td><%= new Date(event.date).toDateString() %></td>
+                        <td>
+                            <%= new Date(event.date).toDateString() %><br>
+                            <% if (event.status === 'Upcoming') { %>
+                                <span style="color: green;">● Upcoming</span>
+                            <% } else if (event.status === 'Ongoing') { %>
+                                <span style="color: orange;">● Ongoing</span>
+                            <% } else { %>
+                                <span style="color: grey;">● Past</span>
+                            <% } %>
+                        </td>
                         <td><%= event.category %></td>
                         <td>
-                            <% const canEdit = user && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
-                            <% const canDelete = user && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
+                            <% const canEdit = user && event.status !== 'Past' && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
+                            <% const canDelete = user && event.status !== 'Past' && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
                             <% let hasAction = false; %>
                             <a href="/event-details?_id=<%= event._id %>">Details</a>
                             <% if (canEdit) { %>

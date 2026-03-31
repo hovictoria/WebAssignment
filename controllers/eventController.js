@@ -6,12 +6,16 @@ const commentModel = require('../models/commentModel');
 
 function canDeleteEvent(user, event) {
     if (!user || !event) return false;
+    const today = new Date().toISOString().split('T')[0];
+    if (event.date <= today) return false;        // ADD THIS
     if (user.role === 'Admin') return true;
     return String(event.organiser) === String(user.id);
 }
 
 function canEditEvent(user, event) {
     if (!user || !event) return false;
+    const today = new Date().toISOString().split('T')[0];
+    if (event.date <= today) return false;        // ADD THIS
     if (user.role === 'Admin') return true;
     return String(event.organiser) === String(user.id);
 }
@@ -52,6 +56,14 @@ exports.showEvents = async (req, res) => {
             .sort(sortOption)
             .collation({ locale: 'en', strength: 2 })
             .lean();
+
+        // check status of event
+        const today = new Date().toISOString().split('T')[0];
+        events.forEach(event => {
+            if (event.date > today) event.status = 'Upcoming';
+            else if (event.date === today) event.status = 'Ongoing';
+            else event.status = 'Past';
+        });
 
         console.log('Filter applied:', filter);
         console.log('Events found:', events.length);
