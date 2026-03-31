@@ -65,7 +65,7 @@
     <h2>Discussion Forum</h2>
 
     <% if (user) { %>
-        <form action="/review/create" method="POST">
+        <form action="/comment/create" method="POST">
             <input type="hidden" name="eventID" value="<%= event._id %>">
             <label for="comment">Comment:</label><br>
             <textarea id="comment" name="comment" required></textarea><br><br>
@@ -77,22 +77,22 @@
 
     <hr>
 
-    <h2 align="center">Reviews</h2>
-    <% reviews.forEach(review => { %>
+    <h2 align="center">Comments</h2>
+    <% comments.forEach(comment => { %>
         <div style="border:1px solid black; padding:10px; margin-bottom:10px;">
-            <p><strong>User:</strong> <%= review.user && review.user.name ? review.user.name : 'Unknown user' %></p>
-            <p><strong>Comment:</strong> <%= review.comment %> <% if (review.edited) { %><small>(edited)</small><% } %></p>
-            <p><strong>Posted:</strong> <%= new Date(review.createdAt).toLocaleString() %></p>
-            <% if (review.edited) { %>
-                <p><strong>Last updated:</strong> <%= new Date(review.updatedAt).toLocaleString() %></p>
+            <p><strong>User:</strong> <%= comment.user && comment.user.name ? comment.user.name : 'Unknown user' %></p>
+            <p><strong>Comment:</strong> <%= comment.comment %> <% if (comment.edited) { %><small>(edited)</small><% } %></p>
+            <p><strong>Posted:</strong> <%= new Date(comment.createdAt).toLocaleString() %></p>
+            <% if (comment.edited) { %>
+                <p><strong>Last updated:</strong> <%= new Date(comment.updatedAt).toLocaleString() %></p>
             <% } %>
-            <% if (user && review.user && String(review.user._id || review.user) === String(user.id)) { %>
-                <form action="/review/update/<%= review._id %>" method="POST">
-                    <label for="edit-comment-<%= review._id %>" style="display:inline-block; vertical-align: top;"><strong>Edit:</strong></label>
-                    <textarea id="edit-comment-<%= review._id %>" name="comment" rows="4" cols="50"><%= review.comment %></textarea>
+            <% if (user && comment.user && String(comment.user._id || comment.user) === String(user.id)) { %>
+                <form action="/comment/update/<%= comment._id %>" method="POST">
+                    <label for="edit-comment-<%= comment._id %>" style="display:inline-block; vertical-align: top;"><strong>Edit:</strong></label>
+                    <textarea id="edit-comment-<%= comment._id %>" name="comment" rows="4" cols="50"><%= comment.comment %></textarea>
                     <button type="submit">Update</button>
                 </form>
-                <form action="/review/delete/<%= review._id %>" method="POST">
+                <form action="/comment/delete/<%= comment._id %>" method="POST">
                     <button type="submit">Delete</button>
                 </form>
             <% } %>

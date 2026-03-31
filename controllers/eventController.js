@@ -2,7 +2,7 @@ const fs = require('fs/promises');
 const User = require("../models/userModel");
 const Event = require('../models/eventModel');
 const mongoose = require('mongoose');
-const reviewModel = require('../models/reviewModel');
+const commentModel = require('../models/commentModel');
 
 function canDeleteEvent(user, event) {
     if (!user || !event) return false;
@@ -72,11 +72,11 @@ exports.getDetails = async (req, res) => {
     try {
         const event = await Event.findById(id);
         const organiser = await User.findByID(event.organiser);
-        const reviews = await reviewModel.findByEvent(id);
-        res.render('event-details', { event, organiser, error: '', user, reviews });
+        const comments = await commentModel.findByEvent(id);
+        res.render('event-details', { event, organiser, error: '', user, comments });
     } catch (err) {
         console.error(err);
-        res.render('event-details', { event: {}, error: 'Error getting event details.', user, reviews: [] });
+        res.render('event-details', { event: {}, error: 'Error getting event details.', user, comments: [] });
     }
 };
 

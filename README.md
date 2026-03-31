@@ -5,7 +5,7 @@
 |------------|--------------------------------|
 | Wansim     | Event Management (CRUD)        |
 | Yijun      | RSVP System                    |
-| Basile     | Comments / Reviews             |
+| Basile     | Comments / Discussion          |
 | Angel      | Saved Events / Bookmarks       |
 | Victoria   | User Profile Management        |
 | Zacchaeus  | Event Reporting / Moderation   |
@@ -64,7 +64,7 @@ PORT=8000
 
 - **Platform:** MongoDB Atlas
 - **Database name:** `webdev`
-- **Collections:** `users`, `events`, `rsvp`, `review`, `category`, `bookmark`, `report`
+- **Collections:** `users`, `events`, `rsvp`, `comments`, `category`, `bookmark`, `report`
 - **MongoDB URI:**
 - mongodb+srv://<username>:<password>@<cluster>.mongodb.net/webdev
 
@@ -129,10 +129,11 @@ PORT=8000
 - `POST /user/edit-user` - Edit selected profile
 - `POST /user/delete-user` - Delete selected account
 
-### Reviews
-- `GET /reviews` - Get all reviews
-- `GET /reviews/create` - Get review form to provide review
-- `POST /reviews/create` - Create new review
+### Comments
+- `POST /comment/create` - Create a new comment
+- `GET /comment/event/:eventId` - Get comments for an event
+- `POST /comment/update/:id` - Update a comment
+- `POST /comment/delete/:id` - Delete a comment
 ---
 
 ## Features & Functionality
@@ -150,8 +151,8 @@ PORT=8000
 - **Update:** Change your RSVP status (e.g. Going → Maybe)
 - **Delete:** Cancel your RSVP
 
-### 3. Comments / Reviews (Basile)
-- **Create:** Post a comment or review under an event
+### 3. Comments / Discussion (Basile)
+- **Create:** Post a comment under an event
 - **Read:** View all comments displayed under an event page
 - **Update:** Edit your own comment after posting
 - **Delete:** Remove your own comment
@@ -192,7 +193,7 @@ campus-event-board/
 │   ├── eventRoutes.js
 │   ├── userRoutes.js
 │   ├── rsvpRoutes.js
-│   ├── reviewRoutes.js
+│   ├── commentRoutes.js
 │   ├── bookmarkRoutes.js
 │   └── reportRoutes.js
 │
@@ -200,7 +201,7 @@ campus-event-board/
 │   ├── eventController.js
 │   ├── userController.js
 │   ├── rsvpController.js
-│   ├── reviewController.js
+│   ├── commentController.js
 │   ├── bookmarkController.js
 │   └── reportController.js
 │
@@ -208,7 +209,7 @@ campus-event-board/
 │   ├── eventModel.js
 │   ├── userModel.js
 │   ├── rsvpModel.js
-│   ├── reviewModel.js
+│   ├── commentModel.js
 │   ├── bookmarkModel.js
 │   └── reportModel.js
 │

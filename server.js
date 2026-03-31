@@ -40,8 +40,8 @@ server.use(rsvpRoutes)
 const bookmarksRoutes = require('./routes/bookmarksRoutes');
 server.use(bookmarksRoutes);
 
-const reviewRoutes = require('./routes/reviewRoutes');
-server.use('/review', reviewRoutes);
+const commentRoutes = require('./routes/commentRoutes');
+server.use('/comment', commentRoutes);
 
 async function connectDB() {
   try {
