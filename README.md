@@ -139,11 +139,12 @@ PORT=8000
 ## Features & Functionality
 
 ### 1. Event Management (Wansim)
-- **Create:** Post a new campus event with title, date, location, description and category
-- **Read:** Browse all events on the event listing page; click into individual event details
-- **Update:** Edit event details (title, date, venue, description, category) — only accessible by the event organiser
-- **Delete:** Remove an event permanently — only accessible by the event organiser 
+- **Create:** Post a new campus event with title, date, location, description, category and image
+- **Read:** Browse all events on the event listing page with search, filter and sort; click into individual event details
+- **Update:** Edit event details — only accessible by the event organiser; past events cannot be edited
+- **Delete:** Remove an event permanently — only accessible by the event organiser; past events cannot be deleted
 - **Authorization:** Edit and Delete buttons are only visible to the event organiser who created it
+- **Event Status:** Events are automatically labelled as Upcoming / Ongoing / Past based on the current date
   
 ### 2. RSVP System (Yijun)
 - **Create:** RSVP to an event with a status (Going / Maybe / Not Going)
@@ -187,7 +188,8 @@ campus-event-board/
 ├── package.json
 │
 ├── middleware/
-│   └── auth-middleware.js
+│   ├── auth-middleware.js
+│   └── upload.js
 │
 ├── routes/
 │   ├── eventRoutes.js
@@ -235,9 +237,15 @@ campus-event-board/
 │   └── update-details.ejs
 │
 └── public/
-    └── index.html
+    ├── index.html
+    ├── images/
+    │   └── default.jpg
+    └── uploads/
 ```
 
 ## Notes
 - All event dates must be set in the future due to form validation rules.
+- Past events cannot be edited or deleted — they are view-only.
+- Event status (Upcoming / Ongoing / Past) is automatically calculated based on today's date.
+- Event images are stored in `public/uploads/` and served statically.
 - Students must be logged in to view events, RSVP, comment, or bookmark events.
