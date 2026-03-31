@@ -6,8 +6,15 @@
     <title><%= event.title %></title>
 </head>
 <body>
+    <center>
+    <table width="700" align="center" border="1" cellpadding="12" cellspacing="0">
+        <tr>
+            <td align="left">
 
     <h1><%= event.title %></h1>
+
+    <a href="/events">← Back to Events</a>
+    <br><br>
 
     <table border="1">
         <tr>
@@ -45,17 +52,16 @@
     <% } %>
     <% if (user) { %>
         <% if (hasAction) { %>|<% } %>
-        <a href="/report-event?_id=<%= event._id %>">Report</a>
+        <a href="/bookmarks/add/<%= event._id %>">Bookmark</a>
         <% hasAction = true; %>
     <% } %>
     <% if (user) { %>
         <% if (hasAction) { %>|<% } %>
-        <a href="/bookmarks/add/<%= event._id %>">Bookmark</a>
+        <a href="/report-event?_id=<%= event._id %>">Report</a>
         <% hasAction = true; %>
     <% } %>
 
     <br><br>
-    <a href="/events">← Back to Events</a>
 
     <h2>Discussion Forum</h2>
 
@@ -72,7 +78,7 @@
 
     <hr>
 
-    <h2>Reviews</h2>
+    <h2 align="center">Reviews</h2>
     <% reviews.forEach(review => { %>
         <div style="border:1px solid black; padding:10px; margin-bottom:10px;">
             <p><strong>User:</strong> <%= review.user && review.user.name ? review.user.name : 'Unknown user' %></p>
@@ -94,6 +100,10 @@
             <% } %>
         </div>
     <% }); %>
+            </td>
+        </tr>
+    </table>
 
+    </center>
 </body>
 </html>

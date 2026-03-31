@@ -1,64 +1,70 @@
 <%- include("common/header") %>
 
-    <h1>Campus Events</h1>
+    <table width="80%" align="center">
+        <tr>
+            <td>
+                <h1>Campus Events</h1>
 
-    <a href="/create-event">Create Event</a>
+                <a href="/create-event">Create Event</a>
 
-    <hr>
+                <hr>
 
-    <form method="GET" action="/events">
-        <div>
-            <label for="keyword">Keyword:</label>
-            <input type="text" id="keyword" name="keyword" value="<%= keyword %>">
-        </div>
+                <form method="GET" action="/events">
+                    <div>
+                        <label for="keyword">Keyword:</label>
+                        <input type="text" id="keyword" name="keyword" value="<%= keyword %>">
+                    </div>
 
-        <br>
+                    <br>
 
-        <div>
-            <label for="category">Category:</label>
-            <select id="category" name="category">
-                <option value="">All</option>
-                <option value="Academic" <%= category === 'Academic' ? 'selected' : '' %>>Academic</option>
-                <option value="Social" <%= category === 'Social' ? 'selected' : '' %>>Social</option>
-                <option value="Sports" <%= category === 'Sports' ? 'selected' : '' %>>Sports</option>
-                <option value="Workshop" <%= category === 'Workshop' ? 'selected' : '' %>>Workshop</option>
-                <option value="Other" <%= category === 'Other' ? 'selected' : '' %>>Other</option>
-            </select>
-        </div>
+                    <div>
+                        <label for="category">Category:</label>
+                        <select id="category" name="category">
+                            <option value="">All</option>
+                            <option value="Academic" <%= category === 'Academic' ? 'selected' : '' %>>Academic</option>
+                            <option value="Social" <%= category === 'Social' ? 'selected' : '' %>>Social</option>
+                            <option value="Sports" <%= category === 'Sports' ? 'selected' : '' %>>Sports</option>
+                            <option value="Workshop" <%= category === 'Workshop' ? 'selected' : '' %>>Workshop</option>
+                            <option value="Other" <%= category === 'Other' ? 'selected' : '' %>>Other</option>
+                        </select>
+                    </div>
 
-        <br>
+                    <br>
 
-        <div>
-            <label for="location">Location:</label>
-            <input type="text" id="location" name="location" value="<%= location %>">
-        </div>
+                    <div>
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location" value="<%= location %>">
+                    </div>
 
-        <br>
+                    <br>
 
-        <div>
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date" value="<%= date %>">
-        </div>
+                    <div>
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date" value="<%= date %>">
+                    </div>
 
-        <br>
+                    <br>
 
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-                <button type="submit">Search / Filter</button>
-                <a href="/events">Clear</a>
-            </div>
-            <div>
-                <label for="sortBy">Sort by:</label>
-                <select id="sortBy" name="sortBy" onchange="this.form.submit()">
-                    <option value="date" <%= sortBy === 'date' ? 'selected' : '' %>>Date</option>
-                    <option value="title" <%= sortBy === 'title' ? 'selected' : '' %>>Title (A-Z)</option>
-                    <option value="titleDesc" <%= sortBy === 'titleDesc' ? 'selected' : '' %>>Title (Z-A)</option>
-                </select>
-            </div>
-        </div>
-    </form>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <button type="submit">Search / Filter</button>
+                            <a href="/events">Clear</a>
+                        </div>
+                        <div>
+                            <label for="sortBy">Sort by:</label>
+                            <select id="sortBy" name="sortBy" onchange="this.form.submit()">
+                                <option value="date" <%= sortBy === 'date' ? 'selected' : '' %>>Date</option>
+                                <option value="title" <%= sortBy === 'title' ? 'selected' : '' %>>Title (A-Z)</option>
+                                <option value="titleDesc" <%= sortBy === 'titleDesc' ? 'selected' : '' %>>Title (Z-A)</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
 
-    <hr>
+                <hr>
+            </td>
+        </tr>
+    </table>
 
     <% if (events.length === 0) { %>
         <p>No events found.</p>
@@ -98,5 +104,6 @@
         </table>
     <% } %>
 
+    </center>
 </body>
 </html>
