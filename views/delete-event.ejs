@@ -17,7 +17,9 @@
     <% if (success === '' && Object.keys(result).length !== 0) { %>
         <p><strong>⚠️ This action cannot be undone! Are you sure you want to delete this event?</strong></p>
 
+        <img src="<%= result.imageUrl || '/images/default.jpg' %>" width="300">
         <table>
+            
             <tr>
                 <th><label>Title</label></th>
                 <td><%= result.title %></td>

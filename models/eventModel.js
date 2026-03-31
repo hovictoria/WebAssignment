@@ -32,6 +32,9 @@ const eventSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: [true, 'An event must have an organiser'],
         ref: 'User'
+    },
+    imageUrl: {
+        type: String, default: '' 
     }
 }, { timestamps: true });
 
@@ -57,9 +60,13 @@ exports.findById = function (id) {
     return Event.findOne({ _id: id });
 };
 
-exports.editEvent = function (id, title, description, date, time, location, category) {
-    return Event.updateOne({ _id: id }, { title, description, date, time, location, category });
-};
+exports.editEvent = async function (id, title, description, date, time, location, category, imageUrl) {
+    const update = { title, description, date, time, location, category };
+    if (imageUrl) {
+        update.imageUrl = imageUrl;
+    }
+    return await Event.findByIdAndUpdate(id, update, { new: true });
+}
 
 exports.deleteEvent = function (id) {
     return Event.deleteOne({ _id: id });

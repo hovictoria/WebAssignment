@@ -17,7 +17,7 @@
     <% } %>
 
     <% if (success === '' && Object.keys(result).length !== 0) { %>
-        <form action="/update-event" method="post">
+        <form action="/update-event" method="post" enctype="multipart/form-data">
             <table>
                 <tr>
                     <th><label for="title">Title</label></th>
@@ -52,6 +52,16 @@
                         </select>
                     </td>
                 </tr>
+                <tr>
+                    <th><label>Change Event Image</label></th>
+                    <td><% if (result.imageUrl) { %>
+                            <img src="<%= result.imageUrl %>" width="200"><br>
+                            <small>Current image — upload a new one to replace it</small>
+                        <% } %>
+                        <input type="file" name="image" accept="image/*">
+                    </td>
+                </tr>
+                
             </table>
             <br>
             <input type="hidden" name="_id" value="<%= result._id %>">

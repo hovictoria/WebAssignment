@@ -98,6 +98,7 @@ exports.handleCreate = async (req, res) => {
     const location = req.body.location.trim();
     const cat = req.body.category.trim();
     const eventDate = date;
+    const imageUrl = req.file ? '/uploads/' + req.file.filename : null;
 
     if (title === '' || desc === '' || location === '' || cat === '' || cat === 'default' || date === '' || time === '') {
         error = 'All fields are required (please choose a category)';
@@ -117,6 +118,7 @@ exports.handleCreate = async (req, res) => {
                     time,
                     location,
                     category: cat,
+                    imageUrl, 
                     organiser: user.id
                 };
                 await Event.addEvent(newEvent);
@@ -147,7 +149,7 @@ exports.getEvent = async (req, res) => {
     }
 };
 
-exports.updateBook = async (req, res) => {
+exports.updateEvent = async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     let success = '';
     let error = '';
@@ -159,6 +161,7 @@ exports.updateBook = async (req, res) => {
     const location = req.body.location.trim();
     const cat = req.body.category.trim();
     const id = req.body._id;
+    const imageUrl = req.file ? '/uploads/' + req.file.filename : null;
 
     const currentData = { _id: id, title, description: desc, date, time, location, category: cat };
 
@@ -175,7 +178,8 @@ exports.updateBook = async (req, res) => {
         if (!canEditEvent(req.session.user, existingEvent)) {
             return res.render('update-event', { result: currentData, date, success: '', error: 'You are not allowed to edit this event.' });
         }
-        const result = await Event.editEvent(id, title, desc, date, time, location, cat);
+        // const result = await Event.editEvent(id, title, desc, date, time, location, cat);
+        const result = await Event.editEvent(id, title, desc, date, time, location, cat, imageUrl);
         success = 'Event updated successfully!';
         res.render('update-event', { result, date, success, error: '' });
     } catch (err) {
@@ -206,6 +210,7 @@ exports.deleteAnEvent = async (req, res) => {
     let result = {};
 
     const id = req.body._id;
+    
 
     try {
         const event = await Event.findById(id);

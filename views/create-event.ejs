@@ -16,7 +16,7 @@
   <% } %>
 
   <% if (success === '') { %>
-    <form action="/create-event" method="post">
+    <form action="/create-event" method="post" enctype="multipart/form-data">
       <table>
         <tr>
           <th>Title</th>
@@ -50,6 +50,10 @@
               <option value="Other" <%= cat === 'Other' ? 'selected' : '' %>>Other</option>
             </select>
           </td>
+        </tr>
+        <tr>
+            <th>Event Image (optional)</th>
+            <td><input type="file" name="image" accept="image/*"></td>
         </tr>
       </table>
       <br>

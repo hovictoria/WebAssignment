@@ -72,6 +72,7 @@
         <table border="1" cellpadding="8" cellspacing="0" style="width:80%; border-collapse:collapse; margin: 0 auto;">
             <thead>
                 <tr>
+                    <th>Image</th>
                     <th>Name of Event</th>
                     <th>Date</th>
                     <th>Category</th>
@@ -81,6 +82,13 @@
             <tbody>
                 <% events.forEach(event => { %>
                     <tr>
+                        <td>
+                            <% if (event.imageUrl) { %>
+                                <img src="<%= event.imageUrl %>" width="300">
+                            <% } else { %>
+                                <img src="/images/default.jpg" width="300">
+                            <% } %>
+                        </td>
                         <td><%= event.title %></td>
                         <td><%= new Date(event.date).toDateString() %></td>
                         <td><%= event.category %></td>
