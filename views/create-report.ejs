@@ -1,8 +1,9 @@
 <%- include("common/header") %>
 
+<table width="700" align="center" border="1" cellpadding="12" cellspacing="0">
+  <tr>
+    <td align="left">
 <h1>Report Event</h1>
-
-<p><strong>Event:</strong> <%= event.title %></p>
 
 <% if (error) { %>
   <p style="color:red"><%= error %></p>
@@ -16,22 +17,27 @@
   <form action="/report-event" method="post">
     <input type="hidden" name="eventId" value="<%= event._id %>">
 
-    <div>
-      <label>Reason:</label>
-      <select name="reason">
-        <option value="">-- Select a category --</option>
-        <% reportReasons.forEach(reportReason => { %>
-          <option value="<%= reportReason %>" <%= reason === reportReason ? 'selected' : '' %>><%= reportReason %></option>
-        <% }) %>
-      </select>
-    </div>
-
-    <br>
-
-    <div>
-      <label>Details:</label>
-      <textarea name="details" rows="5" cols="50"><%= details %></textarea>
-    </div>
+    <table>
+      <tr>
+        <th align="left">Event:</th>
+        <td><%= event.title %></td>
+      </tr>
+      <tr>
+        <th align="left">Reason:</th>
+        <td>
+          <select name="reason">
+            <option value="">-- Select a category --</option>
+            <% reportReasons.forEach(reportReason => { %>
+              <option value="<%= reportReason %>" <%= reason === reportReason ? 'selected' : '' %>><%= reportReason %></option>
+            <% }) %>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <th align="left">Details:</th>
+        <td><textarea name="details" rows="5" cols="50"><%= details %></textarea></td>
+      </tr>
+    </table>
 
     <br>
 
@@ -42,6 +48,9 @@
 <br>
 
 <a href="/events">← Back to Events</a>
+    </td>
+  </tr>
+</table>
 
     </center>
 </body>

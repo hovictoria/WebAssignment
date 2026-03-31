@@ -1,5 +1,8 @@
 <%- include("common/header") %>
 
+<table width="80%" align="center">
+  <tr>
+    <td>
 <h1>Submitted Reports</h1>
 
 <% const pendingReports = reports.filter(report => report.status === 'Pending'); %>
@@ -13,7 +16,7 @@
 <% if (success) { %>
   <p style="color:green"><%= success %></p>
 <% } %>
-
+<hr>
 <% if (reports.length === 0) { %>
   <p>No reports submitted.</p>
 <% } else { %>
@@ -59,30 +62,38 @@
   <% } %>
 
   <h2>Pending (<%= pendingReports.length %>)</h2>
+  <hr><br>
   <% if (pendingReports.length === 0) { %>
     <p>No pending reports.</p>
   <% } else { %>
     <% renderReportTable(pendingReports); %>
   <% } %>
 
+
   <br>
 
   <h2>Reviewed (<%= reviewedReports.length %>)</h2>
+  <hr><br>
   <% if (reviewedReports.length === 0) { %>
     <p>No reviewed reports.</p>
   <% } else { %>
     <% renderReportTable(reviewedReports); %>
   <% } %>
 
+
   <br>
 
   <h2>Resolved (<%= resolvedReports.length %>)</h2>
+  <hr><br>
   <% if (resolvedReports.length === 0) { %>
     <p>No resolved reports.</p>
   <% } else { %>
     <% renderReportTable(resolvedReports); %>
   <% } %>
 <% } %>
+    </td>
+  </tr>
+</table>
 
     </center>
 </body>

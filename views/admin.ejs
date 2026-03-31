@@ -1,6 +1,9 @@
 <%- include("common/header") %>
   <% const students = data.filter(account => account.role === 'Student'); %>
   <% const admins = data.filter(account => account.role === 'Admin'); %>
+  <table width="80%" align="center">
+    <tr>
+      <td>
   <h1>Welcome, <%= user.name %> 👋</h1>
 
   <hr>
@@ -13,7 +16,7 @@
   <hr>
 
   <h2>Students (<%= students.length %>)</h2>
-  <table border="1">
+  <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;">
     <tr>
       <th>Name</th>
       <th>Email</th>
@@ -36,7 +39,7 @@
   <br>
 
   <h2>Admins (<%= admins.length-1 %>)</h2>
-  <table border="1">
+  <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;">
     <tr>
       <th>Name</th>
       <th>Email</th>
@@ -64,7 +67,7 @@
     <h4>Edit User</h4>
     
       <form action="/user/edit-user" method="post">
-        <table>
+        <table cellpadding="8" cellspacing="0">
         <tr>
           <td>Name:*</td>
           <td><input type="text" name="name" value="<%= edit.name %>"></td>
@@ -112,6 +115,9 @@
   <% if(success){ %>
     <p style="color:green"><%= success %></p>
     <% } %>
+      </td>
+    </tr>
+  </table>
   </center>
 </body>
 </html>
