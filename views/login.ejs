@@ -1,20 +1,28 @@
 <%- include("common/header") %>
 
-    <h1>Log in</h1>
+    <div style="padding-left: 25%; padding-right: 25%;">
+    <table border="1" cellpadding="12" cellspacing="0" width="100%">
+        <tr>
+            <td>
+                <h1>Log in</h1>
 
-    <form action="/user/login" method="post">
-        <label for="email">Email: </label><br>
-        <input type="email" name="email" placeholder="Enter email" value="<%= email %>"><br><br>
+                <form action="/user/login" method="post">
+                    <label for="email">Email: </label><br>
+                    <input type="email" name="email" placeholder="Enter email" value="<%= email %>"><br><br>
 
-        <label for="password">Password:</label><br>
-        <input type="password" name="password" placeholder="Enter password"><br><br>
-        <button type="submit">Log In</button><br><br>
-        
-    </form>
-    <span>No account yet? </span><a href="/user/register">Register Now!</a>
-    <% if(errors!=""){ %>
-        <p style="color:red"><%=errors%></p>
-    <% } %>
+                    <label for="password">Password:</label><br>
+                    <input type="password" name="password" placeholder="Enter password"><br><br>
+                    <button type="submit">Log In</button><br><br>
+                    
+                </form>
+                <span>No account yet? </span><a href="/user/register">Register Now!</a>
+                <% if(errors!=""){ %>
+                    <p style="color:red"><%=errors%></p>
+                <% } %>
+            </td>
+        </tr>
+    </table>
+    </div>
     
      
 

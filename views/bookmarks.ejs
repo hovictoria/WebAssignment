@@ -50,11 +50,6 @@
                             </form>
                         </td>
                         <td>
-                            <% if (bookmark.eventDetails) { %>
-                                <a href="/event-details?_id=<%= bookmark.eventId %>">View Event</a>
-                            <% } else { %>
-                                <span>Event unavailable</span>
-                            <% } %>
                             <form action="/bookmarks/<%= bookmark.bookmarkId %>/delete" method="POST">
                                 <button type="submit">Remove</button>
                             </form>
