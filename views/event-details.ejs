@@ -18,10 +18,6 @@
 
     <table border="1">
         <tr>
-            <th><label>Description</label></th>
-            <td><%= event.description %></td>
-        </tr>
-        <tr>
             <th><label>Date</label></th>
             <td><%= new Date(event.date).toDateString() %></td>
         </tr>
@@ -40,6 +36,10 @@
         <tr>
             <th><label>Organiser</label></th>
             <td><%= organiser.name %></td>
+        </tr>
+        <tr>
+            <th><label>Description</label></th>
+            <td><%= event.description %></td>
         </tr>
     </table>
     <br>
