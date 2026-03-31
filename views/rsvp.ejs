@@ -1,5 +1,8 @@
 <%- include("common/header") %>
 
+<table width="700" align="center" border="1" cellpadding="12" cellspacing="0">
+  <tr>
+    <td align="left">
 <h1>RSVP for Event</h1>
 
 <% if (error) { %>
@@ -11,11 +14,28 @@
 <% } %>
 
 <h2><%= event.title %></h2>
-<p><strong>Description:</strong> <%= event.description %></p>
-<p><strong>Date:</strong> <%= new Date(event.date).toDateString() %></p>
-<p><strong>Time:</strong> <%= event.time || '-' %></p>
-<p><strong>Location:</strong> <%= event.location %></p>
-<p><strong>Category:</strong> <%= event.category %></p>
+<table border="1" cellpadding="8" cellspacing="0">
+  <tr>
+    <th>Date</th>
+    <td><%= new Date(event.date).toDateString() %></td>
+  </tr>
+  <tr>
+    <th>Time</th>
+    <td><%= event.time || '-' %></td>
+  </tr>
+  <tr>
+    <th>Location</th>
+    <td><%= event.location %></td>
+  </tr>
+  <tr>
+    <th>Category</th>
+    <td><%= event.category %></td>
+  </tr>
+  <tr>
+    <th>Description</th>
+    <td><%= event.description %></td>
+  </tr>
+</table>
 
 <hr>
 
@@ -73,6 +93,9 @@
 <br>
 <a href="/events">Back to Events</a>
 
+    </td>
+  </tr>
+</table>
     </center>
 </body>
 </html>

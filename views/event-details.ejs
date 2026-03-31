@@ -16,29 +16,29 @@
     <a href="/events">← Back to Events</a>
     <br><br>
 
-    <table border="1">
+    <table border="1" cellpadding="8" cellspacing="0" style="width:80%; border-collapse:collapse;">
         <tr>
-            <th><label>Date</label></th>
+            <th align="left"><label>Date</label></th>
             <td><%= new Date(event.date).toDateString() %></td>
         </tr>
         <tr>
-            <th><label>Time</label></th>
+            <th align="left"><label>Time</label></th>
             <td><%= event.time || '-' %></td>
         </tr>
         <tr>
-            <th><label>Location</label></th>
+            <th align="left"><label>Location</label></th>
             <td><%= event.location %></td>
         </tr>
         <tr>
-            <th><label>Category</label></th>
+            <th align="left"><label>Category</label></th>
             <td><%= event.category %></td>
         </tr>
         <tr>
-            <th><label>Organiser</label></th>
+            <th align="left"><label>Organiser</label></th>
             <td><%= organiser.name %></td>
         </tr>
         <tr>
-            <th><label>Description</label></th>
+            <th align="left"><label>Description</label></th>
             <td><%= event.description %></td>
         </tr>
     </table>
