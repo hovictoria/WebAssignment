@@ -51,7 +51,7 @@ exports.handleRegister = async (req, res) => {
                     password,
                     role
                 };
-                res.redirect("/register/admin-code");
+                res.redirect("/user/register/admin-code");
                 return;
             }
 
