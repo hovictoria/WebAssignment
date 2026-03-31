@@ -40,6 +40,21 @@
 <hr>
 
 <% if (myRsvp) { %>
+  <form action="/update-rsvp" method="POST" style="margin-bottom: 12px;">
+    <input type="hidden" name="id" value="<%= myRsvp._id %>">
+    <input type="hidden" name="eventId" value="<%= event._id %>">
+
+    <label for="status">Status</label>
+    <select name="status" id="status">
+      <option value="Going" <%= myRsvp.status === 'Going' ? 'selected' : '' %>>Going</option>
+      <option value="Maybe" <%= myRsvp.status === 'Maybe' ? 'selected' : '' %>>Maybe</option>
+    </select>
+
+    <br><br>
+
+    <button type="submit">Update RSVP</button>
+  </form>
+
   <form action="/delete-rsvp" method="POST">
     <input type="hidden" name="id" value="<%= myRsvp._id %>">
     <input type="hidden" name="eventId" value="<%= event._id %>">
@@ -48,6 +63,14 @@
 <% } else { %>
   <form action="/create-rsvp" method="POST">
     <input type="hidden" name="eventId" value="<%= event._id %>">
+    <label for="status">Status</label>
+    <select name="status" id="status">
+      <option value="Going">Going</option>
+      <option value="Maybe">Maybe</option>
+    </select>
+
+    <br><br>
+
     <button type="submit">Confirm RSVP</button>
   </form>
 <% } %>
@@ -63,6 +86,7 @@
     <thead>
       <tr>
         <th>User</th>
+        <th>Status</th>
         <th>Date</th>
       </tr>
     </thead>
@@ -70,6 +94,7 @@
       <% rsvps.forEach(rsvp => { %>
         <tr>
           <td><%= rsvp.user.name %></td>
+          <td><%= rsvp.status %></td>
           <td><%= new Date(rsvp.rsvpDate).toDateString() %></td>
         </tr>
       <% }) %>

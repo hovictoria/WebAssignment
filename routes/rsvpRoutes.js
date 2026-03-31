@@ -10,6 +10,9 @@ router.get('/rsvp', authMiddleware.isLoggedIn, rsvpController.getRsvpPage);
 // CREATE RSVP
 router.post('/create-rsvp', authMiddleware.isLoggedIn, rsvpController.createRsvp);
 
+// UPDATE RSVP
+router.post('/update-rsvp', authMiddleware.isLoggedIn, rsvpController.updateRsvp);
+
 // VIEW MY RSVPS
 router.get('/my-rsvps', authMiddleware.isLoggedIn, rsvpController.showMyRsvps);
 
