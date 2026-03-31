@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Event</title>
-</head>
-<body>
+<%- include("common/header") %>
     <table width="700" align="center" border="1" cellpadding="12" cellspacing="0">
         <tr>
             <td align="left">
@@ -20,27 +13,23 @@
         <form action="/update-event" method="post" enctype="multipart/form-data">
             <table>
                 <tr>
-                    <th><label for="title">Title</label></th>
+                    <th align="left"><label for="title">Title:</label></th>
                     <td><input type="text" id="title" name="title" value="<%= result.title %>"></td>
                 </tr>
                 <tr>
-                    <th><label for="description">Description</label></th>
-                    <td><input type="text" id="description" name="description" value="<%= result.description %>"></td>
-                </tr>
-                <tr>
-                    <th><label for="date">Date</label></th>
+                    <th align="left"><label for="date">Date:</label></th>
                     <td><input type="date" id="date" name="date" value="<%= date %>"></td>
                 </tr>
                 <tr>
-                    <th><label for="time">Time</label></th>
+                    <th align="left"><label for="time">Time:</label></th>
                     <td><input type="time" id="time" name="time" value="<%= result.time || '' %>"></td>
                 </tr>
                 <tr>
-                    <th><label for="location">Location</label></th>
+                    <th align="left"><label for="location">Location:</label></th>
                     <td><input type="text" id="location" name="location" value="<%= result.location %>"></td>
                 </tr>
                 <tr>
-                    <th><label for="category">Category</label></th>
+                    <th align="left"><label for="category">Category:</label></th>
                     <td>
                         <select id="category" name="category">
                             <option value="" <%= result.category === '' ? 'selected' : '' %>>--Select a Category--</option>
@@ -53,15 +42,18 @@
                     </td>
                 </tr>
                 <tr>
-                    <th><label>Change Event Image</label></th>
+                    <th align="left"><label>Event Image <br>(optional):</label></th>
                     <td><% if (result.imageUrl) { %>
                             <img src="<%= result.imageUrl %>" width="200"><br>
-                            <small>Current image — upload a new one to replace it</small>
+                            <small>Current image — upload a new one to replace it</small><br>
                         <% } %>
                         <input type="file" name="image" accept="image/*">
                     </td>
                 </tr>
-                
+                <tr>
+                    <th align="left"><label for="description">Description:</label></th>
+                    <td><textarea id="description" name="description" rows="5" cols="40"><%= result.description %></textarea></td>
+                </tr>
             </table>
             <br>
             <input type="hidden" name="_id" value="<%= result._id %>">

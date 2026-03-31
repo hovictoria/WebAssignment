@@ -65,7 +65,7 @@ exports.addBookmark = async (req, res) => {
             return res.redirect('/bookmarks?success=Event bookmarked successfully');
         }
 
-        res.redirect('/bookmarks?success=Event already bookmarked');
+        res.redirect('/bookmarks?error=Event already bookmarked');
     } catch (error) {
         console.error('Error adding bookmark:', error);
         res.redirect('/bookmarks?error=Failed to bookmark event');

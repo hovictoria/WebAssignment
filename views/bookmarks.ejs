@@ -1,13 +1,16 @@
 <%- include("common/header") %>
 
+    <table width="80%" align="center">
+        <tr>
+            <td align="left">
     <h1>My Bookmarked Events</h1>
 
     <% if (error) { %>
-        <p><%= error %></p>
+        <p style="color:red"><%= error %></p>
     <% } %>
 
     <% if (success) { %>
-        <p><%= success %></p>
+        <p style="color:green"><%= success %></p>
     <% } %>
 
     <a href="/events">Back to Events</a>
@@ -17,7 +20,7 @@
     <% if (!bookmarks || bookmarks.length === 0) { %>
         <p>No bookmarked events yet.</p>
     <% } else { %>
-        <table border="1" cellpadding="8" cellspacing="0">
+        <table border="1" cellpadding="8" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>Title</th>
@@ -39,10 +42,10 @@
                                 Event
                             <% } %>
                         </td>
-                        <td><%= bookmark.eventDetails ? bookmark.eventDetails.date : 'N/A' %></td>
+                        <td><%= bookmark.eventDetails ? new Date(bookmark.eventDetails.date).toDateString() : 'N/A' %></td>
                         <td><%= bookmark.eventDetails ? bookmark.eventDetails.location : 'N/A' %></td>
                         <td><%= bookmark.eventDetails ? bookmark.eventDetails.category : 'N/A' %></td>
-                        <td><%= new Date(bookmark.savedAt).toLocaleDateString() %></td>
+                        <td><%= new Date(bookmark.savedAt).toDateString() %></td>
                         <td>
                             <form action="/bookmarks/<%= bookmark.bookmarkId %>/update" method="POST">
                                 <input type="text" name="notes" value="<%= bookmark.notes %>">
@@ -59,6 +62,9 @@
             </tbody>
         </table>
     <% } %>
+            </td>
+        </tr>
+    </table>
 
     </center>
 </body>

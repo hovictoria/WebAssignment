@@ -1,5 +1,8 @@
 <%- include("common/header") %>
 
+<table width="80%" align="center">
+  <tr>
+    <td>
 <h1>My Reports</h1>
 
 <% if (error) { %>
@@ -9,7 +12,7 @@
 <% if (reports.length === 0) { %>
   <p>You have not submitted any reports yet.</p>
 <% } else { %>
-  <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+  <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
     <thead>
       <tr>
         <th>Event</th>
@@ -22,7 +25,15 @@
     <tbody>
       <% reports.forEach(report => { %>
         <tr>
-          <td><%= report.event ? report.event.title : 'Deleted event' %></td>
+          <td>
+            <% if (report.event) { %>
+              <a href="/event-details?_id=<%= report.event._id %>">
+                <%= report.event.title %>
+              </a>
+            <% } else { %>
+              Deleted event
+            <% } %>
+          </td>
           <td><%= report.reason %></td>
           <td><%= report.details || '-' %></td>
           <td><%= report.status %></td>
@@ -32,6 +43,9 @@
     </tbody>
   </table>
 <% } %>
+    </td>
+  </tr>
+</table>
 
     </center>
 </body>

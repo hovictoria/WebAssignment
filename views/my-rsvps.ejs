@@ -53,11 +53,6 @@
 
           <!-- ACTIONS -->
           <td>
-            <!-- EDIT -->
-            <% if (r.event) { %>
-              <a href="/rsvp?_id=<%= r.event._id %>">Edit</a>
-            <% } %>
-
             <!-- DELETE -->
             <form action="/delete-rsvp" method="POST" style="display:inline;">
               <input type="hidden" name="id" value="<%= r._id %>">

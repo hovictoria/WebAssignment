@@ -21,8 +21,8 @@ exports.getRsvpPage = async (req, res) => {
       event,
       rsvps,
       myRsvp,
-      error: '',
-      success: '',
+      error: req.query.error || '',
+      success: req.query.success || '',
       user
     });
 
@@ -35,12 +35,10 @@ exports.getRsvpPage = async (req, res) => {
 // CREATE RSVP
 exports.createRsvp = async (req, res) => {
   try {
-    const { eventId, status, note } = req.body;
+    const { eventId } = req.body;
     const userId = req.session.user.id;
-
-    if (!status) {
-      return res.send("Status is required");
-    }
+    const status = 'Going';
+    const note = '';
 
     const event = await Event.findById(eventId);
     if (!event) {
@@ -63,7 +61,7 @@ exports.createRsvp = async (req, res) => {
       });
     }
 
-    res.redirect(`/rsvp?_id=${eventId}`);
+    res.redirect(`/rsvp?_id=${eventId}&success=You have successfully RSVP-ed!`);
 
   } catch (err) {
     console.log(err);
@@ -100,7 +98,7 @@ exports.showMyRsvps = async (req, res) => {
 // DELETE RSVP
 exports.deleteRsvp = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id, eventId } = req.body;
     const userId = req.session.user.id;
 
     const rsvp = await RSVP.findById(id);
@@ -112,6 +110,10 @@ exports.deleteRsvp = async (req, res) => {
     }
 
     await RSVP.findByIdAndDelete(id);
+
+    if (eventId) {
+      return res.redirect(`/rsvp?_id=${eventId}&success=Your RSVP was deleted successfully!`);
+    }
 
     res.redirect('/my-rsvps');
 

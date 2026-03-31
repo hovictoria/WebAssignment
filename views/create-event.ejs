@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create</title>
-</head>
-<body>
-<center>
+<%- include("common/header") %>
 
-<div>
+<table width="700" align="center" border="1" cellpadding="12" cellspacing="0">
+  <tr>
+    <td align="left">
   <h1>Create New Event</h1>
   
   <% if (error !== '') { %>
@@ -19,27 +13,23 @@
     <form action="/create-event" method="post" enctype="multipart/form-data">
       <table>
         <tr>
-          <th>Title</th>
+          <th align="left">Title:</th>
           <td><input type="text" name="title" value="<%= title %>"></td>
         </tr>
         <tr>
-          <th>Description</th>
-          <td><input type="text" name="description" value="<%= desc %>"></td>
-        </tr>
-        <tr>
-          <th>Date</th>
+          <th align="left">Date:</th>
           <td><input type="date" name="date" value="<%= date %>"></td>
         </tr>
         <tr>
-          <th>Time</th>
+          <th align="left">Time:</th>
           <td><input type="time" name="time" value="<%= time %>"></td>
         </tr>
         <tr>
-          <th>Location</th>
+          <th align="left">Location:</th>
           <td><input type="text" name="location" value="<%= location %>"></td>
         </tr>
         <tr>
-          <th>Category</th>
+          <th align="left">Category:</th>
           <td>
             <select name="category">
               <option value="default" <%= cat === '' || cat === 'default' ? 'selected' : '' %>>--Select a Category--</option>
@@ -52,8 +42,12 @@
           </td>
         </tr>
         <tr>
-            <th>Event Image (optional)</th>
+            <th align="left">Event Image <br>(optional):</th>
             <td><input type="file" name="image" accept="image/*"></td>
+        </tr>
+        <tr>
+          <th align="left">Description:</th>
+          <td><textarea name="description" rows="5" cols="40"><%= desc %></textarea></td>
         </tr>
       </table>
       <br>
@@ -66,8 +60,9 @@
   <% } %>
     <br>
   <a href="/events">← Back to Events</a>
-</div>
+    </td>
+  </tr>
+</table>
 
-</center>
 </body>
 </html>

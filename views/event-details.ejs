@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= event.title %></title>
-</head>
-<body>
+<%- include("common/header") %>
     <center>
     <table width="700" align="center" border="1" cellpadding="12" cellspacing="0">
         <tr>
@@ -88,16 +81,15 @@
     <% reviews.forEach(review => { %>
         <div style="border:1px solid black; padding:10px; margin-bottom:10px;">
             <p><strong>User:</strong> <%= review.user && review.user.name ? review.user.name : 'Unknown user' %></p>
-            <p><strong>Comment:</strong> <%= review.comment %></p>
+            <p><strong>Comment:</strong> <%= review.comment %> <% if (review.edited) { %><small>(edited)</small><% } %></p>
             <p><strong>Posted:</strong> <%= new Date(review.createdAt).toLocaleString() %></p>
             <% if (review.edited) { %>
-                <small>(edited)</small>
                 <p><strong>Last updated:</strong> <%= new Date(review.updatedAt).toLocaleString() %></p>
             <% } %>
             <% if (user && review.user && String(review.user._id || review.user) === String(user.id)) { %>
                 <form action="/review/update/<%= review._id %>" method="POST">
-                    <label for="edit-comment-<%= review._id %>">Edit:</label>
-                    <input type="text" id="edit-comment-<%= review._id %>" name="comment" value="<%= review.comment %>">
+                    <label for="edit-comment-<%= review._id %>" style="display:inline-block; vertical-align: top;"><strong>Edit:</strong></label>
+                    <textarea id="edit-comment-<%= review._id %>" name="comment" rows="4" cols="50"><%= review.comment %></textarea>
                     <button type="submit">Update</button>
                 </form>
                 <form action="/review/delete/<%= review._id %>" method="POST">

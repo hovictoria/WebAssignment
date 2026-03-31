@@ -23,7 +23,7 @@ exports.showEvents = async (req, res) => {
         const category = (req.query.category || '').trim();
         const location = (req.query.location || '').trim();
         const date = (req.query.date || '').trim();
-        const sortBy = (req.query.sortBy || 'date').trim();
+        const sortBy = (req.query.sortBy || 'dateDesc').trim();
 
         let filter = {};
 
@@ -43,8 +43,9 @@ exports.showEvents = async (req, res) => {
             filter.date = date;
         }
 
-        let sortOption = { date: 1 };
-        if (sortBy === 'title') sortOption = { title: 1 };
+        let sortOption = { date: -1 };
+        if (sortBy === 'dateAsc') sortOption = { date: 1 };
+        else if (sortBy === 'title') sortOption = { title: 1 };
         else if (sortBy === 'titleDesc') sortOption = { title: -1 };
 
         const events = await Event.find(filter)
@@ -60,7 +61,7 @@ exports.showEvents = async (req, res) => {
     } catch (err) {
         console.log(err);
         const user = req.session.user;
-        res.render('events', { events: [], keyword: '', category: '', location: '', date: '', sortBy: 'date', user });
+        res.render('events', { events: [], keyword: '', category: '', location: '', date: '', sortBy: 'dateDesc', user });
     }
 };
 
@@ -81,7 +82,7 @@ exports.getDetails = async (req, res) => {
 
 // ------ CREATE event ------
 exports.getCreateEventForm = async (req, res) => {
-    res.render('create-event', { error: '', success: '', title: '', desc: '', date: '', time: '', location: '', cat: '' });
+    res.render('create-event', { error: '', success: '', title: '', desc: '', date: '', time: '', location: '', cat: '', user: req.session.user });
 };
 
 exports.handleCreate = async (req, res) => {
@@ -130,7 +131,7 @@ exports.handleCreate = async (req, res) => {
         }
     }
 
-    res.render('create-event', { error, success, title, desc, date, time, location, cat });
+    res.render('create-event', { error, success, title, desc, date, time, location, cat, user: req.session.user });
 };
 
 // ------ EDIT event ------
@@ -139,13 +140,13 @@ exports.getEvent = async (req, res) => {
     try {
         const result = await Event.findById(id);
         if (!canEditEvent(req.session.user, result)) {
-            return res.render('update-event', { result: {}, date: '', success: '', error: 'You are not allowed to edit this event.' });
+            return res.render('update-event', { result: {}, date: '', success: '', error: 'You are not allowed to edit this event.', user: req.session.user });
         }
         const ymd = new Date(result.date).toISOString().split('T')[0];
-        res.render('update-event', { result, date: ymd, success: '', error: '' });
+        res.render('update-event', { result, date: ymd, success: '', error: '', user: req.session.user });
     } catch (err) {
         console.error(err);
-        res.render('update-event', { result: {}, date: '', success: '', error: 'Failed to get Event.' });
+        res.render('update-event', { result: {}, date: '', success: '', error: 'Failed to get Event.', user: req.session.user });
     }
 };
 
@@ -167,24 +168,24 @@ exports.updateEvent = async (req, res) => {
 
     if (title === '' || desc === '' || location === '' || cat === 'default' || time === '') {
         error = 'All fields are required';
-        return res.render('update-event', { result: currentData, date, success: '', error });
+        return res.render('update-event', { result: currentData, date, success: '', error, user: req.session.user });
     } else if (date <= today) {
         error = 'Event date cannot be in the past';
-        return res.render('update-event', { result: currentData, date, success: '', error });
+        return res.render('update-event', { result: currentData, date, success: '', error, user: req.session.user });
     }
 
     try {
         const existingEvent = await Event.findById(id);
         if (!canEditEvent(req.session.user, existingEvent)) {
-            return res.render('update-event', { result: currentData, date, success: '', error: 'You are not allowed to edit this event.' });
+            return res.render('update-event', { result: currentData, date, success: '', error: 'You are not allowed to edit this event.', user: req.session.user });
         }
         // const result = await Event.editEvent(id, title, desc, date, time, location, cat);
         const result = await Event.editEvent(id, title, desc, date, time, location, cat, imageUrl);
         success = 'Event updated successfully!';
-        res.render('update-event', { result, date, success, error: '' });
+        res.render('update-event', { result, date, success, error: '', user: req.session.user });
     } catch (err) {
         console.error(err);
-        res.render('update-event', { result: currentData, date, success: '', error: 'Failed to update event.' });
+        res.render('update-event', { result: currentData, date, success: '', error: 'Failed to update event.', user: req.session.user });
     }
 };
 
