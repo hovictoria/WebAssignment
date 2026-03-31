@@ -1,6 +1,8 @@
 const RSVP = require('../models/rsvpModel');
 const Event = require('../models/eventModel');
 
+const ALLOWED_STATUSES = ['Going', 'Maybe'];
+
 // SHOW RSVP PAGE FOR ONE EVENT
 exports.getRsvpPage = async (req, res) => {
   try {
@@ -37,8 +39,7 @@ exports.createRsvp = async (req, res) => {
   try {
     const { eventId } = req.body;
     const userId = req.session.user.id;
-    const status = 'Going';
-    const note = '';
+    const status = ALLOWED_STATUSES.includes(req.body.status) ? req.body.status : 'Going';
 
     const event = await Event.findById(eventId);
     if (!event) {
@@ -49,15 +50,13 @@ exports.createRsvp = async (req, res) => {
 
     if (existing) {
       existing.status = status;
-      existing.note = note;
       existing.rsvpDate = Date.now();
       await existing.save();
     } else {
       await RSVP.create({
         user: userId,
         event: eventId,
-        status,
-        note
+        status
       });
     }
 
@@ -66,6 +65,38 @@ exports.createRsvp = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.send("Error saving RSVP");
+  }
+};
+
+// UPDATE RSVP
+exports.updateRsvp = async (req, res) => {
+  try {
+    const { id, eventId } = req.body;
+    const status = (req.body.status || '').trim();
+    const userId = req.session.user.id;
+
+    if (!ALLOWED_STATUSES.includes(status)) {
+      return res.redirect(`/rsvp?_id=${eventId}&error=Invalid RSVP status`);
+    }
+
+    const rsvp = await RSVP.findById(id);
+
+    if (!rsvp) {
+      return res.redirect(`/rsvp?_id=${eventId}&error=RSVP not found`);
+    }
+
+    if (String(rsvp.user) !== String(userId)) {
+      return res.redirect(`/rsvp?_id=${eventId}&error=Not authorized`);
+    }
+
+    rsvp.status = status;
+    rsvp.rsvpDate = Date.now();
+    await rsvp.save();
+
+    res.redirect(`/rsvp?_id=${eventId}&success=RSVP updated successfully!`);
+  } catch (err) {
+    console.log(err);
+    res.redirect(`/rsvp?_id=${req.body.eventId}&error=Error updating RSVP`);
   }
 };
 
