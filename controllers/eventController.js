@@ -191,9 +191,23 @@ exports.updateEvent = async (req, res) => {
         if (!canEditEvent(req.session.user, existingEvent)) {
             return res.render('update-event', { result: currentData, date, success: '', error: 'You are not allowed to edit this event.', user: req.session.user });
         }
-        // const result = await Event.editEvent(id, title, desc, date, time, location, cat);
         const result = await Event.editEvent(id, title, desc, date, time, location, cat, imageUrl);
-        success = 'Event updated successfully!';
+
+        const noChanges = 
+        existingEvent.title === title &&
+        existingEvent.description === desc &&
+        existingEvent.date === date &&
+        existingEvent.time === time &&
+        existingEvent.location === location &&
+        existingEvent.category === cat &&
+        !req.file;  // no new image uploaded
+
+        if (noChanges) {
+            success = 'No changes made';
+        }
+        else{
+            success = 'Event updated successfully!'
+        }
         res.render('update-event', { result, date, success, error: '', user: req.session.user });
     } catch (err) {
         console.error(err);
