@@ -53,8 +53,8 @@
                         <div>
                             <label for="sortBy">Sort by:</label>
                             <select id="sortBy" name="sortBy" onchange="this.form.submit()">
-                                <option value="dateDesc" <%= sortBy === 'dateDesc' ? 'selected' : '' %>>Newest to Oldest</option>
                                 <option value="dateAsc" <%= sortBy === 'dateAsc' ? 'selected' : '' %>>Oldest to Newest</option>
+                                <option value="dateDesc" <%= sortBy === 'dateDesc' ? 'selected' : '' %>>Newest to Oldest</option>
                                 <option value="title" <%= sortBy === 'title' ? 'selected' : '' %>>Title (A-Z)</option>
                                 <option value="titleDesc" <%= sortBy === 'titleDesc' ? 'selected' : '' %>>Title (Z-A)</option>
                             </select>

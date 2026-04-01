@@ -47,8 +47,8 @@ exports.showEvents = async (req, res) => {
             filter.date = date;
         }
 
-        let sortOption = { date: -1 };
-        if (sortBy === 'dateAsc') sortOption = { date: 1 };
+        let sortOption = { date: 1 };
+        if (sortBy === 'dateAsc') sortOption = { date: -1 };
         else if (sortBy === 'title') sortOption = { title: 1 };
         else if (sortBy === 'titleDesc') sortOption = { title: -1 };
 
