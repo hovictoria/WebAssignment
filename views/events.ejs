@@ -5,7 +5,7 @@
             <td>
                 <h1>Campus Events</h1>
 
-                <a href="/create-event">Create Event</a>
+                <a href="/events/create-event">Create Event</a>
 
                 <hr>
 
@@ -106,14 +106,14 @@
                             <% const canEdit = user && event.status !== 'Past' && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
                             <% const canDelete = user && event.status !== 'Past' && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
                             <% let hasAction = false; %>
-                            <a href="/event-details?_id=<%= event._id %>">Details</a>
+                            <a href="/events/event-details?_id=<%= event._id %>">Details</a>
                             <% if (canEdit) { %>
-                                | <a href="/update-event?_id=<%= event._id %>">Edit</a>
+                                | <a href="/events/update-event?_id=<%= event._id %>">Edit</a>
                                 <% hasAction = true; %>
                             <% } %>
                             <% if (canDelete) { %>
                                 <% if (hasAction) { %>|<% } %>
-                                <a href="/delete-event?_id=<%= event._id %>">Delete</a>
+                                <a href="/events/delete-event?_id=<%= event._id %>">Delete</a>
                             <% } %>
                         </td>
                     </tr>

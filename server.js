@@ -29,7 +29,7 @@ const userRoutes = require('./routes/userRoutes')
 server.use("/user",userRoutes)
 
 const eventRoutes = require("./routes/eventRoutes");
-server.use(eventRoutes)
+server.use('/events', eventRoutes)
 
 const reportRoutes = require('./routes/reportRoutes');
 server.use(reportRoutes)

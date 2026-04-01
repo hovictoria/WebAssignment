@@ -5,7 +5,7 @@ const eventController = require('../controllers/eventController');
 const authMiddleware = require('../middleware/auth-middleware');
 const upload = require('../middleware/upload');  
 
-router.get('/events', authMiddleware.isLoggedIn,eventController.showEvents);
+router.get('/', authMiddleware.isLoggedIn,eventController.showEvents);
 
 // view all details
 router.get('/event-details',authMiddleware.isLoggedIn, eventController.getDetails);
