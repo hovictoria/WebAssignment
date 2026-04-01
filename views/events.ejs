@@ -83,11 +83,11 @@
             <tbody>
                 <% events.forEach(event => { %>
                     <tr>
-                        <td>
+                        <td style="text-align: center;">
                             <% if (event.imageUrl) { %>
-                                <img src="<%= event.imageUrl %>" width="300">
+                                <img src="<%= event.imageUrl %>" width="100">
                             <% } else { %>
-                                <img src="/images/default.jpg" width="300">
+                                <img src="/images/default.jpg" width="100">
                             <% } %>
                         </td>
                         <td><%= event.title %></td>

@@ -37,7 +37,7 @@
                     <tr>
                         <td>
                             <% if (bookmark.eventDetails) { %>
-                                <a href="/event-details?_id=<%= bookmark.eventId %>"><%= bookmark.eventDetails.title %></a>
+                                <a href="/events/event-details?_id=<%= bookmark.eventId %>"><%= bookmark.eventDetails.title %></a>
                             <% } else { %>
                                 Event
                             <% } %>

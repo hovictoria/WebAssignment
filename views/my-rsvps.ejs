@@ -34,7 +34,7 @@
           <!-- EVENT NAME (CLICKABLE) -->
           <td>
             <% if (r.event) { %>
-              <a href="/event-details?_id=<%= r.event._id %>">
+              <a href="/events/event-details?_id=<%= r.event._id %>">
                 <%= r.event.title %>
               </a>
             <% } else { %>
