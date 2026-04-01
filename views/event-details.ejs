@@ -44,12 +44,11 @@
     <br>
 
     <% let hasAction = false; %>
-    <% if (user && user.role === 'Student') { %>
-        <% if (hasAction) { %>|<% } %>
+    <% if (user && user.role === 'Student' && event.status !== 'Past') { %>
         <a href="/rsvp?_id=<%= event._id %>">RSVP</a>
         <% hasAction = true; %>
     <% } %>
-    <% if (user) { %>
+    <% if (user && event.status !== 'Past') { %>
         <% if (hasAction) { %>|<% } %>
         <a href="/bookmarks/add/<%= event._id %>">Bookmark</a>
         <% hasAction = true; %>
@@ -57,7 +56,6 @@
     <% if (user) { %>
         <% if (hasAction) { %>|<% } %>
         <a href="/report-event?_id=<%= event._id %>">Report</a>
-        <% hasAction = true; %>
     <% } %>
 
     <br><br>

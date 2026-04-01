@@ -67,9 +67,11 @@
         </tr>
     </table>
 
-    <% if (events.length === 0) { %>
-        <p>No events found.</p>
-    <% } else { %>
+    <% if (activeEvents.length === 0 && pastEvents.length === 0) { %>
+        <p style="text-align:center;">No events found.</p>
+    <% } %>
+
+    <% if (activeEvents.length > 0) { %>
         <table border="1" cellpadding="8" cellspacing="0" style="width:80%; border-collapse:collapse; margin: 0 auto;">
             <thead>
                 <tr>
@@ -81,30 +83,24 @@
                 </tr>
             </thead>
             <tbody>
-                <% events.forEach(event => { %>
+                <% activeEvents.forEach(event => { %>
                     <tr>
                         <td style="text-align: center;">
-                            <% if (event.imageUrl) { %>
-                                <img src="<%= event.imageUrl %>" width="100">
-                            <% } else { %>
-                                <img src="/images/default.jpg" width="100">
-                            <% } %>
+                            <img src="<%= event.imageUrl || '/images/default.jpg' %>" width="100">
                         </td>
                         <td><%= event.title %></td>
                         <td>
                             <%= new Date(event.date).toDateString() %><br>
                             <% if (event.status === 'Upcoming') { %>
                                 <span style="color: green;">● Upcoming</span>
-                            <% } else if (event.status === 'Ongoing') { %>
-                                <span style="color: orange;">● Ongoing</span>
                             <% } else { %>
-                                <span style="color: grey;">● Past</span>
+                                <span style="color: orange;">● Ongoing</span>
                             <% } %>
                         </td>
                         <td><%= event.category %></td>
                         <td>
-                            <% const canEdit = user && event.status !== 'Past' && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
-                            <% const canDelete = user && event.status !== 'Past' && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
+                            <% const canEdit = user && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
+                            <% const canDelete = user && (user.role === 'Admin' || String(event.organiser) === String(user.id)); %>
                             <% let hasAction = false; %>
                             <a href="/events/event-details?_id=<%= event._id %>">Details</a>
                             <% if (canEdit) { %>
@@ -122,6 +118,39 @@
         </table>
     <% } %>
 
-    </center>
+    <% if (pastEvents.length > 0) { %>
+        <br>
+        <h2 style="width:80%; margin: 20px auto 10px auto;">Past Events</h2>
+        <table border="1" cellpadding="8" cellspacing="0" style="width:80%; border-collapse:collapse; margin: 0 auto;">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name of Event</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% pastEvents.forEach(event => { %>
+                    <tr>
+                        <td style="text-align: center;">
+                            <img src="<%= event.imageUrl || '/images/default.jpg' %>" width="100">
+                        </td>
+                        <td><%= event.title %></td>
+                        <td>
+                            <%= new Date(event.date).toDateString() %><br>
+                            <span style="color: grey;">● Past</span>
+                        </td>
+                        <td><%= event.category %></td>
+                        <td>
+                            <a href="/events/event-details?_id=<%= event._id %>">Details</a>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } %>
+
 </body>
 </html>

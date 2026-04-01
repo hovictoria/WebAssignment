@@ -65,15 +65,19 @@ exports.showEvents = async (req, res) => {
             else event.status = 'Past';
         });
 
-        console.log('Filter applied:', filter);
-        console.log('Events found:', events.length);
+        // console.log('Filter applied:', filter);
+        // console.log('Events found:', events.length);
 
         const user = req.session.user;
-        res.render('events', { events, keyword, category, location, date, sortBy, user });
+        const activeEvents = events.filter(e => e.status !== 'Past');
+        const pastEvents = events.filter(e => e.status === 'Past');
+
+        res.render('events', { events, activeEvents, pastEvents, keyword, category, location, date, sortBy, user });
+        // res.render('events', { events, keyword, category, location, date, sortBy, user });
     } catch (err) {
         console.log(err);
         const user = req.session.user;
-        res.render('events', { events: [], keyword: '', category: '', location: '', date: '', sortBy: 'dateDesc', user });
+        res.render('events', { events: [], activeEvents:[], pastEvents: [], keyword: '', category: '', location: '', date: '', sortBy: 'dateDesc', user });
     }
 };
 
@@ -85,6 +89,10 @@ exports.getDetails = async (req, res) => {
         const event = await Event.findById(id);
         const organiser = await User.findByID(event.organiser);
         const comments = await commentModel.findByEvent(id);
+
+        const today = new Date().toISOString().split('T')[0];
+        event.status = event.date > today ? 'Upcoming' : event.date === today ? 'Ongoing' : 'Past';
+        
         res.render('event-details', { event, organiser, error: '', user, comments });
     } catch (err) {
         console.error(err);
