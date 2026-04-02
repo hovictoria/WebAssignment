@@ -34,7 +34,7 @@
         </tr>
         <tr>
             <th align="left"><label>Organiser</label></th>
-            <td><%= organiser.name %></td>
+            <td><%= organiser && organiser.name ? organiser.name : 'Deleted user' %></td>
         </tr>
         <tr>
             <th align="left"><label>Description</label></th>

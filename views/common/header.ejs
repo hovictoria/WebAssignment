@@ -26,10 +26,13 @@
             <a href="/bookmarks"><i class="fa-regular fa-bookmark"> Bookmarked</i></a> | 
             <a href="/reports/my-reports"><i class="fa-solid fa-flag"> My Reports</i></a> | 
         <%}%>
-        <a href="/user/profile"><i class="fa-solid fa-user"> Profile</i></a> | 
+
         <% if(user && user.role=="Admin"){ %>
             <a href="/reports"><i class="fa-solid fa-flag"> Reports</i></a> |
         <% } %>
+        
+        <a href="/user/profile"><i class="fa-solid fa-user"> Profile</i></a> | 
+        
         <% if(!user){ %>
             <a href="/user/login"><i class="fa-solid fa-arrow-right-to-bracket"> Log in</i></a>
         <% }else{ %>
