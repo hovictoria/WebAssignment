@@ -7,7 +7,7 @@ exports.createComment = async (req, res) => {
         const userID = req.session.user.id;
         await commentModel.createComment({ user: userID, event: eventID, comment });
 
-        res.redirect(`/event-details?_id=${eventID}`);
+        res.redirect(`/events/event-details?_id=${eventID}`);
     } catch (error) {
         res.send(error);
     }
@@ -38,7 +38,7 @@ exports.updateComment = async (req, res) => {
 
         await commentModel.updateComment(commentID, req.body.comment);
 
-        res.redirect(`/event-details?_id=${existingComment.event}`);
+        res.redirect(`/events/event-details?_id=${existingComment.event}`);
     } catch (error) {
         res.send(error.message);
     }
@@ -59,7 +59,7 @@ exports.deleteComment = async (req, res) => {
 
         await commentModel.deleteComment(commentID);
 
-        res.redirect(`/event-details?_id=${existingComment.event}`);
+        res.redirect(`/events/event-details?_id=${existingComment.event}`);
     } catch (error) {
         res.send(error.message);
     }
