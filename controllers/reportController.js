@@ -4,7 +4,8 @@ const Report = require('../models/reportModel');
 
 const reportReasons = ['Spam', 'Duplicate event', 'Inappropriate content', 'False information', 'Wrong category', 'Offensive language', 'Other'];
 
-exports.getCreateReportForm = async (req, res) => { //defines and exports a controller function for loading the report form page for a specific event. it reads the event ID from the URL query string, validates it, and loads the event details to display on the form. If any step fails, it redirects back to the events listing page.
+exports.getCreateReportForm = async (req, res) => { 
+  //defines and exports a controller function for loading the report form page for a specific event. it reads the event ID from the URL query string, validates it, and loads the event details to display on the form. If any step fails, it redirects back to the events listing page.
   const eventId = req.query._id; 
 
   try {
@@ -36,7 +37,8 @@ exports.getCreateReportForm = async (req, res) => { //defines and exports a cont
   }
 };
 
-exports.handleCreateReport = async (req, res) => { //this function handles the form submission for creating a new report. It validates the input, checks that the event exists, and then creates a new report in the database. If there are validation errors or if the database operation fails, it re-renders the form with appropriate error messages.
+exports.handleCreateReport = async (req, res) => { 
+  //this function handles the form submission for creating a new report. It validates the input, checks that the event exists, and then creates a new report in the database. If there are validation errors or if the database operation fails, it re-renders the form with appropriate error messages.
   const eventId = req.body.eventId;
   const reason = (req.body.reason || '').trim();
   const details = (req.body.details || '').trim();
@@ -80,7 +82,7 @@ exports.handleCreateReport = async (req, res) => { //this function handles the f
       user: req.session.user
     });
   } catch (err) {
-    console.error('Failed to submit report', { //
+    console.error('Failed to submit report', { 
       eventId,
       userId: req.session.user ? req.session.user.id : null,
       reason,
