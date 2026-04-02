@@ -23,7 +23,7 @@ const checkAuth = (req, res, next) => {
 // ============================================================================
 const checkBookmarkOwnership = async (req, res, next) => {
   try {
-    const bookmark = await Bookmark.findOne({ bookmarkId: req.params.bookmarkId });
+    const bookmark = await Bookmark.findById(req.params.bookmarkId);
     
     if (!bookmark) {
       return res.status(404).json({ 
@@ -158,7 +158,7 @@ router.get('/api/bookmarks', checkAuth, async (req, res) => {
       bookmarks.map(async (bookmark) => {
         const event = await Event.findById(bookmark.eventId);
         return {
-          bookmarkId: bookmark.bookmarkId,
+          bookmarkId: bookmark._id,
           eventId: bookmark.eventId,
           savedAt: bookmark.savedAt,
           notes: bookmark.notes,
@@ -199,7 +199,7 @@ router.get('/api/bookmarks/check/:eventId', checkAuth, async (req, res) => {
     res.json({
       success: true,
       isBookmarked: !!bookmark,
-      bookmarkId: bookmark ? bookmark.bookmarkId : null
+      bookmarkId: bookmark ? bookmark._id : null
     });
     
   } catch (error) {
@@ -228,7 +228,7 @@ router.put('/api/bookmarks/:bookmarkId', checkAuth, checkBookmarkOwnership, asyn
     
     // Update the bookmark
     const updatedBookmark = await Bookmark.findOneAndUpdate(
-      { bookmarkId: req.params.bookmarkId },
+      { _id: req.params.bookmarkId, userId: req.session.user.id },
       { notes: notes || '' },
       { new: true, runValidators: true }
     );
@@ -255,7 +255,8 @@ router.put('/api/bookmarks/:bookmarkId', checkAuth, checkBookmarkOwnership, asyn
 router.delete('/api/bookmarks/:bookmarkId', checkAuth, checkBookmarkOwnership, async (req, res) => {
   try {
     const result = await Bookmark.findOneAndDelete({ 
-      bookmarkId: req.params.bookmarkId 
+      _id: req.params.bookmarkId,
+      userId: req.session.user.id
     });
     
     if (!result) {

@@ -178,7 +178,7 @@ exports.deleteRsvp = async (req, res) => {
       return res.redirect(`/rsvp?_id=${eventId}&success=Your RSVP was deleted successfully!`);
     }
 
-    res.redirect('/my-rsvps');
+    res.redirect('/rsvp/my-rsvps');
 
   } catch (err) {
     console.log(err);

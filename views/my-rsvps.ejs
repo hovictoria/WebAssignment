@@ -6,7 +6,7 @@
 
       <h1>My RSVPs</h1>
 
-      <form method="GET" action="/my-rsvps" style="margin-bottom: 15px;">
+      <form method="GET" action="/rsvp/my-rsvps" style="margin-bottom: 15px;">
         <label for="sortBy">Sort by:</label>
         <select name="sortBy" id="sortBy">
           <option value="event-oldest" <%= sortBy === 'event-oldest' ? 'selected' : '' %>>
@@ -59,7 +59,7 @@
                 <td><%= new Date(r.rsvpDate).toDateString() %></td>
 
                 <td>
-                  <form action="/delete-rsvp" method="POST" style="display:inline;">
+                  <form action="/rsvp/delete-rsvp" method="POST" style="display:inline;">
                     <input type="hidden" name="id" value="<%= r._id %>">
                     <button type="submit">Delete</button>
                   </form>

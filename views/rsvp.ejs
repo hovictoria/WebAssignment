@@ -40,7 +40,7 @@
 <hr>
 
 <% if (myRsvp) { %>
-  <form action="/update-rsvp" method="POST" style="margin-bottom: 12px;">
+  <form action="/rsvp/update-rsvp" method="POST" style="margin-bottom: 12px;">
     <input type="hidden" name="id" value="<%= myRsvp._id %>">
     <input type="hidden" name="eventId" value="<%= event._id %>">
 
@@ -55,13 +55,13 @@
     <button type="submit">Update RSVP</button>
   </form>
 
-  <form action="/delete-rsvp" method="POST">
+  <form action="/rsvp/delete-rsvp" method="POST">
     <input type="hidden" name="id" value="<%= myRsvp._id %>">
     <input type="hidden" name="eventId" value="<%= event._id %>">
     <button type="submit">Delete RSVP</button>
   </form>
 <% } else { %>
-  <form action="/create-rsvp" method="POST">
+  <form action="/rsvp/create-rsvp" method="POST">
     <input type="hidden" name="eventId" value="<%= event._id %>">
     <label for="status">Status</label>
     <select name="status" id="status">

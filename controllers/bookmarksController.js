@@ -98,7 +98,7 @@ exports.updateBookmark = async (req, res) => {
 exports.deleteBookmark = async (req, res) => {
     try {
         await Bookmark.findOneAndDelete({
-            bookmarkId: req.params._id,
+            _id: req.params._id,
             userId: req.session.user.id
         });
 
