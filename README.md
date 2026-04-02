@@ -58,8 +58,6 @@ Make sure you have the following installed:
 - **Platform:** MongoDB Atlas
 - **Database name:** `webdev`
 - **Collections:** `users`, `events`, `rsvp`, `comments`, `category`, `bookmark`, `report`
-- **MongoDB URI:**
-- mongodb+srv://<username>:<password>@<cluster>.mongodb.net/webdev
 
 
 > ⚠️ Ensure your IP address is whitelisted on MongoDB Atlas before running.
