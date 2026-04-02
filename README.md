@@ -29,13 +29,6 @@ Make sure you have the following installed:
 3. **Install dependencies**
 ```npm install```
 
-4. **Configure environment variables**
-
-Create a `.env` file in the root folder with the following:
-MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/webdev
-SESSION_SECRET=your_secret_key
-PORT=8000
-
 ---
 
 5. **Start the application**
@@ -129,6 +122,18 @@ PORT=8000
 - `POST /user/edit-user` - Edit selected profile
 - `POST /user/delete-user` - Delete selected account
 
+### Events
+- `GET /events` - Show all events page
+- `GET /events/create-event` - Show create event page
+- `POST /events/create-event` - Create a new event
+- `GET /events/update-event?_id=:id` - Show edit event page
+- `POST /events/update-event?_id=:id` - Update an event
+- `GET /events/delete-event?_id=:id` - Delete an event
+- `GET /events/event-details?_id=:id` - Show event details page
+- `GET /rsvp?_id=:id` - RSVP to an event
+- `GET /bookmarks/add/:id` - Add event to bookmarks
+- `GET /report-event?_id=:id` - Report an event
+  
 ### Comments
 - `POST /comment/create` - Create a new comment
 - `GET /comment/event/:eventId` - Get comments for an event

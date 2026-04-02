@@ -17,7 +17,7 @@ exports.isAdmin = (req, res, next) => {
 
 exports.hasLoggedIn = (req, res, next) => {
     if (req.session.user) {
-        console.log("User alr logged in");
+        console.log("User already logged in");
         if(req.session.user.role=="Student"){
             return res.redirect("/user/home");
         }
