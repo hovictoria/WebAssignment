@@ -29,13 +29,6 @@ Make sure you have the following installed:
 3. **Install dependencies**
 ```npm install```
 
-4. **Configure environment variables**
-
-Create a `.env` file in the root folder with the following:
-MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/webdev
-SESSION_SECRET=your_secret_key
-PORT=8000
-
 ---
 
 5. **Start the application**
