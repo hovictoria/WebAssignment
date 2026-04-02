@@ -82,8 +82,7 @@ exports.updateBookmark = async (req, res) => {
 
         await Bookmark.findOneAndUpdate(
             {
-                bookmarkId: req.params.bookmarkId,
-                userId: req.session.user.id
+                _id: req.params._id
             },
             { notes },
             { runValidators: true }
@@ -99,7 +98,7 @@ exports.updateBookmark = async (req, res) => {
 exports.deleteBookmark = async (req, res) => {
     try {
         await Bookmark.findOneAndDelete({
-            bookmarkId: req.params.bookmarkId,
+            bookmarkId: req.params._id,
             userId: req.session.user.id
         });
 

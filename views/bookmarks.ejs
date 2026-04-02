@@ -47,13 +47,13 @@
                         <td><%= bookmark.eventDetails ? bookmark.eventDetails.category : 'N/A' %></td>
                         <td><%= new Date(bookmark.savedAt).toDateString() %></td>
                         <td>
-                            <form action="/bookmarks/<%= bookmark.bookmarkId %>/update" method="POST">
+                            <form action="/bookmarks/<%= bookmark._id %>/update" method="POST">
                                 <input type="text" name="notes" value="<%= bookmark.notes %>">
                                 <button type="submit">Save Notes</button>
                             </form>
                         </td>
                         <td>
-                            <form action="/bookmarks/<%= bookmark.bookmarkId %>/delete" method="POST">
+                            <form action="/bookmarks/<%= bookmark._id %>/delete" method="POST">
                                 <button type="submit">Remove</button>
                             </form>
                         </td>
