@@ -55,8 +55,8 @@ const checkBookmarkOwnership = async (req, res, next) => {
 // ============================================================================
 router.get('/bookmarks', authMiddleware.isLoggedIn, bookmarksController.showBookmarksPage);
 router.get('/bookmarks/add/:eventId', authMiddleware.isLoggedIn, bookmarksController.addBookmark);
-router.post('/bookmarks/:bookmarkId/update', authMiddleware.isLoggedIn, bookmarksController.updateBookmark);
-router.post('/bookmarks/:bookmarkId/delete', authMiddleware.isLoggedIn, bookmarksController.deleteBookmark);
+router.post('/bookmarks/:_id/update', authMiddleware.isLoggedIn, bookmarksController.updateBookmark);
+router.post('/bookmarks/:_id/delete', authMiddleware.isLoggedIn, bookmarksController.deleteBookmark);
 
 router.post('/api/bookmarks/add', checkAuth, async (req, res) => {
   try {

@@ -1,12 +1,6 @@
 const mongoose = require('mongoose');
 
 const bookmarkSchema = new mongoose.Schema({
-  bookmarkId: {
-    type: String,
-    required: true,
-    unique: true,
-    default: () => new mongoose.Types.ObjectId().toString()
-  },
   userId: {
     type: String,
     required: true,
