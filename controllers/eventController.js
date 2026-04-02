@@ -35,8 +35,7 @@ exports.showEvents = async (req, res) => {
         // $regex allows partial searches - dont need exact match to search
         if (keyword) {
             filter.$or = [
-                { title: { $regex: keyword, $options: 'i' } },
-                { description: { $regex: keyword, $options: 'i' } }
+                { title: { $regex: keyword, $options: 'i' } }
             ];
         }
 
@@ -66,7 +65,7 @@ exports.showEvents = async (req, res) => {
             else if (event.date === today) event.status = 'Ongoing';
             else event.status = 'Past';
         });
-        // adds a temp status field to each event object only in memory during this request - not saved
+        // adds a temp status field to each event object only in memory during this request - not saved as its not in schema:)
 
         const user = req.session.user;
         const activeEvents = events.filter(e => e.status !== 'Past');
