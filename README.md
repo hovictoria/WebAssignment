@@ -73,8 +73,9 @@ Make sure you have the following installed:
 6. 🚩 Report issues if needed
 
 ### For Admins
+- For registration, key in admin code: admin123
 1. 👤 User Management
-- View all registered user accounts
+   - View all registered user accounts
    - Edit user details, including:
       - Name
       - Password (securely updated with hashing)
