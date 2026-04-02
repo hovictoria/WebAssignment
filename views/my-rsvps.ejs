@@ -2,72 +2,119 @@
 
 <table width="80%" align="center">
   <tr>
-    <td>
-<h1>My RSVPs</h1>
+    <td align="left">
 
-<% if (!rsvps || rsvps.length === 0) { %>
-  <p>You have not RSVP'd to any events yet.</p>
-<% } else { %>
+      <h1>My RSVPs</h1>
 
-  <form method="GET" action="/my-rsvps" style="margin-bottom: 15px;">
-    <label for="sortBy">Sort by:</label>
-    <select name="sortBy" id="sortBy">
-      <option value="oldest" <%= sortBy === 'oldest' ? 'selected' : '' %>>Oldest to Newest</option>
-      <option value="newest" <%= sortBy === 'newest' ? 'selected' : '' %>>Newest to Oldest</option>
-    </select>
-    <button type="submit">Sort</button>
-  </form>
+      <form method="GET" action="/my-rsvps" style="margin-bottom: 15px;">
+        <label for="sortBy">Sort by:</label>
+        <select name="sortBy" id="sortBy">
+          <option value="event-oldest" <%= sortBy === 'event-oldest' ? 'selected' : '' %>>
+            Event Date: Oldest to Newest
+          </option>
+          <option value="event-newest" <%= sortBy === 'event-newest' ? 'selected' : '' %>>
+            Event Date: Newest to Oldest
+          </option>
+          <option value="rsvp-oldest" <%= sortBy === 'rsvp-oldest' ? 'selected' : '' %>>
+            RSVP Date: Oldest to Newest
+          </option>
+          <option value="rsvp-newest" <%= sortBy === 'rsvp-newest' ? 'selected' : '' %>>
+            RSVP Date: Newest to Oldest
+          </option>
+        </select>
+        <button type="submit">Sort</button>
+      </form>
 
-  <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
-    <thead>
-      <tr>
-        <th>Event</th>
-        <th>Status</th>
-        <th>Note</th>
-        <th>RSVP Date</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% rsvps.forEach(r => { %>
-        <tr>
-          <!-- EVENT NAME (CLICKABLE) -->
-          <td>
-            <% if (r.event) { %>
-              <a href="/events/event-details?_id=<%= r.event._id %>">
-                <%= r.event.title %>
-              </a>
-            <% } else { %>
-              Deleted Event
-            <% } %>
-          </td>
+      <!-- UPCOMING RSVPS -->
+      <h2>Upcoming RSVPs</h2>
 
-          <!-- STATUS -->
-          <td><%= r.status %></td>
+      <% if (!upcomingRsvps || upcomingRsvps.length === 0) { %>
+        <p>You have no upcoming RSVPs.</p>
+      <% } else { %>
+        <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse; margin-bottom: 30px;">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Event Date</th>
+              <th>Status</th>
+              <th>RSVP Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% upcomingRsvps.forEach(r => { %>
+              <tr>
+                <td>
+                  <% if (r.event) { %>
+                    <a href="/events/event-details?_id=<%= r.event._id %>">
+                      <%= r.event.title %>
+                    </a>
+                  <% } else { %>
+                    Deleted Event
+                  <% } %>
+                </td>
 
-          <!-- NOTE -->
-          <td><%= r.note || '-' %></td>
+                <td><%= r.event ? new Date(r.event.date).toDateString() : '-' %></td>
+                <td><%= r.status %></td>
+                <td><%= new Date(r.rsvpDate).toDateString() %></td>
 
-          <!-- DATE -->
-          <td><%= new Date(r.rsvpDate).toDateString() %></td>
+                <td>
+                  <form action="/delete-rsvp" method="POST" style="display:inline;">
+                    <input type="hidden" name="id" value="<%= r._id %>">
+                    <button type="submit">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
 
-          <!-- ACTIONS -->
-          <td>
-            <!-- DELETE -->
-            <form action="/delete-rsvp" method="POST" style="display:inline;">
-              <input type="hidden" name="id" value="<%= r._id %>">
-              <button type="submit">Delete</button>
-            </form>
-          </td>
-        </tr>
-      <% }) %>
-    </tbody>
-  </table>
+      <!-- PAST RSVPS -->
+      <h2>Past RSVPs</h2>
 
-<% } %>
+      <% if (!pastRsvps || pastRsvps.length === 0) { %>
+        <p>You have no past RSVPs.</p>
+      <% } else { %>
+        <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Event Date</th>
+              <th>Status</th>
+              <th>RSVP Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% pastRsvps.forEach(r => { %>
+              <tr>
+                <td>
+                  <% if (r.event) { %>
+                    <a href="/events/event-details?_id=<%= r.event._id %>">
+                      <%= r.event.title %>
+                    </a>
+                  <% } else { %>
+                    Deleted Event
+                  <% } %>
+                </td>
+
+                <td>
+                  <%= r.event ? new Date(r.event.date).toDateString() : '-' %>
+                  <br>
+                  <span style="color: gray;">● Past</span>
+                </td>
+
+                <td><%= r.status %></td>
+                <td><%= new Date(r.rsvpDate).toDateString() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+
     </td>
   </tr>
 </table>
-    </center>
+
 </body>
 </html>
