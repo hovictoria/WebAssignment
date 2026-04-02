@@ -2,9 +2,9 @@ const multer = require('multer');
 const path = require('path');
 
 const storage = multer.diskStorage({
-    destination: 'public/uploads/',
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
+    destination: 'public/uploads/', // location to save
+    filename: (req, file, cb) => { // name of file 
+        cb(null, Date.now() + path.extname(file.originalname)); // time stamp + extension name => help to avoid duplicate names
     }
 });
 

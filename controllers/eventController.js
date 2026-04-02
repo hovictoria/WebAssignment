@@ -31,6 +31,8 @@ exports.showEvents = async (req, res) => {
 
         let filter = {};
 
+        // $or means either of the conditions - if the keyword is found in title/desc, it will display
+        // $regex allows partial searches - dont need exact match to search
         if (keyword) {
             filter.$or = [
                 { title: { $regex: keyword, $options: 'i' } },
@@ -47,15 +49,15 @@ exports.showEvents = async (req, res) => {
             filter.date = date;
         }
 
-        let sortOption = { date: 1 };
-        if (sortBy === 'dateAsc') sortOption = { date: -1 };
-        else if (sortBy === 'title') sortOption = { title: 1 };
-        else if (sortBy === 'titleDesc') sortOption = { title: -1 };
+        let sortOption = { date: 1 }; // default sort: oldest first 
+        if (sortBy === 'dateAsc') sortOption = { date: -1 }; // newest first  
+        else if (sortBy === 'title') sortOption = { title: 1 }; // a-z
+        else if (sortBy === 'titleDesc') sortOption = { title: -1 }; // z-a
 
-        const events = await Event.find(filter)
-            .sort(sortOption)
-            .collation({ locale: 'en', strength: 2 })
-            .lean();
+        const events = await Event.find(filter) // filter results
+            .sort(sortOption) // sort the filtered results
+            .collation({ locale: 'en', strength: 2 }) // sort according to eng rules, ignore case 
+            .lean(); //return plain js objects (no heavy mongoose doc, only the main parts)
 
         // check status of event
         const today = new Date().toISOString().split('T')[0];
@@ -64,9 +66,7 @@ exports.showEvents = async (req, res) => {
             else if (event.date === today) event.status = 'Ongoing';
             else event.status = 'Past';
         });
-
-        // console.log('Filter applied:', filter);
-        // console.log('Events found:', events.length);
+        // adds a temp status field to each event object only in memory during this request - not saved
 
         const user = req.session.user;
         const activeEvents = events.filter(e => e.status !== 'Past');
@@ -119,7 +119,8 @@ exports.handleCreate = async (req, res) => {
     const location = req.body.location.trim();
     const cat = req.body.category.trim();
     const eventDate = date;
-    const imageUrl = req.file ? '/uploads/' + req.file.filename : null;
+    const imageUrl = req.file ? '/uploads/' + req.file.filename : null; //create url with /uploads infront
+    // null if there is no image
 
     if (title === '' || desc === '' || location === '' || cat === '' || cat === 'default' || date === '' || time === '') {
         error = 'All fields are required (please choose a category)';
