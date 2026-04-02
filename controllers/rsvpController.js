@@ -16,7 +16,6 @@ exports.getRsvpPage = async (req, res) => {
 
     const rsvps = await RSVP.find({ event: eventId }).populate('user');
     const myRsvp = await RSVP.findOne({ user: userId, event: eventId });
-
     let user = req.session.user || null;
 
     res.render('rsvp', {

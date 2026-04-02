@@ -2,7 +2,7 @@ const Bookmark = require('../models/bookmarkModel');
 const Event = require('../models/eventModel');
 
 async function getBookmarksWithDetails(userId) {
-    const bookmarks = await Bookmark.find({ userId }).sort({ savedAt: -1 }).lean();
+    const bookmarks = await Bookmark.retrieveAlluserBookmarks(userId).sort({ savedAt: -1 }).lean();
 
     return Promise.all(
         bookmarks.map(async (bookmark) => {
@@ -50,17 +50,13 @@ exports.addBookmark = async (req, res) => {
             return res.redirect('/events');
         }
 
-        const existingBookmark = await Bookmark.findOne({
+        const existingBookmark = await Bookmark.findByUserIdandEventId(
             userId,
             eventId
-        });
+        );
 
         if (!existingBookmark) {
-            await Bookmark.create({
-                userId,
-                eventId,
-                notes: ''
-            });
+            await Bookmark.createBookmark(userId,eventId);
 
             return res.redirect('/bookmarks?success=Event bookmarked successfully');
         }
@@ -80,12 +76,8 @@ exports.updateBookmark = async (req, res) => {
             return res.redirect('/bookmarks?error=Notes cannot exceed 500 characters');
         }
 
-        await Bookmark.findOneAndUpdate(
-            {
-                _id: req.params._id
-            },
-            { notes },
-            { runValidators: true }
+        await Bookmark.editBookmark(
+            req.params._id,notes
         );
 
         res.redirect('/bookmarks?success=Bookmark updated successfully');
@@ -97,10 +89,8 @@ exports.updateBookmark = async (req, res) => {
 
 exports.deleteBookmark = async (req, res) => {
     try {
-        await Bookmark.findOneAndDelete({
-            _id: req.params._id,
-            userId: req.session.user.id
-        });
+        await Bookmark.deleteBookmark(req.params._id,req.session.user.id
+        );
 
         res.redirect('/bookmarks?success=Bookmark removed successfully');
     } catch (error) {

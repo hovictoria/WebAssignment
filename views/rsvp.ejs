@@ -93,7 +93,7 @@
     <tbody>
       <% rsvps.forEach(rsvp => { %>
         <tr>
-          <td><%= rsvp.user.name %></td>
+          <td><%= rsvp.user ? rsvp.user.name : "Deleted User" %></td>
           <td><%= rsvp.status %></td>
           <td><%= new Date(rsvp.rsvpDate).toDateString() %></td>
         </tr>
