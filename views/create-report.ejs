@@ -14,7 +14,7 @@
 <% } %>
 
 <% if (!success) { %>
-  <form action="/report-event" method="post">
+  <form action="/reports/report-event" method="post">
     <input type="hidden" name="eventId" value="<%= event._id %>">
 
     <table>

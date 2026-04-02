@@ -132,7 +132,7 @@ Make sure you have the following installed:
 - `GET /events/event-details?_id=:id` - Show event details page
 - `GET /rsvp?_id=:id` - RSVP to an event
 - `GET /bookmarks/add/:id` - Add event to bookmarks
-- `GET /report-event?_id=:id` - Report an event
+- `GET /reports/report-event?_id=:id` - Report an event
   
 ### Comments
 - `POST /comment/create` - Create a new comment

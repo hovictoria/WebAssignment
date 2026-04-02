@@ -12,9 +12,9 @@ router.post('/report-event', authMiddleware.isLoggedIn, reportController.handleC
 router.get('/my-reports', authMiddleware.isLoggedIn, reportController.showMyReports); 
 
 // shows all reports but only to admins
-router.get('/reports', authMiddleware.isLoggedIn, authMiddleware.isAdmin, reportController.showReports); 
+router.get('/', authMiddleware.isLoggedIn, authMiddleware.isAdmin, reportController.showReports); 
 //lets admins change a report's status
-router.post('/reports/update-status', authMiddleware.isLoggedIn, authMiddleware.isAdmin, reportController.updateReportStatus); 
+router.post('/update-status', authMiddleware.isLoggedIn, authMiddleware.isAdmin, reportController.updateReportStatus); 
 //lets admins delete a report
-router.get('/reports/delete', authMiddleware.isLoggedIn, authMiddleware.isAdmin, reportController.deleteReport); 
+router.get('/delete', authMiddleware.isLoggedIn, authMiddleware.isAdmin, reportController.deleteReport); 
 module.exports = router;
