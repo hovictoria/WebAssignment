@@ -168,8 +168,16 @@ exports.updateReportStatus = async (req, res) => {
     return res.redirect('/reports?error=Invalid report status');
   }
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.redirect('/reports?error=Invalid report selected');
+  }
+
   try {
-    await Report.updateStatus(id, status);
+    const result = await Report.updateStatus(id, status);
+    if (!result || result.matchedCount === 0) {
+      return res.redirect('/reports?error=Report not found');
+    }
+
     res.redirect('/reports?success=Report status updated');
   } catch (err) {
     console.error('Failed to update report status', {
@@ -185,8 +193,16 @@ exports.updateReportStatus = async (req, res) => {
 exports.deleteReport = async (req, res) => {
   const id = req.query.id;
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.redirect('/reports?error=Invalid report selected');
+  }
+
   try {
-    await Report.deleteReport(id);
+    const result = await Report.deleteReport(id);
+    if (!result || result.deletedCount === 0) {
+      return res.redirect('/reports?error=Report not found');
+    }
+
     res.redirect('/reports?success=Report deleted');
   } catch (err) {
     console.error('Failed to delete report', {
