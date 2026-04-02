@@ -104,21 +104,53 @@ exports.updateRsvp = async (req, res) => {
 exports.showMyRsvps = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const sortBy = req.query.sortBy || 'oldest';
+    const sortBy = req.query.sortBy || 'event-oldest';
 
-    let sortOption = { rsvpDate: 1 }; // oldest first
-    if (sortBy === 'newest') {
-      sortOption = { rsvpDate: -1 };
-    }
-
-    let rsvps = await RSVP.find({ user: userId })
-      .populate('event')
-      .sort(sortOption);
-
+    let rsvps = await RSVP.find({ user: userId }).populate('event');
     rsvps = rsvps.filter(r => r.event);
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let upcomingRsvps = [];
+    let pastRsvps = [];
+
+    rsvps.forEach(r => {
+      const eventDate = new Date(r.event.date);
+      eventDate.setHours(0, 0, 0, 0);
+
+      if (eventDate < today) {
+        pastRsvps.push(r);
+      } else {
+        upcomingRsvps.push(r);
+      }
+    });
+
+    const sorter = (a, b) => {
+      if (sortBy === 'event-newest') {
+        return new Date(b.event.date) - new Date(a.event.date);
+      }
+      if (sortBy === 'rsvp-oldest') {
+        return new Date(a.rsvpDate) - new Date(b.rsvpDate);
+      }
+      if (sortBy === 'rsvp-newest') {
+        return new Date(b.rsvpDate) - new Date(a.rsvpDate);
+      }
+
+      // default
+      return new Date(a.event.date) - new Date(b.event.date);
+    };
+
+    upcomingRsvps.sort(sorter);
+    pastRsvps.sort(sorter);
+
     let user = req.session.user;
-    res.render('my-rsvps', { rsvps, user, sortBy });
+    res.render('my-rsvps', {
+      upcomingRsvps,
+      pastRsvps,
+      user,
+      sortBy
+    });
 
   } catch (err) {
     console.log(err);
