@@ -62,14 +62,19 @@ exports.handleCreateReport = async (req, res) => {
     } else if (reason === 'Other' && details === '') { //if reason is "Other" but details are empty, set an error message indicating that details are required.
       error = 'Details are required when reason is Other';
     } else {
-      await Report.createReport({ //if validation passes, create a new report in the database with the provided event ID, reporter ID (from the session), reason, details, and a default status of "Pending".
-        event: eventId,
-        reporter: req.session.user.id,
-        reason,
-        details,
-        status: 'Pending'
-      });
-      success = 'Report submitted successfully';
+      const existingReport = await Report.findDuplicateReport(eventId, req.session.user.id, reason);
+      if (existingReport) {
+        error = 'You have already submitted a report for this event with the same reason';
+      } else {
+        await Report.createReport({ //if validation passes, create a new report in the database with the provided event ID, reporter ID (from the session), reason, details, and a default status of "Pending".
+          event: eventId,
+          reporter: req.session.user.id,
+          reason,
+          details,
+          status: 'Pending'
+        });
+        success = 'Report submitted successfully';
+      }
     }
 
     res.render('create-report', {  //re-render the form with the original input values and any error or success messages. This allows the user to correct any issues without losing their input.
@@ -92,6 +97,8 @@ exports.handleCreateReport = async (req, res) => {
     let submitError = 'Failed to submit report';
     if (err.name === 'ValidationError' && err.errors && err.errors.details && err.errors.details.kind === 'maxlength') { //if the error is a Mongoose validation error related to the "details" field exceeding the maximum length, set a specific error message indicating that the character limit was exceeded.
       submitError = 'Failed to submit report. Length exceeds character limit.';
+    } else if (err.code === 11000) {
+      submitError = 'You have already submitted a report for this event with the same reason';
     }
 
     res.render('create-report', {

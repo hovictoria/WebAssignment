@@ -29,10 +29,20 @@ const reportSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+reportSchema.index({ event: 1, reporter: 1, reason: 1 }, { unique: true });
+
 const Report = mongoose.model('Report', reportSchema, 'reports');
 
 exports.createReport = function (newReport) {
   return Report.create(newReport);
+};
+
+exports.findDuplicateReport = function (eventId, reporterId, reason) {
+  return Report.findOne({
+    event: eventId,
+    reporter: reporterId,
+    reason
+  });
 };
 
 exports.findAllReports = function () {
