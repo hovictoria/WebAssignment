@@ -7,7 +7,7 @@ const commentModel = require('../models/commentModel');
 function canDeleteEvent(user, event) {
     if (!user || !event) return false;
     const today = new Date().toISOString().split('T')[0];
-    if (event.date <= today) return false;        // ADD THIS
+    if (event.date <= today) return false;        
     if (user.role === 'Admin') return true;
     return String(event.organiser) === String(user.id);
 }
@@ -15,7 +15,7 @@ function canDeleteEvent(user, event) {
 function canEditEvent(user, event) {
     if (!user || !event) return false;
     const today = new Date().toISOString().split('T')[0];
-    if (event.date <= today) return false;        // ADD THIS
+    if (event.date <= today) return false;        
     if (user.role === 'Admin') return true;
     return String(event.organiser) === String(user.id);
 }
