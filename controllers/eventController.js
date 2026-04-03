@@ -254,8 +254,6 @@ exports.deleteAnEvent = async (req, res) => {
 
     try {
         const event = await Event.findById(id);
-        console.log('Event found:', event);         // see full event object
-        console.log('imageUrl value:', event.imageUrl)
         if (!canDeleteEvent(req.session.user, event)) {
             return res.render('delete-event', { success: '', error: 'You are not allowed to delete this event.', result: event || {} });
         }
@@ -263,14 +261,12 @@ exports.deleteAnEvent = async (req, res) => {
         // delete img using unlink
         if (event.imageUrl) {
             const imagePath = path.join(__dirname, '../public', event.imageUrl);
-            console.log('Trying to delete:', imagePath); 
             fs.unlink(imagePath, (err) => { 
                 if (err) console.error('Failed to delete image:', err);
             });
         }
         success = 'Event deleted!';
     } catch (err) {
-        console.log('error')
         console.error(err);
         error = 'Failed to Delete';
     }
