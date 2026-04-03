@@ -258,4 +258,9 @@ campus-event-board/
 
 The following parts of this project involved the use of AI/LLM tools:
 
-- **UI improvements** — AI was used to suggest HTML/EJS layout improvements for better readability and structure of our webpages.
+- **UI improvements** — Suggest HTML/EJS layout improvements for better readability and structure of our webpages.
+- **Debugging** — Help understand and interpret error messages encountered during development.
+- **README guidance** — Suggest the structure and phrasing of this README file.
+- **Mock data** — Generate sample data for populating the MongoDB database during testing.
+- **Feature ideation** —Brainstorm ideas for additional features that could be added to the application.
+  
