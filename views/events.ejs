@@ -86,7 +86,7 @@
                 <% activeEvents.forEach(event => { %>
                     <tr>
                         <td style="text-align: center;">
-                            <img src="<%= event.imageUrl || '/images/default.jpg' %>" width="100">
+                            <img src="<%= event.imageUrl %>" onerror="this.src='/images/default.jpg'" alt="<%= event.title %>" width="100">
                         </td>
                         <td><%= event.title %></td>
                         <td>

@@ -6,7 +6,7 @@
 
     <h1><%= event.title %></h1>
     <% if (event.imageUrl) { %>
-        <img src="<%= event.imageUrl %>" width="300">
+        <img src="<%= event.imageUrl %>" onerror="this.src='/images/default.jpg'" alt="<%= event.title %>" width="300">
     <% } else { %>
         <img src="/images/default.jpg" width="300">
     <% } %>
