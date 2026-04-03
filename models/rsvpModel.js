@@ -28,4 +28,32 @@ const rsvpSchema = new mongoose.Schema({
 
 const RSVP = mongoose.model('RSVP', rsvpSchema, 'rsvps');
 
-module.exports = RSVP;
+exports.findByEvent = function (eventId) {
+  return RSVP.find({ event: eventId }).populate('user');
+};
+
+exports.findARSVP = function (userId, eventId) {
+  return RSVP.findOne({ user: userId, event: eventId });
+};
+
+exports.findRSVPById = function (id) {
+  return RSVP.findById(id);
+};
+
+exports.findByUser = function (userId) {
+  return RSVP.find({ user: userId }).populate('event');
+};
+
+exports.createRSVP = function (userId, eventId, status) {
+  return RSVP.create({ user: userId, event: eventId, status });
+};
+
+exports.updateRSVP = function (rsvp, status) {
+  rsvp.status = status;
+  rsvp.rsvpDate = Date.now();
+  return rsvp.save();
+};
+
+exports.deleteRSVP = function (id) {
+  return RSVP.findByIdAndDelete(id);
+};

@@ -60,10 +60,10 @@ exports.findById = function (id) {
     return Event.findOne({ _id: id });
 };
 
-exports.editEvent = async function (id, title, description, date, time, location, category, imageUrl) {
+exports.editEvent = function (id, title, description, date, time, location, category, imageUrl) {
     const update = { title, description, date, time, location, category };
     if (imageUrl) update.imageUrl = imageUrl;
-    return await Event.updateOne({ _id: id }, { $set: update });
+    return Event.updateOne({ _id: id }, { $set: update });
 };
 
 exports.deleteEvent = function (id) {
