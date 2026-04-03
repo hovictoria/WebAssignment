@@ -3,12 +3,12 @@ const router = express.Router();
 
 const commentController = require('../controllers/commentController');
 
-router.post('/create', commentController.createComment);
+router.post('/create', authMiddleware.isLoggedIn, commentController.createComment);
 
-router.get('/event/:eventId', commentController.getCommentsByEvent);
+router.get('/event/:eventId', authMiddleware.isLoggedIn ,commentController.getCommentsByEvent);
 
-router.post('/update/:id', commentController.updateComment);
+router.post('/update/:id',authMiddleware.isLoggedIn, commentController.updateComment);
 
-router.post('/delete/:id', commentController.deleteComment);
+router.post('/delete/:id', authMiddleware.isLoggedIn, commentController.deleteComment);
 
 module.exports = router;
