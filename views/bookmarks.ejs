@@ -37,9 +37,9 @@
                     <tr>
                         <td>
                             <% if (bookmark.eventDetails) { %>
-                                <a href="/events/event-details?_id=<%= bookmark.eventId %>"><%= bookmark.eventDetails.title %></a>
+                                <p><a href="/events/event-details?_id=<%= bookmark.eventId %>"><%= bookmark.eventDetails.title %></a></p>
                             <% } else { %>
-                                Event
+                                Deleted Event
                             <% } %>
                         </td>
                         <td><%= bookmark.eventDetails ? new Date(bookmark.eventDetails.date).toDateString() : 'N/A' %></td>
@@ -47,10 +47,14 @@
                         <td><%= bookmark.eventDetails ? bookmark.eventDetails.category : 'N/A' %></td>
                         <td><%= new Date(bookmark.savedAt).toDateString() %></td>
                         <td>
+                            <% if (bookmark.eventDetails) { %> 
                             <form action="/bookmarks/<%= bookmark._id %>/update" method="POST">
                                 <input type="text" name="notes" value="<%= bookmark.notes %>">
                                 <button type="submit">Save Notes</button>
                             </form>
+                            <% } else{ %>
+                                <p style="color: grey; font-style: italic;">Notes are unavailable for deleted events.</p>
+                            <% } %>
                         </td>
                         <td>
                             <form action="/bookmarks/<%= bookmark._id %>/delete" method="POST">
