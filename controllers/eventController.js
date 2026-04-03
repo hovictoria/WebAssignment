@@ -126,7 +126,7 @@ exports.handleCreate = async (req, res) => {
     // null if there is no image
 
     if (title === '' || desc === '' || location === '' || cat === '' || cat === 'default' || date === '' || time === '') {
-        error = 'All fields are required (please choose a category)';
+        error = 'All fields are required';
     } else if (date <= today) {
         error = 'Event date cannot be in the past';
     } else {
