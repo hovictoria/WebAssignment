@@ -253,3 +253,14 @@ campus-event-board/
 - Event status (Upcoming / Ongoing / Past) is automatically calculated based on today's date.
 - Event images are stored in `public/uploads/` and served statically.
 - Students must be logged in to view events, RSVP, comment, or bookmark events.
+
+## AI/LLM Usage Declaration
+
+The following parts of this project involved the use of AI/LLM tools:
+
+- **UI improvements** — Suggest HTML/EJS layout improvements for better readability and structure of our webpages.
+- **Debugging** — Help understand and interpret error messages encountered during development.
+- **README guidance** — Suggest the structure and phrasing of this README file.
+- **Mock data** — Generate sample data for populating the MongoDB database during testing.
+- **Feature ideation** —Brainstorm ideas for additional features that could be added to the application.
+  
