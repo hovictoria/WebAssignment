@@ -51,6 +51,7 @@ exports.findAllReports = function () {
     .populate('reporter')
     .sort({ createdAt: -1 });
 };
+// This function retrieves all reports from the database, populates the associated event and reporter details, and sorts the reports in descending order based on their creation date, ensuring that the most recent reports are displayed first.
 
 exports.findReportsByReporter = function (reporterId) {
   return Report.find({ reporter: reporterId })
@@ -58,6 +59,7 @@ exports.findReportsByReporter = function (reporterId) {
     .populate('reporter')
     .sort({ createdAt: -1 });
 };
+// This function retrieves all reports by a specific reporter and populates the associated event and reporter details. It sorts the reports in descending order based on their creation date, ensuring that the most recent reports are displayed first.
 
 exports.findById = function (id) {
   return Report.findById(id)
@@ -68,7 +70,9 @@ exports.findById = function (id) {
 exports.updateStatus = function (id, status) {
   return Report.updateOne({ _id: id }, { status });
 };
+// This function updates the status of a report identified by its ID. It uses the updateOne method to set the new status value for the specified report in the database. returns a result object that indicates whether the update was successful and how many documents were modified. (matchedCount, modifiedCount)
 
 exports.deleteReport = function (id) {
   return Report.deleteOne({ _id: id });
 };
+// This function deletes a report from the database based on its ID. It uses the deleteOne method to remove the specified report document from the collection. returns a result object that indicates whether the deletion was successful and how many documents were deleted. (deletedCount)

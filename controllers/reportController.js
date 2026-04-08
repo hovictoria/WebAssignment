@@ -115,7 +115,7 @@ exports.handleCreateReport = async (req, res) => {
 
 exports.showReports = async (req, res) => {
   try {
-    const reports = await Report.findAllReports(); //this function retrieves all reports from the database and renders them on the "reports" page. It also handles any errors that occur during the retrieval process and logs them with relevant details.
+    const reports = await Report.findAllReports(); 
     res.render('reports', {
       reports,
       user: req.session.user,
@@ -139,6 +139,7 @@ exports.showReports = async (req, res) => {
 exports.showMyReports = async (req, res) => {
   try {
     const reports = await Report.findReportsByReporter(req.session.user.id);
+    //reports look like an array of report objects
     res.render('my-reports', {
       reports,
       user: req.session.user,
